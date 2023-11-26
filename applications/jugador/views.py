@@ -10,7 +10,7 @@ from django.views.generic import (
 from .models import Jugador
 
 class HomeView(TemplateView):
-    template_name = 'home.html'
+    template_name = 'home/home.html'
 
 class SignUpView(CreateView):
     """Vista para crear un nuevo jugador"""
