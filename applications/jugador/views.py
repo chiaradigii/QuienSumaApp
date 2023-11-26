@@ -9,11 +9,8 @@ from django.views.generic import (
 )
 from .models import Jugador
 
-class HomePageView(ListView):
-    """Vista para mostrar la lista de jugadores"""
-    model = Jugador
-    template_name = 'jugador/home.html'
-    context_object_name = 'jugadores'
+class HomeView(TemplateView):
+    template_name = 'home.html'
 
 class SignUpView(CreateView):
     """Vista para crear un nuevo jugador"""
