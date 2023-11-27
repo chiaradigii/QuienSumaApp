@@ -1,0 +1,126 @@
+
+{% extends "base/base.html" %}
+
+{% load static %}
+
+
+{% block head %} 
+
+<style>
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  background-color: #212529;
+
+}
+
+.cover-container {
+  max-width: 40em;
+}
+
+
+.fondocard{
+
+    background-color: #cbd1f2;
+}
+.fondonavegacion{
+
+    background-color: #cbd1f2;
+}
+
+.carta-block , .img-container{
+    position: relative;
+    margin: 0 auto 20px auto;
+    max-width: 819px;
+    box-sizing: border-box;
+}
+
+.fade.in{
+    opacity: 1;
+}
+section.content.light a:not(.btn) {
+    color: black;
+}
+a:active, a:hover {
+    outline: 0;
+}
+
+.bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+
+</style>
+{% endblock head %} 
+
+{% block body %}
+
+{% include 'includes/header.html' %}
+
+
+
+
+<!--Fin de navbar -->
+
+<!--Carousel-->
+
+{% include 'includes/carousel.html' %}
+
+
+<!--Fin de Carousel-->
+
+<div id="acercaDeNosotros" class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column  text-white bg-dark">
+
+  
+    <br><br>
+
+
+<!-- inicio de About us-->
+
+    <div class="cover-container d-flexp-3 mx-auto flex-column">
+    
+      <main class="px-3">
+
+        <h1>CONECTAMOS JUGADORES CON EQUIPOS.</h1><br>
+        <p class="lead">Estas cansado de quedarte en casa sin jugar? Ahora podes organizar, invitar o sumarte a partidos. </p>
+        <br><h4><strong>Contactanos</strong></h4>
+        <p class="lead">
+          info@quiensuma.com
+        </p>
+
+
+      </main>
+    
+      
+    </div>
+
+<!-- Fin de About us-->
+
+<!--INICIO PIE DE PÁGINA-->
+
+{% include 'includes/footer.html' %}
+
+
+<!-- FIN DE PIE DE PAGINA -->
+
+</div>
+
+
+
+
+
+{% endblock body %}

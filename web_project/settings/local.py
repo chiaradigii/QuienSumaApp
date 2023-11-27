@@ -1,4 +1,5 @@
 from .base import *
+import_secrets()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -13,6 +14,11 @@ DATABASES = {
     }
 }
 
-STATIC_URL = 'static/'
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR.child('static')]
+STATIC_ROOT = BASE_DIR.child('staticfiles')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.child('media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,0 +1,70 @@
+
+{% load static %}
+<header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
+    <nav class="nav nav-masthead justify-content-center float-md-end">
+      <!--INICIO DEL LOGO CON ICONO -->
+      
+        <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" >
+        
+          <h3 style="font-family:  Helvetica;">Te damos la bienvenida <strong>{{user.get_username}}</strong> </h3>  
+        
+      <!--FIN  DEL LOGO CON ICONO -->
+
+      <!--INICIO DEL DROPDOWN -->
+      <div class="dropdown show" style="margin: auto auto auto 10px;">
+        <li class="nav-item dropdown">
+          <a class="btn btn-secondary dropdown-toggle " href="#" role="button" id="dropdownBusquedaLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Opciones
+          </a> 
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li>  <a class="dropdown-item" name="nuevoPartidoRedirect"  onClick="redirect()">Organizar un partido</a>
+              <script type="text/javascript">
+                function redirect()
+                {
+                  window.location.href="{% url 'busqueda_app:NuevoPartido' %}";
+                }
+              </script></li>
+            <li>  <a class="dropdown-item" name="nuevoJugadorRedirect"  onClick="redirect()">Registrar a mi equipo</a>
+              <script type="text/javascript">
+                function redirect()
+                {
+                  window.location.href="{% url 'jugador_app:registrar_jugador' %}";
+                }
+              </script></li>  
+            <li> <a class="dropdown-item" href="#acercaDeNosotros">Acerca de nosotros</a></li>
+            {% if user.is_authenticated  %}
+            <!-- permito al usuario cerrar sesion -->
+            <!-- añado el parametro next para añadir un url next
+            que contiene la dirección url de esta pagina para redireccionar  -->
+            <li> <a class="dropdown-item"  href="{% url 'logout' %}">Cerrar sesión</a></li>
+            {% else %}
+            <p>Inicia sesión para acceder</p>
+            <a href="{% url 'jugador_app:login' %}?next={{request.path}}">Iniciar sesión</a>
+            {% endif %}
+          </ul>
+        </li>
+      </div>
+
+
+
+    
+       <!--FIN DEL DROPDOWN DE OPCIONES-->
+
+        <!--INICIO BOTONES-->
+      <li class="nav-item col-xs-6 ">
+        
+        <!-- <button class="btn btn-dark  my-2 my-sm-0 " type="submit">Jugadores</button> -->
+        <a class="btn  rounded mx-1 btn-secondary" href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
+
+      </li> 
+      
+      <li class="nav-item">
+        <a class="btn mx-1 btn-secondary" href="{% url 'busqueda_app:busquedas' %}">Partidos</a>
+      </li>
+      <li class="nav-item">
+        <a class="btn mx-1 btn-secondary" href="{% url 'jugador_app:pagina_principal' %}">Inicio</a>
+
+      </li>
+       <!--FIN BOTONES-->
+    </nav>
+</header>

@@ -1,0 +1,149 @@
+
+{% extends "base/base.html" %}
+
+
+
+{% block head %}
+<style>
+
+.main-head{
+    height: 150px;
+    background: #FFF;
+   
+}
+
+.sidenav {
+    height: 100%;
+    background-color: #000;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+
+.main {
+    padding: 0px 15px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+}
+
+@media screen and (max-width: 450px) {
+    .login-form{
+        margin-top: 10%;
+    }
+
+    .register-form{
+        margin-top: 10%;
+    }
+}
+
+@media screen and (min-width: 768px){
+    .main{
+        margin-left: 40%; 
+    }
+
+    .sidenav{
+        width: 40%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+    }
+
+    .login-form{
+        margin-top: 50%;
+    }
+
+    .register-form{
+        margin-top: 20%;
+    }
+}
+
+
+.login-main-text{
+    margin-top: 20%;
+    padding: 60px;
+    color: #fff;
+}
+
+.login-main-text h2{
+    font-weight: 300;
+}
+
+.btn-black{
+    background-color: #000 !important;
+    color: #fff;
+}
+</style>
+{% endblock head %}
+
+
+
+
+{% block body %}
+{% load crispy_forms_tags %}
+
+
+
+
+    <!-- revisar errores -->
+    <!-- Usuario authenticado
+        login
+        formilario -->
+
+    {% if form.errors %}
+        <p>La contraseña o el usuario no son correctos</p>
+    {% endif %}
+        
+
+
+
+    <!-- CASOS
+    1) Usuario logueado pero sin acceso
+    2) usuario no logueado
+    3) formulario de logueo -->
+
+    <!-- caso 1) ir a la siguiente pagina
+    quiere decir que no estan authenticados o no tienen permisos para ver esapagina -->
+
+    {% if next %}    
+        {% if user.is_authenticated %}
+            <!-- esta authenticado pero no tiene permisos para ver la pagina -->
+            <p>No tenes permisos para acceder a esta pagina</p>
+        {% else %}
+            <p>Login para ver esta pagina</p><br>
+        {% endif %}
+    {% endif %}
+
+    <div class="sidenav">
+        <div class="login-main-text">
+        <h1>Quien suma?<br> Iniciar sesion</h1>
+        <p>Inicie sesión para acceder.</p>
+        </div>
+    </div>
+    <div class="main">
+        <div class="col-md-6 col-sm-12">
+            <div class="login-form">
+                <form method="post" action="{% url  'jugador_app:login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{form.username|as_crispy_field}}
+                </div>
+                <div class="form-group">
+                    {{form.password|as_crispy_field}}
+                </div>
+                <!-- input para registrarse -->
+                <br>
+                <button type="submit" value="login" class="btn btn-black">Login</button>
+
+                <!-- hidden input para el caso de next, se fija si tiene permisos para ver el next -->
+                <input type="hidden" name="next" value="{{next}}">
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+

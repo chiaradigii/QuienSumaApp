@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}Signup{% endblock titulo %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+    <h1>Crear sesión</h1>
+
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <!-- signup_form porque signup es el nombre de la ulr que conecta a la vista y al formulario que cree -->
+        {{ form|crispy }}
+        <iframe src="https://storage.googleapis.com/maps-solutions-qqjk6ahb2j/address-selection/oec5/address-selection.html"
+        width="100%" height="100%"
+        style="border:0;"
+        loading="lazy">
+      </iframe>
+        <button type="submit" class="btn btn-success">Confirmar</button> 
+      </form>
+</div>
+{% endblock body %}

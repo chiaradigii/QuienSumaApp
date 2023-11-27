@@ -1,33 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Welcome to our website!</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
-    <main>
-        <section>
-            <h2>Our Services</h2>
-            <p>We provide the best services in the industry.</p>
-        </section>
-        <section>
-            <h2>Our Team</h2>
-            <p>Meet our dedicated and professional team.</p>
-        </section>
-    </main>
-    <footer>
-        <p>Copyright &copy; 2022. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+{% extends "base/base.html" %}
+
+{% load static %}
+
+
+{% block titulo %} 
+
+    home
+
+{% endblock titulo %}
+
+{% block body %}
+
+
+<!--navbar Inicio-->
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+    Quien suma?
+  </a>
+  <form class="form-inline">
+    <a type="button" class="btn btn btn-dark my-2 my-sm-0 " href="{% url 'jugador_app:login' %}">Iniciar sesion</a>
+    <a class="btn btn-dark my-2 my-sm-0 ml-2" href="{% url 'jugador_app:signup' %}">Crear cuenta</a>
+</form>
+
+</nav>
+
+<!--Fin de navbar -->
+
+{% block head %} 
+
+<style>
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  background-color: #212529;
+
+}
+
+.cover-container {
+  max-width: 40em;
+}
+
+
+.fondocard{
+
+    background-color: #cbd1f2;
+}
+.fondonavegacion{
+
+    background-color: #cbd1f2;
+}
+
+.carta-block , .img-container{
+    position: relative;
+    margin: 0 auto 20px auto;
+    max-width: 819px;
+    box-sizing: border-box;
+}
+
+.fade.in{
+    opacity: 1;
+}
+section.content.light a:not(.btn) {
+    color: black;
+}
+a:active, a:hover {
+    outline: 0;
+}
+
+.bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+
+</style>
+{% endblock head %} 
+
+<!--Fin de navbar -->
+
+<!--Carousel-->
+
+{% include 'includes/carousel.html' %}
+
+
+<!--Fin de Carousel-->
+
+<div id="acercaDeNosotros" class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column  text-white bg-dark">
+
+  
+    <br><br>
+
+
+<!-- inicio de About us-->
+
+    <div class="cover-container d-flexp-3 mx-auto flex-column">
+    
+      <main class="px-3">
+        <h1>CONECTAMOS JUGADORES CON EQUIPOS.</h1><br>
+        <p class="lead">Estas cansado de quedarte en casa sin jugar? Ahora podes organizar tus partidos, invitar o sumarte a partidos. Si ningun equipo te interesa... <strong>¡organizate uno!</strong></p>
+        <br><h4><strong>Contactanos</strong></h4>
+        <p class="lead">
+          info@quiensuma.com
+        </p>
+
+
+      </main>
+    
+      
+    </div>
+
+<!-- Fin de About us-->
+
+<!--INICIO PIE DE PÁGINA-->
+
+{% include 'includes/footer.html' %}
+
+
+<!-- FIN DE PIE DE PAGINA -->
+
+</div>
+
+
+
+
+
+{% endblock body %}
