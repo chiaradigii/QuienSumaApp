@@ -11,5 +11,8 @@ urlpatterns = [
      name='pagina_principal',
      ),
     path('login/', views.LoginView.as_view(), name='login'),
-
+     path("Felicidades/",
+     views.RegistroCorrecto.as_view(),
+     name='registroCorrecto',
+     ),
 ]

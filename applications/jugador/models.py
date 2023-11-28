@@ -1,32 +1,47 @@
 from django.db import models
 from datetime import date
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
+from django_google_maps import fields as map_fields
+from managers import UserManager
 
 # Create your models here.
-class Jugador(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+class Jugador(AbstractBaseUser,PermissionsMixin):
+    objects = UserManager()
+    posicion_choices = (
+        ('Arquero', 'Arquero'),
+        ('Defensa', 'Defensa'),
+        ('Medio', 'Medio'),
+        ('Delantero', 'Delantero'),
+    )
+    user = models.CharField("username", max_length=50, default="example")
     nombre = models.CharField("nombre",max_length=50)
     apellido = models.CharField("apellido", max_length=60)
     fecha_nacimiento = models.DateField("fecha de nacimiento", auto_now=False, auto_now_add=False, default=date.today)
     sexo = models.CharField("sexo", max_length=50,choices=(('M', 'Masculino'), ('F', 'Femenino')), default='M')
-    direccion = models.CharField("direccion", max_length=255, blank=True, null=True)
     correo = models.EmailField("correo", max_length=254, unique=True, default="example@gmail.com")
     descripcion = models.TextField("descripcion", blank=True, null=True)
-    posicion = models.CharField(max_length=100)
-    nacionalidad = models.CharField(max_length=100)
+    posicion = models.CharField("posicion", max_length=100, choices=posicion_choices, default='Medio')
     foto = models.ImageField(upload_to='fotos', null=True, blank=True)
-    latitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    longitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-
+    #address field and geolocation field
+    direccion = map_fields.AddressField(max_length=200,default="Calle 1 # 1-1")
+    geolocation = map_fields.GeoLocationField(max_length=100, default="-74.806981,10.987807")
+    is_staff = models.BooleanField(default=False)
+    USERNAME_FIELD = 'user'
     def save(self, *args, **kwargs):
-        if not self.latitude or not self.longitude:
-            gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
-            geocode_result = geolocator.geocode(self.direccion)
-            if geocode_result:
-                self.latitude = geocode_result.latitude
-                self.longitude = geocode_result.longitude
+        if not self.geolocation:
+            # If geolocation is not provided, try to fetch it from the address
+            geolocator = GoogleV3(api_key='AIzaSyCEgenBDBqhvJzkyU-wy4TqW6RTRfti-74')
+            location = geolocator.geocode(self.direccion)
+
+            if location:
+                # Set the geolocation field if the address is successfully geocoded
+                self.geolocation = f"{location.longitude},{location.latitude}"
+
         super(Jugador, self).save(*args, **kwargs)
+
+    def calcular_años(self):
+        today = date.today()
+        return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
 
     def __str__(self):
         return '{} {}'.format(self.nombre, self.apellido)

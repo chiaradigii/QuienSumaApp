@@ -1,3 +1,5 @@
+<!-- signup.html -->
+
 {% extends "base/base.html" %}
 
 {% block titulo %}Signup{% endblock titulo %}
@@ -8,15 +10,70 @@
 <div class="container">
     <h1>Crear sesión</h1>
 
-    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <!-- signup_form porque signup es el nombre de la ulr que conecta a la vista y al formulario que cree -->
-        {{ form|crispy }}
-        <iframe src="https://storage.googleapis.com/maps-solutions-qqjk6ahb2j/address-selection/oec5/address-selection.html"
-        width="100%" height="100%"
-        style="border:0;"
-        loading="lazy">
-      </iframe>
-        <button type="submit" class="btn btn-success">Confirmar</button> 
-      </form>
+    <div class="row">
+        <div>
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}              
+                <div class="form-group">
+                  {{ form.user|as_crispy_field }}
+              </div>
+                <div class="form-group">
+                  <div class="row">
+                      <div class="col-6">
+                          {{form.nombre|as_crispy_field}}
+                      </div>
+                      <div class="col-6">
+                          {{form.apellido|as_crispy_field}}     
+                      </div>
+                  </div>
+      
+              </div>
+              <div class="form-group">
+                {{form.correo|as_crispy_field}}
+              </div>
+
+            <div class="row">
+              <div class="col-6">
+                  {{form.sexo|as_crispy_field}}
+              </div>
+              <div class="col-6">
+                  {{form.fecha_nacimiento|as_crispy_field}}     
+              </div>
+          </div>
+          <div>
+            {{ form.direccion|as_crispy_field }}
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form.descripcion|as_crispy_field}}
+            </div>
+            <div class="col-6">
+                {{form.posicion|as_crispy_field}}
+            </div>
+        </div>
+        <div class="form-group">
+            {{form.foto|as_crispy_field}}
+        </div>
+        <div class="row">
+          <div class="col-6">
+              {{form.password1|as_crispy_field}}
+          </div>
+          <div class="col-6">
+              {{form.password2|as_crispy_field}}     
+          </div>
+      </div>
+                <button type="submit" class="btn btn-success">Confirmar</button>
+            </form>
+        </div>
+    </div>
 </div>
+<!-- Add the script for Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEgenBDBqhvJzkyU-wy4TqW6RTRfti-74&libraries=places&callback=initAutocomplete" async defer></script>
+
+<!-- Script for the autocompletion function -->
+<script>
+    function initAutocomplete() {
+        var input = document.getElementById('id_direccion');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
 {% endblock body %}

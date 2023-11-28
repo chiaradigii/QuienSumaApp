@@ -8,7 +8,7 @@ from djs import import_secrets
 BASE_DIR = Path(__file__).ancestor(3)
 SECRETS_DIR = BASE_DIR.child('secrets')
 import_secrets()
-GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+GOOGLE_MAPS_API_KEY = config('GOOGLE_API_KEY')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'applications.busqueda',
     'applications.equipo',
     'applications.futbolClubs',
+    'django_google_maps',
+
     
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -110,3 +112,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'jugador.Jugador'
+from django.apps import AppConfig
+AppConfig.default = False
