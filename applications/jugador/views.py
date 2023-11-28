@@ -60,7 +60,7 @@ class SignUpView(FormView):
 class LoginView(FormView):
     template_name = 'registration/login.html'
     form_class = AuthenticationForm 
-    success_url = reverse_lazy('home/pagina_principal.html')
+    success_url = reverse_lazy('jugador_app:pagina_principal')
 
     def form_valid(self, form):
         user = authenticate(
@@ -73,7 +73,7 @@ class LoginView(FormView):
 
 class MainPageView(LoginRequiredMixin,TemplateView):
     """Vista que carga la pagina principal cuando alguien ya esta logueado"""
-    template_name = "pagina_principal.html"
+    template_name = "home/pagina_principal.html"
 
 
 class RegistroCorrecto(TemplateView):
