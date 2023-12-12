@@ -1,11 +1,11 @@
-from django.db import models
-from datetime import date
-from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
 """
 La app jugador (users) Manejaría el registro, el perfil, 
 y la autenticación de los usuarios. Incluiría modelos para el Usuario y la Autenticación
 """
-
+from django.db import models
+from datetime import date
+from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
+from .utils import obtener_geolocalizacion
 from django_google_maps import fields as map_fields
 from managers import UserManager
 
@@ -34,14 +34,10 @@ class Jugador(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'user'
     def save(self, *args, **kwargs):
         if not self.geolocation:
-            # If geolocation is not provided, try to fetch it from the address
-            geolocator = GoogleV3(api_key='AIzaSyCEgenBDBqhvJzkyU-wy4TqW6RTRfti-74')
-            location = geolocator.geocode(self.direccion)
-
-            if location:
-                # Set the geolocation field if the address is successfully geocoded
-                self.geolocation = f"{location.longitude},{location.latitude}"
-
+            if not self.geolocation:
+                geolocation = obtener_geolocalizacion(self.direccion)
+                if geolocation:
+                    self.geolocation = geolocation
         super(Jugador, self).save(*args, **kwargs)
 
     def calcular_años(self):

@@ -21,6 +21,7 @@ from django.urls import reverse_lazy
 import os
 from geopy.geocoders import GoogleV3
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
@@ -49,8 +50,8 @@ class SignUpView(FormView):
         print(form.errors)
         return super().form_invalid(form)
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['google_api_key'] = os.environ.get('GOOGLE_API_KEY', '')
+        context = super(SignUpView,self).get_context_data(**kwargs)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
 class LoginView(FormView):

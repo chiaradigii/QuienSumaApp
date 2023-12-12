@@ -4,6 +4,7 @@ from django import forms
 from django_google_maps import fields as map_fields
 from geopy.geocoders import GoogleV3
 from .models import Jugador
+from .utils import obtener_geolocalizacion
 
 class SignUpForm(forms.ModelForm):
 
@@ -58,14 +59,10 @@ class SignUpForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
-        # Use Google Maps Geocoding API to get geolocation from the provided address
-        geolocator = GoogleV3(api_key='AIzaSyCEgenBDBqhvJzkyU-wy4TqW6RTRfti-74')
-        location = geolocator.geocode(cleaned_data.get('direccion'))
-
-        if location:
-            cleaned_data['geolocation'] = f"{location.longitude},{location.latitude}"
-
+        direccion = cleaned_data.get('direccion')
+        geolocation = obtener_geolocalizacion(direccion)
+        if geolocation:
+            cleaned_data['geolocation'] = geolocation
         return cleaned_data
 
     def save(self, commit=True):
