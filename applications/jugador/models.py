@@ -1,6 +1,11 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
+"""
+La app jugador (users) Manejaría el registro, el perfil, 
+y la autenticación de los usuarios. Incluiría modelos para el Usuario y la Autenticación
+"""
+
 from django_google_maps import fields as map_fields
 from managers import UserManager
 
