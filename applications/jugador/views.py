@@ -22,16 +22,12 @@ import os
 from geopy.geocoders import GoogleV3
 from django.http import HttpResponseRedirect
 
-class HomeView(TemplateView):
-    template_name = 'home/home.html'
-    
-
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
     model = Jugador
     form_class = SignUpForm
     template_name = 'registration/signup.html'
-    success_url= reverse_lazy('jugador_app:home')
+    success_url= reverse_lazy('main_app:home')
 
     def form_valid(self, form):
         user = Jugador.objects.create_user(
@@ -60,7 +56,7 @@ class SignUpView(FormView):
 class LoginView(FormView):
     template_name = 'registration/login.html'
     form_class = AuthenticationForm 
-    success_url = reverse_lazy('jugador_app:pagina_principal')
+    success_url = reverse_lazy('main_app:pagina_principal')
 
     def form_valid(self, form):
         user = authenticate(
@@ -69,15 +65,6 @@ class LoginView(FormView):
         )
         login(self.request, user)
         return super(LoginView,self).form_valid(form)
-
-
-class MainPageView(LoginRequiredMixin,TemplateView):
-    """Vista que carga la pagina principal cuando alguien ya esta logueado"""
-    template_name = "home/pagina_principal.html"
-
-
-class RegistroCorrecto(TemplateView):
-    template_name = "jugador/registro_correcto.html"
 
 class LogOutView(View):
     def get(self, request, *args, **kwargs):
@@ -101,3 +88,5 @@ class UpdatePasswordView(FormView):
         logout(self.request)
         return super(UpdatePasswordView, self).form_valid(form)
     
+class RegistroCorrecto(TemplateView):
+    template_name = "jugador/registro_correcto.html"
