@@ -31,13 +31,10 @@ INSTALLED_APPS = [
     #third party apps
     "crispy_bootstrap5",
     'crispy_forms',
+    'django_google_maps',
     #local apps
     'applications.jugador',
     'applications.busqueda',
-    'applications.equipo',
-    'applications.futbolClubs',
-    'django_google_maps',
-
     
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
