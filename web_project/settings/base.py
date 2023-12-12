@@ -35,6 +35,11 @@ INSTALLED_APPS = [
     #local apps
     'applications.jugador',
     'applications.busqueda',
+    'applications.comunicaciones',
+    'applications.main',
+    'applications.partidos',
+    'applications.ubicaciones',
+    'applications.valoraciones',
     
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
