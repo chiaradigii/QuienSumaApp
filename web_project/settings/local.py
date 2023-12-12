@@ -1,5 +1,4 @@
 from .base import *
-import_secrets()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
