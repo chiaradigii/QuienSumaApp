@@ -5,9 +5,8 @@ y la autenticación de los usuarios. Incluiría modelos para el Usuario y la Aut
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin
-from .utils import obtener_geolocalizacion
-from django_google_maps import fields as map_fields
 from managers import UserManager
+from ..ubicaciones.models import Ubicacion
 
 # Create your models here.
 class Jugador(AbstractBaseUser,PermissionsMixin):
@@ -28,16 +27,11 @@ class Jugador(AbstractBaseUser,PermissionsMixin):
     posicion = models.CharField("posicion", max_length=100, choices=posicion_choices, default='Medio')
     foto = models.ImageField(upload_to='fotos', null=True, blank=True)
     #address field and geolocation field
-    direccion = map_fields.AddressField(max_length=200,default="Calle 1 # 1-1")
-    geolocation = map_fields.GeoLocationField(max_length=100, default="-74.806981,10.987807")
+    ubicacion = models.ForeignKey(Ubicacion, on_delete=models.SET_NULL, null=True, blank=True)
+
     is_staff = models.BooleanField(default=False)
     USERNAME_FIELD = 'user'
     def save(self, *args, **kwargs):
-        if not self.geolocation:
-            if not self.geolocation:
-                geolocation = obtener_geolocalizacion(self.direccion)
-                if geolocation:
-                    self.geolocation = geolocation
         super(Jugador, self).save(*args, **kwargs)
 
     def calcular_años(self):

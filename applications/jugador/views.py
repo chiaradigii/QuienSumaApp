@@ -22,6 +22,8 @@ import os
 from geopy.geocoders import GoogleV3
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from ..ubicaciones.utils import obtener_geolocalizacion
+from ..ubicaciones.models import Ubicacion
 
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
@@ -31,6 +33,17 @@ class SignUpView(FormView):
     success_url= reverse_lazy('main_app:home')
 
     def form_valid(self, form):
+        # Get the cleaned data from the form
+        cleaned_data = form.cleaned_data
+
+        # Create or Update the Ubicacion instance
+        direccion = cleaned_data.get('direccion')
+        geolocation = obtener_geolocalizacion(direccion)
+        ubicacion, created = Ubicacion.objects.update_or_create(
+            direccion=direccion,
+            defaults={'geolocation': geolocation} if geolocation else {}
+        )
+        # Create the Jugador instance
         user = Jugador.objects.create_user(
             user=form.cleaned_data['user'],
             nombre=form.cleaned_data['nombre'],
@@ -41,11 +54,11 @@ class SignUpView(FormView):
             descripcion=form.cleaned_data['descripcion'],
             posicion=form.cleaned_data['posicion'],
             foto=form.cleaned_data['foto'],
-            direccion=form.cleaned_data['direccion'],
-            geolocation=form.cleaned_data['geolocation'],
+            ubicacion = ubicacion,
             password=form.cleaned_data['password1']
         )
         return super(SignUpView,self).form_valid(form)
+    
     def form_invalid(self, form):
         print(form.errors)
         return super().form_invalid(form)

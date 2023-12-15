@@ -4,7 +4,8 @@ from django import forms
 from django_google_maps import fields as map_fields
 from geopy.geocoders import GoogleV3
 from .models import Jugador
-from .utils import obtener_geolocalizacion
+from ..ubicaciones.models import Ubicacion
+from ..ubicaciones.utils import obtener_geolocalizacion
 
 class SignUpForm(forms.ModelForm):
 
@@ -28,9 +29,21 @@ class SignUpForm(forms.ModelForm):
             }
         )
     )
+    
+    direccion = forms.CharField(
+        label='Dirección',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Dirección'
+            }
+        )
+    )
+
     class Meta:
         model = Jugador
-        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'descripcion', 'posicion', 'foto', 'direccion')
+        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'descripcion', 'posicion', 'foto',)
         exclude = ['geolocation', 'is_staff', 'is_superuser']
 
 
@@ -62,7 +75,10 @@ class SignUpForm(forms.ModelForm):
         direccion = cleaned_data.get('direccion')
         geolocation = obtener_geolocalizacion(direccion)
         if geolocation:
-            cleaned_data['geolocation'] = geolocation
+            Ubicacion.objects.update_or_create(
+                direccion=direccion,
+                defaults={'geolocation': geolocation}
+            )
         return cleaned_data
 
     def save(self, commit=True):

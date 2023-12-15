@@ -23,14 +23,7 @@
                 {
                   window.location.href="{% url 'busqueda_app:NuevoPartido' %}";
                 }
-              </script></li>
-            <li>  <a class="dropdown-item" name="nuevoJugadorRedirect"  onClick="redirect()">Registrar a mi equipo</a>
-              <script type="text/javascript">
-                function redirect()
-                {
-                  window.location.href="{% url 'jugador_app:registrar_jugador' %}";
-                }
-              </script></li>  
+              </script></li> 
             <li> <a class="dropdown-item" href="#acercaDeNosotros">Acerca de nosotros</a></li>
             {% if user.is_authenticated  %}
             <!-- permito al usuario cerrar sesion -->
