@@ -24,9 +24,7 @@ urlpatterns = [
     path('', include('applications.jugador.urls')),
     path("accounts/",include('django.contrib.auth.urls')),
     path('', include('applications.comunicaciones.urls')),
-    path('',include('applications.busqueda.urls')),
     path('',include('applications.main.urls')),
     path('',include('applications.partidos.urls')),
     path('',include('applications.ubicaciones.urls')),
-    path('',include('applications.valoraciones.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -28,13 +28,10 @@ INSTALLED_APPS = [
     'django_google_maps',
     #local apps
     'applications.jugador',
-    'applications.busqueda',
     'applications.comunicaciones',
     'applications.main',
     'applications.partidos',
-    'applications.ubicaciones',
-    'applications.valoraciones',
-    
+    'applications.ubicaciones',    
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 

@@ -13,17 +13,10 @@
       <!--INICIO DEL DROPDOWN -->
       <div class="dropdown show" style="margin: auto auto auto 10px;">
         <li class="nav-item dropdown">
-          <a class="btn btn-secondary dropdown-toggle " href="#" role="button" id="dropdownBusquedaLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="btn btn-secondary dropdown-toggle " href="#" role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Opciones
           </a> 
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li>  <a class="dropdown-item" name="nuevoPartidoRedirect"  onClick="redirect()">Organizar un partido</a>
-              <script type="text/javascript">
-                function redirect()
-                {
-                  window.location.href="{% url 'busqueda_app:NuevoPartido' %}";
-                }
-              </script></li> 
             <li> <a class="dropdown-item" href="#acercaDeNosotros">Acerca de nosotros</a></li>
             {% if user.is_authenticated  %}
             <!-- permito al usuario cerrar sesion -->
@@ -51,9 +44,6 @@
 
       </li> 
       
-      <li class="nav-item">
-        <a class="btn mx-1 btn-secondary" href="{% url 'busqueda_app:busquedas' %}">Partidos</a>
-      </li>
       <li class="nav-item">
         <a class="btn mx-1 btn-secondary" href="{% url 'main_app:pagina_principal' %}">Inicio</a>
 
