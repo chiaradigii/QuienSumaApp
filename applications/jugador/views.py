@@ -104,3 +104,22 @@ class UpdatePasswordView(FormView):
     
 class RegistroCorrecto(TemplateView):
     template_name = "jugador/registro_correcto.html"
+
+class JugadorListView(LoginRequiredMixin,ListView):
+    template_name = "jugador/jugadores_disponibles.html"
+    model = Jugador
+    context_object_name = "jugadores"
+    paginate_by = 10
+
+    def get_queryset(self):
+        lista = Jugador.objects.all().order_by('nombre')
+        return lista
+
+class JugadorDetailView(LoginRequiredMixin,DetailView):
+    template_name = "jugador/detalle_jugador.html"
+    model = Jugador
+    context_object_name = "jugador"
+    def get_context_data(self, **kwargs):
+        context = super(JugadorDetailView, self).get_context_data(**kwargs)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+        return context

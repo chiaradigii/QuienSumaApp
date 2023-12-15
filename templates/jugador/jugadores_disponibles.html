@@ -1,0 +1,133 @@
+{% extends "base/base.html" %}
+
+
+
+{% block titulo %} 
+
+   jugadores disponibles
+
+{% endblock titulo %}
+
+{% block head %} 
+<style>
+  pagination > li > a,
+.pagination > li > span {
+    color: #676b90; 
+}
+
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    background-color: #5f6bd2;
+    border-color:#1f2342;
+}
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #5f6bd2; 
+    border-color: #5f6bd2;
+}
+
+  body{
+background:var(--bs-body-color);
+}
+  h1{
+    color:aliceblue;
+  }
+  table {
+  margin: 15px;
+  padding: 15px;
+}
+
+</style>
+{% endblock head %}
+
+{% block body %}
+{% include 'includes/header.html' %}
+
+
+
+<div class="container  text-center  px-4 ">
+    <h1>Jugadores disponibles</h1>
+
+<!--formulario para poder filtrar-->
+    <form class="row gx-5" method="GET">{% csrf_token %}
+      <div class="col">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Buscar jugador" name="kword" id="kword" aria-label="jugador a buscar" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+            </div>
+          </div>
+      </div>
+    </form>
+  </div>
+
+
+  <!--Tabla de jugadores-->
+  <table class="table table-dark col-lg-6 col-md-8 mx-auto ">
+    <thead>
+      <tr>
+        <th scope="col">NOMBRE</th>
+        <th scope="col">POSICION</th>
+        <th scope="col">SEXO</th>
+        <th scope="col">EDAD</th>
+        <th scope="col">UBICACION</th>
+        <th scope="col">VER PERFIL</th>
+      </tr>
+    </thead>
+    <tbody> 
+    {% for j in jugadores %}
+      <tr>
+        <td>{{j.nombre}} {{j.apellido}}</td>
+        <td>{{ j.get_posicion_display }}
+        </td>
+        <td>{{ j.get_sexo_display }}</td>
+        <td>{{j.calcular_años}}</td>
+        <td>{{j.ubicacion.direccion}}</td>
+        <td><a class="btn btn-light" href="{% url 'jugador_app:detalle_jugador' j.id  %}">Perfil</a>
+        </td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+  <!--Fin de Tabla de jugadores-->
+
+
+
+<!-- Paginacion -->
+<div class="pagination justify-content-center" >
+  <!--Si esta paginado-->
+  {% if is_paginated %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          
+          <!--page_obj hace referencia al obj que crea la paginacion
+          Si hay una pagina previa, mostrame el simbolo para ir para atras
+          sino mostramelo disabled-->
+               
+            <!--page_range tiene el num de paginas-->
+          {% for pagina in paginator.page_range  %}
+
+            {% if pagina == page_obj.number  %} 
+            <li class="page-item active"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+
+  {% endif %}
+    
+</div>
+ <!-- Fin de Paginacion -->
+
+
+{% endblock body %}
+

@@ -10,4 +10,12 @@ urlpatterns = [
      views.RegistroCorrecto.as_view(),
      name='registroCorrecto',
      ),
+    path('jugadores-disponibles/',
+    views.JugadorListView.as_view(),
+    name='jugadores_disponibles',
+    ),
+    path('detalle-jugador/<pk>/',
+    views.JugadorDetailView.as_view(),
+    name='detalle_jugador',
+    ),
 ]

@@ -1,0 +1,117 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block titulo %} 
+
+  detalle jugador
+
+{% endblock titulo %}
+
+{% block head%}
+<style>
+  .rounded-circle {
+    border-radius: 40%;
+    width: 250px;  
+    height: 250px;  
+    object-fit: cover;
+}
+</style>
+{% endblock head %}
+
+{% block body %}
+{% include 'includes/header.html' %}
+
+<div class="container">
+    <div class="main-body">
+    <br>
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    {% if jugador.foto %}
+                    <img src="{{ jugador.foto.url }}" alt="Admin" class="rounded-circle">
+                    {% else %}
+                        {% if jugador.get_sexo_display == 'Femenino'  %}
+                            <img src= "{% static 'img/WomanAvatar.png' %}"  alt="Admin" class="rounded-circle" width="150">
+                            {% else %}
+                            <img src= "{% static 'img/MasculinoAvatar.jpg' %}"  alt="Admin" class="rounded-circle" width="150">
+                            {% endif %}
+                    {% endif %}
+
+
+                    <div class="mt-3">
+                      <h4>{{jugador.nombre}} {{jugador.apellido}}</h4>
+                      <button class="btn btn-primary">Conectar</button>
+                      <button class="btn btn-outline-primary">Chat</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Nombre completo</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    {{jugador.nombre}} {{jugador.apellido}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Edad</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{jugador.calcular_años}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Sexo</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{jugador.get_sexo_display}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Posiciones</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+
+                        {% for subcategoria in jugador.categoria.all %}
+                        {{subcategoria.nombre_subcategoria}}
+                        <br/>
+                        {% endfor %}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Direccion</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{jugador.ubicacion.direccion}}
+                    </div>
+                  </div>
+                  <hr>
+                
+                  <hr>
+              </div>
+              
+              <div >
+                <div class="alert alert-success" role="alert">
+                  <h4 class="alert-heading">Descripcion</h4>
+                  {{jugador.descripcion|safe}}
+                </div>
+               </div>
+
+
+{% endblock body %}
