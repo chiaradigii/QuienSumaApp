@@ -1,5 +1,3 @@
-# forms.py
-
 from django import forms
 from django_google_maps import fields as map_fields
 from geopy.geocoders import GoogleV3

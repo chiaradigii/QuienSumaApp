@@ -1,25 +1,16 @@
-from django.shortcuts import render
 from django.views.generic import (
     ListView,
     DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
     TemplateView,
     View
 )
 from .models import Jugador
-import googlemaps
-import json
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic.edit import FormView
-from .forms import SignUpForm, LoginForm, PasswordChangeForm
+from .forms import SignUpForm, PasswordChangeForm
 from django.urls import reverse_lazy
-import os
-from geopy.geocoders import GoogleV3
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from ..ubicaciones.utils import obtener_geolocalizacion

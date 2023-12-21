@@ -1,5 +1,4 @@
 from django.contrib import admin
+from .models import Partido
 
-#from models import Partido
-
-#admin.site.register(Partido)
+admin.site.register(Partido)

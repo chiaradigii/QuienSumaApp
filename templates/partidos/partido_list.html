@@ -1,5 +1,13 @@
-
+{% extends "base/base.html" %}
 {% load static %}
+
+{% block titulo %} 
+
+    Proximos partidos
+
+{% endblock titulo %}
+{% block body %}
+<!--INICIO DEL HEADER -->
 <header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
     <nav class="nav nav-masthead justify-content-center float-md-end">
       <!--INICIO DEL LOGO CON ICONO -->
@@ -9,6 +17,8 @@
           <h3 style="font-family:  Helvetica;">Te damos la bienvenida <strong>{{user.get_username}}</strong> </h3>  
         
       <!--FIN  DEL LOGO CON ICONO -->
+
+
         <!--INICIO BOTONES-->
       <li class="nav-item col-xs-6 ">
         
@@ -28,6 +38,13 @@
     <li class="nav-item"> 
      <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
     </li>
+    <li class="nav-item"> 
+        <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:crear_partido' %}">Crear partidos</a>
+       </li>
        <!--FIN BOTONES-->
     </nav>
 </header>
+
+{% endblock body %}
+
+

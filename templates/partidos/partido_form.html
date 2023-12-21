@@ -1,0 +1,123 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+
+<!-- CSS files for datetimepicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">        
+
+{% endblock head %}
+
+{% block titulo %}Organizar un partido{% endblock titulo %}
+
+{% block css %}
+
+<style>
+  .form-estilizado {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+  }
+  .body-background {
+    background-image: url('/static/images/bg_3.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; 
+  }
+  .form-estilizado .form-group {
+    margin-bottom: 15px;
+  }
+  .form-estilizado input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+  }
+  .form-estilizado input[type="submit"]:hover {
+    background-color: #1a73e8;
+    cursor: pointer;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.9); 
+  }
+  .card-body {
+    padding: 2em;
+  }
+  h1 {
+    color: #333;
+  }
+</style>
+{% endblock css %}
+
+{% block body %}
+<div class="body-background"></div>
+{% include 'includes/header.html' %}
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-body">
+          <h1 class="text-center mb-4">Organizar un Partido</h1>
+          <form action="{% url 'partidos_app:crear_partido' %}" method="POST" class="form-estilizado">
+            {% csrf_token %}
+
+            {{ form.tipo_futbol|as_crispy_field }}
+            {{ form.direccion|as_crispy_field }}
+
+
+            <div class="form-group">
+                <div id="datetimepicker1" class="input-group date">
+                  <input type="text" id="id_fecha_hora" name="fecha_hora" class="form-control" />
+                  <span class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                  </span>
+                </div>
+              </div>
+
+
+            {{ form.arqueros|as_crispy_field }}
+            {{ form.defensas|as_crispy_field }}
+            {{ form.medios|as_crispy_field }}
+            {{ form.delanteros|as_crispy_field }}
+
+            <div class="text-center">
+              <input type="submit" value="Crear Partido" class="btn btn-primary">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  function initAutocomplete() {
+    var input = document.getElementById('id_direccion');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+  }
+
+  $(document).ready(function () {
+    $('#id_fecha_hora').datetimepicker({
+      format: 'DD-MM-YYYY HH:mm', 
+      sideBySide: true
+    });
+
+    $('#id_fecha_hora').on('dp.change', function(e) {
+      $('[name="fecha_hora"]').val(e.date.format('DD-MM-YYYY HH:mm'));
+    });
+  });
+</script>
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+{% endblock scripts %}
