@@ -1,6 +1,5 @@
 {% extends "base/base.html" %}
-
-
+{% load static %}
 
 {% block titulo %} 
 
@@ -71,6 +70,7 @@ background:var(--bs-body-color);
   <table class="table table-dark col-lg-6 col-md-8 mx-auto ">
     <thead>
       <tr>
+        <th scope="col"></th>
         <th scope="col">NOMBRE</th>
         <th scope="col">POSICION</th>
         <th scope="col">SEXO</th>
@@ -82,6 +82,15 @@ background:var(--bs-body-color);
     <tbody> 
     {% for j in jugadores %}
       <tr>
+        {% if j.foto %}
+        <td style="width: 100px; height: 100px;"><img src="{{ j.foto.url }}" alt="Admin" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;"></td>
+        {% else %}
+            {% if j.get_sexo_display == 'Femenino'  %}
+                <td style="width: 100px; height: 100px;"><img src= "{% static 'img/WomanAvatar.png' %}"  alt="Admin" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;"></td>
+            {% else %}
+                <td style="width: 100px; height: 100px;"><img src= "{% static 'img/MasculinoAvatar.jpg' %}"  alt="Admin" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;"></td>
+            {% endif %}
+        {% endif %}
         <td>{{j.nombre}} {{j.apellido}}</td>
         <td>{{ j.get_posicion_display }}
         </td>
