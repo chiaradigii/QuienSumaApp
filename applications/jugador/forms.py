@@ -1,6 +1,4 @@
 from django import forms
-from django_google_maps import fields as map_fields
-from geopy.geocoders import GoogleV3
 from .models import Jugador
 from ..ubicaciones.models import Ubicacion
 from ..ubicaciones.utils import obtener_geolocalizacion

@@ -72,8 +72,8 @@
             {{ form.tipo_futbol|as_crispy_field }}
             {{ form.direccion|as_crispy_field }}
 
-
-            <div class="form-group">
+            <div class="form-group mb-3">
+                <label for="id_fecha_hora">Fecha y Hora</label>
                 <div id="datetimepicker1" class="input-group date">
                   <input type="text" id="id_fecha_hora" name="fecha_hora" class="form-control" />
                   <span class="input-group-append">
@@ -83,10 +83,27 @@
               </div>
 
 
-            {{ form.arqueros|as_crispy_field }}
-            {{ form.defensas|as_crispy_field }}
-            {{ form.medios|as_crispy_field }}
-            {{ form.delanteros|as_crispy_field }}
+<!--Tabla para posiciones reuqeridas-->
+<table class="table table-striped">
+  <h4 class="text-center mb-2 ">Posiciones Requeridas</h4>
+  <thead>
+    <tr>
+      <th scope="col">ARQUEROS</th>
+      <th scope="col">DEFENSAS</th>
+      <th scope="col">MEDIOCAMPISTAS</th>
+      <th scope="col">DELANTEROS</th>
+    </tr>
+  </thead>
+  <tbody> 
+    <tr>
+      <td>{{ form.arqueros|as_crispy_field }} </td>
+      <td>{{ form.defensas|as_crispy_field }}</td>
+      <td>{{ form.medios|as_crispy_field }}</td>
+      <td>{{ form.delanteros|as_crispy_field }}</td>
+    </tr>
+  </tbody>
+</table>
+<!--Fin de Tabla-->
 
             <div class="text-center">
               <input type="submit" value="Crear Partido" class="btn btn-primary">
@@ -101,12 +118,17 @@
 {% endblock body %}
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript">
-  function initAutocomplete() {
-    var input = document.getElementById('id_direccion');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-  }
+<!-- Google Maps API -->
+<!-- script for Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
 
+<!-- Script for the autocompletion function -->
+<script>
+    function initAutocomplete() {
+        var input = document.getElementById('id_direccion');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script><script type="text/javascript">
   $(document).ready(function () {
     $('#id_fecha_hora').datetimepicker({
       format: 'DD-MM-YYYY HH:mm', 
@@ -118,6 +140,5 @@
     });
   });
 </script>
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+
 {% endblock scripts %}

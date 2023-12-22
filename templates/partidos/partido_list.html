@@ -44,6 +44,37 @@
        <!--FIN BOTONES-->
     </nav>
 </header>
+<!--FIN DEL HEADER -->
+
+<!--INICIO DEL CONTENIDO-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Proximos partidos</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        {% for partido in partidos %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">{{partido.nombre}}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">Fecha: {{partido.fecha|date:"DD-MM-YYYY HH:mm"}}</p>
+                    <p class="text-center">Hora: {{partido.hora}}</p>
+                    <p class="text-center">Lugar: {{partido.lugar}}</p>
+                    <p class="text-center">Cupos: {{partido.cupos}}</p>
+                    <p class="text-center">Creador: {{partido.creador}}</p>
+                    <p class="text-center">Jugadores: {{partido.jugadores}}</p>
+                    <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="btn btn-primary btn-block">Ver más</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
 {% endblock body %}
 

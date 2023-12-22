@@ -15,11 +15,11 @@ class UserManager(BaseUserManager, models.Manager):
         return self._create_user(user,nombre,apellido,fecha_nacimiento,sexo, correo, descripcion, posicion, foto, password, False, False, **extra_fields)
  
     def create_superuser(self, user, password=None, **extra_fields):
+        extra_fields.setdefault('correo', f'{user}@example.com')
         extra_fields.setdefault('nombre', 'default_nombre')
         extra_fields.setdefault('apellido', 'default_apellido')
         extra_fields.setdefault('fecha_nacimiento', '2000-01-01')
         extra_fields.setdefault('sexo', 'default_sexo')
-        extra_fields.setdefault('correo', 'default_correo@example.com')
         extra_fields.setdefault('descripcion', 'default_descripcion')
         extra_fields.setdefault('posicion', 'default_posicion')
         extra_fields.setdefault('foto', 'default_foto')
