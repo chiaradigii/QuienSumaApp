@@ -13,7 +13,6 @@ from .forms import SignUpForm, PasswordChangeForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.conf import settings
-from ..ubicaciones.utils import obtener_geolocalizacion
 from ..ubicaciones.models import Ubicacion
 
 class SignUpView(FormView):
@@ -29,11 +28,7 @@ class SignUpView(FormView):
 
         # Create or Update the Ubicacion instance
         direccion = cleaned_data.get('direccion')
-        geolocation = obtener_geolocalizacion(direccion)
-        ubicacion, created = Ubicacion.objects.update_or_create(
-            direccion=direccion,
-            defaults={'geolocation': geolocation} if geolocation else {}
-        )
+        ubicacion = Ubicacion(direccion=direccion)
         # Create the Jugador instance
         user = Jugador.objects.create_user(
             user=form.cleaned_data['user'],

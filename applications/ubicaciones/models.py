@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django_google_maps import fields as map_fields
 from .utils import obtener_geolocalizacion
+from geopy.exc import GeocoderQueryError
 
 class Ubicacion(models.Model):
     direccion = models.CharField(max_length=200)
@@ -10,10 +11,9 @@ class Ubicacion(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.geolocation:
-            if not self.geolocation:
-                geolocation = obtener_geolocalizacion(self.direccion)
-                if geolocation:
-                    self.geolocation = geolocation
+            geolocation = obtener_geolocalizacion(self.direccion)
+            if geolocation:
+                self.geolocation = geolocation
         super(Ubicacion, self).save(*args, **kwargs)
 
     def __str__(self):

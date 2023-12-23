@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Partido, PosicionCupo
 from ..ubicaciones.models import Ubicacion
-from ..ubicaciones.utils import obtener_geolocalizacion
 from django.utils import timezone
 
 class PartidoForm(forms.ModelForm):
@@ -48,25 +47,6 @@ class PartidoForm(forms.ModelForm):
             raise forms.ValidationError('La fecha no puede ser anterior a la actual')
         return fecha_hora
 
-
-    def clean(self):
-        cleaned_data = super().clean()
-        direccion = cleaned_data.get('direccion')
-        geolocation = obtener_geolocalizacion(direccion)
-        if geolocation:
-            Ubicacion.objects.update_or_create(
-                direccion=direccion,
-                defaults={'geolocation': geolocation} 
-            )
-        return cleaned_data
     
-    def save(self, commit=True):
-        partido = super().save(commit=False)
-        if commit:
-            partido.save()
-            PosicionCupo.objects.create(partido=partido, posicion='ARQUERO', cupos=self.cleaned_data['arqueros'])
-            PosicionCupo.objects.create(partido=partido, posicion='DEFENSA', cupos=self.cleaned_data['defensas'])
-            PosicionCupo.objects.create(partido=partido, posicion='MEDIO', cupos=self.cleaned_data['medios'])
-            PosicionCupo.objects.create(partido=partido, posicion='DELANTERO', cupos=self.cleaned_data['delanteros'])
-        return partido
+
     
