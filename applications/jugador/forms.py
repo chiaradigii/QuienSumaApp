@@ -6,6 +6,10 @@ from django.contrib.auth import authenticate
 
 class SignUpForm(forms.ModelForm):
 
+    SEXO_CHOICES = [
+        ('M', 'Maculino'),
+        ('F', 'Femenino'),
+    ]
     password1 = forms.CharField(
         label='Contraseña',
         required=True,
@@ -44,9 +48,17 @@ class SignUpForm(forms.ModelForm):
         input_formats=['%d-%m-%Y'], 
         widget=DatePickerInput()
     )
+
+    sexo = forms.ChoiceField(
+        label='sexo',
+        choices=SEXO_CHOICES,
+        widget=forms.RadioSelect,
+        initial='M',
+    )
+
     class Meta:
         model = Jugador
-        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'descripcion', 'posicion', 'foto',)
+        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'posicion', 'foto',)
         exclude = ['geolocation', 'is_staff', 'is_superuser']
 
     def clean_password2(self):

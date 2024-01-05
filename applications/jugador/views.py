@@ -38,7 +38,6 @@ class SignUpView(FormView):
             fecha_nacimiento=form.cleaned_data['fecha_nacimiento'],
             sexo=form.cleaned_data['sexo'],
             correo=form.cleaned_data['correo'],
-            descripcion=form.cleaned_data['descripcion'],
             posicion=form.cleaned_data['posicion'],
             foto=form.cleaned_data['foto'],
             ubicacion = ubicacion,

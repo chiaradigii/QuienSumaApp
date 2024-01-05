@@ -5,76 +5,196 @@
 {% block titulo %}Signup{% endblock titulo %}
 
 {% block head %}
-
+<link rel="stylesheet"
+href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 <!-- Tempus Dominus Bootstrap 4 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
-¡
+<style>
+form i {
+        margin-left: -30px;
+        cursor: pointer;
+    }
+.password-field {
+        position: relative;
+}
+.password-toggle {
+        color: #000;
+        position: absolute;
+        right: 10px;
+        top: 62%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 24px;
+    }
+.form-outline .form-control {
+        padding-right: 2.5rem; 
+        line-height: 24px;
+    }
+.card {
+    background-color: #352f44;
+    color: #ffffff; 
+}
 
+.gradient-custom {
+    background-image: url('{% static "/img/registro.jpg" %}');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.card-registration  {
+    max-width: 1000px;
+    margin: 0 auto;
+    }
+
+.card-registration .card-body {
+        padding: 2rem; 
+    }
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: .75em;
+        padding-right: .75em;
+        }
+.card-registration .select-arrow {
+        top: 13px;
+    }
+    .form-outline {
+        margin-bottom: 0.5rem; /* Smaller bottom margin for form-outline */
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem; /* Reduced space between form fields */
+    }
+    .form-outline .form-control {
+        padding: 0.5rem 1rem; /* Adjust padding inside input fields */
+    }
+    .vh-100 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-body {
+        padding: 1rem 1rem; /* Smaller padding inside the card-body */
+    }
+    .card-registration {
+        max-height:  calc(100vh - 40px); 
+        overflow-y: auto; 
+    }
+    h3.mb-3 {
+        font-size: 2.2rem; /
+        font-weight: bold; 
+    }
+    
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #ffffff;
+        opacity: 1; /* Firefox */
+    }
+    .container.py-5.h-100 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding-top: 0; /* Remove top padding if necessary */
+        padding-bottom: 0; /* Remove bottom padding if necessary */
+    }
+</style>
 {% endblock head %}
 
 {% block body %}
-<br><br>
-<div class="container">
-    <h1>Sign Up</h1>
+<section class="vh-100 gradient-custom">
+    <div class="container">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px"> 
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="mb-3 pb-2 pb-md-0 mb-md-4 text-uppercase">Sign Up</h3>
+                            <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}   
+                            <div class="row">
+                                <div class="col">         
+                                    <div class="form-outline">          
+                                        {{ form.user|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                <div class="col">   
+                                    <div class="form-outline">          
+                                         {{form.correo|as_crispy_field}}
+                                    </div>  
+                                </div>
+                            <div class="row">
+                            <div class="col">
+                                <div class="form-outline">              
+                                        {{form.nombre|as_crispy_field}} 
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline"> 
+                                    {{form.apellido|as_crispy_field}}
+                                </div>   
+                            </div>
+                            </div>
+                            <div class="row"> 
+                                <div class="col">  
+                                    <div class="form-outline">             
+                                    <h6 class="mb-0 me-4">Sexo: </h6>
+                                    {{ form.sexo }}
 
-    <div class="row">
-        <div>
-            <form method="POST" enctype="multipart/form-data">{% csrf_token %}              
-                <div class="form-group">
-                  {{ form.user|as_crispy_field }}
-              </div>
-                <div class="form-group">
-                  <div class="row">
-                      <div class="col-6">
-                          {{form.nombre|as_crispy_field}}
-                      </div>
-                      <div class="col-6">
-                          {{form.apellido|as_crispy_field}}     
-                      </div>
-                  </div>
-      
-              </div>
-              <div class="form-group">
-                {{form.correo|as_crispy_field}}
-              </div>
-
-            <div class="row">
-              <div class="col-6">
-                  {{form.sexo|as_crispy_field}}
-              </div>
-              <div class="col-6">
-                <div class="form-group" style="position: relative;">
-                    {{ form.fecha_nacimiento|as_crispy_field }}
+                                    </div>                                  
+                                </div>
+                                
+                                <div class="col">
+                                    <div class="form-outline mb-4" style="position: relative;">
+                                        {{ form.fecha_nacimiento|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                    <div class="col">
+                                        {{form.direccion|as_crispy_field}}
+                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        {{form.posicion|as_crispy_field}}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        {{form.foto|as_crispy_field}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-outline password-field">
+                                        <label>Contraseña</label>
+                                        <input type="password" name="{{ form.password1.name }}" id="id_password1" class="form-control" required>
+                                        <i class="bi bi-eye-slash password-toggle" id="togglePassword1"></i>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline password-field">
+                                        <label>Confirmar contraseña</label>
+                                        <input type="password" name="{{ form.password2.name }}" id="id_password2" class="form-control" required>
+                                        <i class="bi bi-eye-slash password-toggle" id="togglePassword2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                                        
+                                        <div class="d-flex justify-content-center-end pt-3">
+                                            <button type="submit" class="btn btn-warning btn-lg ms-2">Confirmar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-          </div>
-          <div>
-            {{ form.direccion|as_crispy_field }}
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {{form.descripcion|as_crispy_field}}
-            </div>
-            <div class="col-6">
-                {{form.posicion|as_crispy_field}}
             </div>
         </div>
-        <div class="form-group">
-            {{form.foto|as_crispy_field}}
-        </div>
-        <div class="row">
-          <div class="col-6">
-              {{form.password1|as_crispy_field}}
-          </div>
-          <div class="col-6">
-              {{form.password2|as_crispy_field}}     
-          </div>
-      </div>
-                <button type="submit" class="btn btn-success">Confirmar</button>
-            </form>
-        </div>
-    </div>
-</div>
+</section>
 
 {% endblock body %}
 
@@ -99,6 +219,22 @@
         });
     });
 </script>
-    
+<script>
+    const togglePassword1 = document.querySelector('#togglePassword1');
+    const password1 = document.querySelector('#id_password1');
+    togglePassword1.addEventListener('click', function() {
+        const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+        password1.setAttribute('type', type);
+        this.classList.toggle('bi-eye');
+    });
+
+    const togglePassword2 = document.querySelector('#togglePassword2');
+    const password2 = document.querySelector('#id_password2');
+    togglePassword2.addEventListener('click', function() {
+        const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+        password2.setAttribute('type', type);
+        this.classList.toggle('bi-eye');
+    });
+</script>
 {% endblock scripts %}
 ```
