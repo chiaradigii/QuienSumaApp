@@ -29,6 +29,7 @@ class SignUpView(FormView):
         # Create or Update the Ubicacion instance
         direccion = cleaned_data.get('direccion')
         ubicacion = Ubicacion(direccion=direccion)
+        ubicacion.save()
         # Create the Jugador instance
         user = Jugador.objects.create_user(
             user=form.cleaned_data['user'],
