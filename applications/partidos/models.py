@@ -3,9 +3,8 @@ from collections.abc import Iterable
 from django.utils import timezone
 from django.db import models
 from django.conf import settings
-
+from ..jugador.models import Jugador
 from ..ubicaciones.models import Ubicacion
-
 
 
 class PosicionCupo(models.Model):
@@ -31,7 +30,8 @@ class Partido(models.Model):
     creador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='creador',null=True, blank=True)
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.SET_NULL, null=True, blank=True)
     posiciones = models.ForeignKey(PosicionCupo, on_delete=models.CASCADE,null=True, blank=True)
-
+    jugadores = models.ManyToManyField(Jugador, through='PartidoJugador')
+   
     def is_today(self):
         return self.fecha_hora.date() == timezone.now().date()
     
@@ -50,12 +50,20 @@ class Partido(models.Model):
     def unirse(self, jugador):
         self.cupos_disponibles -= 1
         self.save()
-        self.jugadores.add(jugador)
+        PartidoJugador.objects.create(partido=self, jugador=jugador)
     
     def abandonar(self, jugador):
         self.cupos_disponibles += 1
         self.save()
-        self.jugadores.remove(jugador)
+        PartidoJugador.objects.filter(partido=self, jugador=jugador).delete()
+
+    def delete(self, *args, **kwargs):
+        PartidoJugador.objects.filter(partido=self).delete()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.tipo_futbol, self.fecha_hora, self.ubicacion)
+
+class PartidoJugador(models.Model):
+    partido = models.ForeignKey(Partido, on_delete=models.CASCADE)
+    jugador = models.ForeignKey(Jugador, on_delete=models.SET_NULL, null=True, blank=True)

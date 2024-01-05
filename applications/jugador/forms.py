@@ -1,6 +1,8 @@
 from django import forms
 from .models import Jugador
-from ..ubicaciones.models import Ubicacion
+from .widgets import DatePickerInput 
+from django.contrib.auth import authenticate
+
 
 class SignUpForm(forms.ModelForm):
 
@@ -36,11 +38,16 @@ class SignUpForm(forms.ModelForm):
         )
     )
 
+    fecha_nacimiento = forms.DateField(
+        label='Fecha de nacimiento',
+        required=True,
+        input_formats=['%d-%m-%Y'], 
+        widget=DatePickerInput()
+    )
     class Meta:
         model = Jugador
         fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'descripcion', 'posicion', 'foto',)
         exclude = ['geolocation', 'is_staff', 'is_superuser']
-
 
     def clean_password2(self):
         if self.cleaned_data['password1'] != self.cleaned_data['password2']:
