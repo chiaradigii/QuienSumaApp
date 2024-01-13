@@ -118,9 +118,10 @@
 
     <div class="sidenav">
         <div class="login-main-text">
-        <h1>Quien suma?<br> Iniciar sesion</h1>
-        <p>Inicie sesión para acceder.</p>
-        </div>
+        <h1 style="font-family: 'Great Vibes', cursive;">Quien suma?</h1>        
+        <h3 style="color: white;">Inicia sesión</h3>
+    </div>
+        
     </div>
     <div class="main">
         <div class="col-md-6 col-sm-12">
@@ -135,7 +136,8 @@
                 </div>
                 <!-- input para registrarse -->
                 <br>
-                <button type="submit" value="login" class="btn btn-black">Login</button>
+                <button type="submit" value="login" class="btn btn-black" style="margin-bottom: 15px;">Login</button>
+                <p>Aún no tienes tu cuenta? <a href="{% url 'jugador_app:signup' %}">Sign Up</a></p>
 
                 <!-- hidden input para el caso de next, se fija si tiene permisos para ver el next -->
                 <input type="hidden" name="next" value="{{next}}">
