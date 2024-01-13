@@ -184,9 +184,10 @@ form i {
                             </div>
                                         
                                         <div class="d-flex justify-content-center-end pt-3">
-                                            <button type="submit" class="btn btn-warning btn-lg ms-2">Confirmar</button>
+                                            <button type="submit" id="confirmarButton" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#registroExitosoModal">Confirmar</button>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -194,7 +195,10 @@ form i {
                 </div>
             </div>
         </div>
+        <!-- Modal HTML -->
+
 </section>
+
 
 {% endblock body %}
 
@@ -236,5 +240,6 @@ form i {
         this.classList.toggle('bi-eye');
     });
 </script>
+
 {% endblock scripts %}
 ```

@@ -5,11 +5,8 @@ app_name = 'jugador_app'
 
 urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
+    path('success-signup/', views.SuccessSignUpView.as_view(), name='success_signup'),
     path('login/', views.LoginView.as_view(), name='login'),
-     path("Felicidades/",
-     views.RegistroCorrecto.as_view(),
-     name='registroCorrecto',
-     ),
     path('jugadores-disponibles/',
     views.JugadorListView.as_view(),
     name='jugadores_disponibles',
@@ -18,4 +15,5 @@ urlpatterns = [
     views.JugadorDetailView.as_view(),
     name='detalle_jugador',
     ),
+
 ]

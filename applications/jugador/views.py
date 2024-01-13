@@ -14,18 +14,20 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from ..ubicaciones.models import Ubicacion
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
     model = Jugador
     form_class = SignUpForm
     template_name = 'registration/signup.html'
-    success_url= reverse_lazy('main_app:home')
+    success_url = reverse_lazy('jugador_app:success_signup')
 
     def form_valid(self, form):
-        # Get the cleaned data from the form
         cleaned_data = form.cleaned_data
-
         # Create or Update the Ubicacion instance
         direccion = cleaned_data.get('direccion')
         ubicacion = Ubicacion(direccion=direccion)
@@ -43,16 +45,34 @@ class SignUpView(FormView):
             ubicacion = ubicacion,
             password=form.cleaned_data['password1']
         )
-        return super(SignUpView,self).form_valid(form)
+        user.save()
+        # Session variable to show a success message in the login page
+        self.request.session['registro_exitoso'] = True
+        self.request.session.save()
+        return super().form_valid(form)
     
     def form_invalid(self, form):
         print(form.errors)
         return super().form_invalid(form)
+    
+    def get(self, request, *args, **kwargs):
+        if 'registro_exitoso' in request.session:
+            del request.session['registro_exitoso']
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(SignUpView,self).get_context_data(**kwargs)
         context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
-
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            print(form.errors)
+            return self.form_invalid(form)
+        
 class LoginView(FormView):
     template_name = 'registration/login.html'
     form_class = AuthenticationForm 
@@ -87,9 +107,6 @@ class UpdatePasswordView(FormView):
             user.save()
         logout(self.request)
         return super(UpdatePasswordView, self).form_valid(form)
-    
-class RegistroCorrecto(TemplateView):
-    template_name = "jugador/registro_correcto.html"
 
 class JugadorListView(LoginRequiredMixin,ListView):
     template_name = "jugador/jugadores_disponibles.html"
@@ -100,6 +117,11 @@ class JugadorListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         lista = Jugador.objects.all().order_by('nombre')
         return lista
+
+class SuccessSignUpView(TemplateView):
+    template_name = 'registration/success_signup.html'    
+    model = Jugador
+    form_class = SignUpForm
 
 class JugadorDetailView(LoginRequiredMixin,DetailView):
     template_name = "jugador/detalle_jugador.html"

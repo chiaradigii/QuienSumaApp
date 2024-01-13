@@ -1,0 +1,142 @@
+<!-- signup.html -->
+{% extends "base/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block titulo %}Signup{% endblock titulo %}
+
+{% block head %}
+<link rel="stylesheet"
+href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+<!-- Tempus Dominus Bootstrap 4 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+<style>
+form i {
+        margin-left: -30px;
+        cursor: pointer;
+    }
+.password-field {
+        position: relative;
+}
+.password-toggle {
+        color: #000;
+        position: absolute;
+        right: 10px;
+        top: 62%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 24px;
+    }
+.form-outline .form-control {
+        padding-right: 2.5rem; 
+        line-height: 24px;
+    }
+.card {
+    background-color: #352f44;
+    color: #ffffff; 
+}
+
+.gradient-custom {
+    background-image: url('{% static "/img/registro.jpg" %}');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.card-registration  {
+    max-width: 1000px;
+    margin: 0 auto;
+    }
+
+.card-registration .card-body {
+        padding: 2rem; 
+    }
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: .75em;
+        padding-right: .75em;
+        }
+.card-registration .select-arrow {
+        top: 13px;
+    }
+    .form-outline {
+        margin-bottom: 0.5rem; /* Smaller bottom margin for form-outline */
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem; /* Reduced space between form fields */
+    }
+    .form-outline .form-control {
+        padding: 0.5rem 1rem; /* Adjust padding inside input fields */
+    }
+    .vh-100 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-body {
+        padding: 1rem 1rem; /* Smaller padding inside the card-body */
+    }
+    .card-registration {
+        max-height:  calc(100vh - 40px); 
+        overflow-y: auto; 
+    }
+    h3.mb-3 {
+        font-size: 2.2rem; /
+        font-weight: bold; 
+    }
+    
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #ffffff;
+        opacity: 1; /* Firefox */
+    }
+    .container.py-5.h-100 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding-top: 0; /* Remove top padding if necessary */
+        padding-bottom: 0; /* Remove bottom padding if necessary */
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<section class="vh-100 gradient-custom">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <!-- Modal HTML -->
+            <div class="modal fade show" id="registroExitosoModal" tabindex="-1" role="dialog" aria-labelledby="registroExitosoModalLabel" aria-hidden="true" style="display: block;">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="registroExitosoModalLabel" style="color: black;">Registro Exitoso</h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                        <div class="modal-body" style="color: black;">
+                                            Tu registro se ha completado correctamente.
+                                        </div>
+                                        <div class="modal-footer">
+                                                <a class="btn btn-secondary" href="{% url 'main_app:home' %}" >Cerrar</a>
+                                                <a  class="btn btn-secondary" href="{% url 'jugador_app:login' %}">Iniciar Sesión</a>
+                                        </div>
+                                     </div>
+            </div>
+                          
+
+        </div>
+    </div>
+
+</section>
+
+
+{% endblock body %}
+
+{% block scripts %}
+{{ block.super }}
+
+{% endblock scripts %}
+```
