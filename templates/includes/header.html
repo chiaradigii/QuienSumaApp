@@ -6,8 +6,11 @@
 <h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
 <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
 
-<h3 style="font-family: Calibri; margin-right:1.5rem;">Te damos la bienvenida <strong>{{user.get_username}}</strong> </h3>  
-
+{% if user.sexo == 'M' %}
+<h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenido <strong>{{user.get_username}}</strong> </h3>  
+{% else %}
+<h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenida <strong>{{user.get_username}}</strong> </h3>  
+{% endif %}
 <!--FIN  DEL LOGO CON ICONO -->
         <!--INICIO BOTONES-->
       <li class="nav-item col-xs-6 ">

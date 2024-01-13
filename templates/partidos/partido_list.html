@@ -48,13 +48,17 @@ background:var(--bs-body-color);
 <!--INICIO DEL HEADER -->
 <header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
     <nav class="nav nav-masthead justify-content-center float-md-end">
-      <!--INICIO DEL LOGO CON ICONO -->
-      
-        <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" >
-        
-          <h3 style="font-family:  Helvetica;">Te damos la bienvenida <strong>{{user.get_username}}</strong> </h3>  
-        
-      <!--FIN  DEL LOGO CON ICONO -->
+<!--INICIO DEL LOGO CON ICONO -->
+<h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
+<img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
+
+{% if user.sexo == 'M' %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenido <strong>{{user.get_username}}</strong> </h3>  
+{% else %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenida <strong>{{user.get_username}}</strong> </h3>  
+{% endif %}
+
+<!--FIN  DEL LOGO CON ICONO -->
 
 
         <!--INICIO BOTONES-->
