@@ -1,5 +1,32 @@
 
 {% load static %}
+{% block head %}
+
+<style>
+  .custom-carousel-caption {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    height: 60%;
+  }
+
+  .custom-carousel-caption h1 {
+    font-size: 10rem;
+    font-weight: bold;
+    text-align: left;
+    text-shadow: 2px 2px 4px #000000;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .custom-carousel-caption h1 {
+      font-size: 2.5rem; /* Tamaño más pequeño para pantallas más pequeñas */
+    }
+  }
+</style>
+
+{% endblock head %}
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
@@ -12,11 +39,9 @@
      <!--Wrapper for slides-->
    <div class="carousel-inner">
        <div class="carousel-item active" >
-           <img src= "{% static 'img/carrousel2.jpg' %}"  class="d-block w-100" alt="">
-           <div class="carousel-caption">
-      
-           <h2>El futbol no se abandona</h2>
-           <h5>No dejes de jugar.</h5>
+           <img src= "{% static 'img/carrousel2.jpg' %}"  class="d-block w-100" alt="Primera imagen">
+           <div class="custom-carousel-caption carousel-caption d-none d-md-block">
+            <h1 style="font-size: 3rem; font-weight: bold;">TU PARTIDO.<br>TU CANCHA.<br>TUS REGLAS.</h1>
            </div>
        </div>
 

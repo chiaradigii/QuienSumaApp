@@ -10,44 +10,107 @@
 
 {% block head %} 
 <style>
-  pagination > li > a,
-.pagination > li > span {
-    color: #676b90; 
-}
-
-.pagination > .active > a,
-.pagination > .active > a:focus,
-.pagination > .active > a:hover,
-.pagination > .active > span,
-.pagination > .active > span:focus,
-.pagination > .active > span:hover {
-    background-color: #5f6bd2;
-    border-color:#1f2342;
-}
-.page-item.active .page-link {
-    z-index: 1;
-    color: #fff;
-    background-color: #5f6bd2; 
-    border-color: #5f6bd2;
-}
-
-  body{
-background:var(--bs-body-color);
-}
-  h1{
-    color:aliceblue;
+  .pagination > li > a, .
+  .pagination > li > span {
+  color: #676b90;
   }
-  table {
-  margin: 15px;
-  padding: 15px;
+  
+  .pagination > .active > a,
+  .pagination > .active > a:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > span,
+  .pagination > .active > span:focus,
+  .pagination > .active > span:hover {
+  background-color: #5f6bd2;
+  border-color: #1f2342;
+  }
+  .page-item.active .page-link {
+  z-index: 1;
+  color: #fff;
+  background-color: #5f6bd2;
+  border-color: #5f6bd2;
+  }
+
+body {
+background: #1c1c1c; 
+color: #e1e1e1;
+border: 1px solid #2a2a2;
 }
 
+.list-group-item {
+  align-items:
+  justify-content: space-between;
+  padding: 15px;
+  margin-bottom: 10px; 
+  background-color: #1c1c1c; 
+  color: #e1e1e1; /* Light text for list items */
+  border: none; 
+}
+.list-group-item + .list-group-item {
+  border-top: 1px solid #2a2a2a;
+  }
+
+ 
+.list-group-item-heading {
+    color: #aaa; / Lighter text color for headings */
+    }
+  
+.list-group-item small {
+      color: #ccc; /* Lighter text color for smaller text */
+      }
+
+.partido-list-item {
+  border: none;
+  padding: 0;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+.partido-list-item h5 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.partido-list-item a:hover {
+  color: #bbbbbb; /* Light grey for hover state */
+}
+.partido-list-item p {
+  margin: 0px 0;
+  color: #999999;
+}
+.partido-date {
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+.partido-cupos {
+  font-size: 0.8em;
+  display: inline-block; 
+  background: #28a745; 
+  color: #ffffff; 
+  padding: 5px 10px; 
+  border-radius: 15px;
+  margin-left: 10px;
+  text-decoration: none; 
+}
+
+.partido-cupos.full {
+  color: #dc3545; 
+  }
+
+.fecha-encabezado {
+    color: #fff; /* White color for the date header */
+    font-size: 1.5rem; /* Larger font size for visibility */
+    margin-bottom: 20px; /* Spacing below the header */
+  }
+
+  
 </style>
 {% endblock head %}
+
+
 {% block body %}
 <!--INICIO DEL HEADER -->
-<header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
-    <nav class="nav nav-masthead justify-content-center float-md-end">
+<header class="bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white shadow-5-strong">    <nav class="nav nav-masthead justify-content-center float-md-end">
 <!--INICIO DEL LOGO CON ICONO -->
 <h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
 <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
@@ -88,50 +151,118 @@ background:var(--bs-body-color);
 </header>
 <!--FIN DEL HEADER -->
 
+
+
 <!--INICIO DEL CONTENIDO-->
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center">Proximos partidos</h1>
-            <hr>
-        </div>
-    </div>
-    <div class="row">
-        {% for partido in partidos %}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">{{partido.nombre}}</h3>
-                </div>
-                <div class="card-body">
-                  {% if partido.is_today%}
-                    <p class="text-center">Hoy</p>
-                  {% elif partido.is_tomorrow %}
-                    <p class="text-center">Mañana</p>
-                  {% elif partido.is_this_week %}
-                    <p class="text-center">{{partido.get_day_of_week}}</p>
-                  {% else %}
-                    <p class="text-center">{{partido.get_day_of_week|date:"m/Y"}}</p>  
-                  {% endif %}
-                    <p class="text-center">Hora: {{partido.get_hora}}</p>  
-                    <p class="text-center">Lugar: {{partido.ubicacion}}</p>
-                    <p class="text-center">Cupos: {{partido.cupos_disponibles}}</p>
-                    <p class="text-center">Organizador: {{partido.creador}}</p>
-                    {% if not partido.jugadores  %}
-                      <p class="text-center">Jugadores: No hay jugadores inscriptos</p>
-                    {% else %}
-                      {% for j in partido.jugadores %}
-                      <p class="text-center">Jugadores: {{j}}</p>
-                      {% endfor %}
-                    {% endif %}
-                    <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="btn btn-primary btn-block">Ver más</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+<div class="container mt-4" style="margin-left: 20px;" >
+  <h1 class="text-center mb-4 fecha-encabezado">Próximos partidos</h1>
 
+<div class="column" style="margin-left: 20px;">
+    <!-- Partidos de hoy -->
+    {% if partidos_hoy %}
+    <div class="list-group">
+    <h2 class="fecha-encabezado"><strong>Hoy - </strong><small>{% now "D j M Y" %}</small></h2>
+    {% for partido in partidos_hoy %}
+    <div class="list-group-item partido-list-item">
+      <h5>
+        {{ partido.get_lugar }}
+        <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
+          {{ partido.cupos_disponibles }} spots
+        </a>
+      </h5>
+      <p>
+        <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
+        <span>{{ partido.ubicacion }}</span>
+      </p>
+      <p>
+        <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+        
+        <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+      </p>
+      {% endfor %}
+    </div>
+      {% endif %}
+      
+      <!-- Partidos de mañana -->
+      {% if partidos_manana %}
+    <div class="list-group">
+      <h2 class="fecha-encabezado">Mañana - <small>{{ partidos_manana.0.fecha_hora | date:"D j M Y" }}</small></h2>
+      {% for partido in partidos_manana %}
+      <div class="list-group-item partido-list-item">
+        <h5>
+          {{ partido.get_lugar }}
+          <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
+            {{ partido.cupos_disponibles }} spots
+          </a>
+        </h5>
+        <p>
+          <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
+          <span>{{ partido.ubicacion }}</span>
+        </p>
+        <p>
+          <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+          
+          <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+        </p>
+        {% endfor %}
+
+      </div>
+        {% endif %}
+    
+        
+        <!-- Partidos de esta semana -->
+        {% if partidos_semana %}
+    <div class="list-group">
+        <h2 class="fecha-encabezado">Esta semana</h2>
+        {% for partido in partidos_semana %}
+        <div class="list-group-item partido-list-item">
+          <h5>
+            {{ partido.get_lugar }}
+            <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
+              {{ partido.cupos_disponibles }} spots
+            </a>
+          </h5>
+          <p>
+            <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
+            <span>{{ partido.ubicacion }}</span>
+          </p>
+          <p>
+            <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+            
+            <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+          </p>
+          {% endfor %}
+          {% endif %}
+      </div>
+          <!-- Partidos restantes -->
+          {% for partido in partidos_otros %}
+            {% ifchanged partido.fecha_hora.date %}
+            <div class="list-group">
+              <br>
+            <h2 class="fecha-encabezado"> {{ partido.fecha_hora | date:"l, d F Y" }}</h2>
+              {% endifchanged %}
+            <div class="list-group-item partido-list-item">
+              <h5>
+                {{ partido.get_lugar }}
+                <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
+                  {{ partido.cupos_disponibles }} spots
+                </a>
+              </h5>
+              <p>
+                <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
+                <span>{{ partido.ubicacion }}</span>
+              </p>
+              <p>
+                <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+                
+                <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+              </p>    
+          {% endfor %}
+        </div>
+      </div>
+
+  </div>
     <!-- Paginacion -->
 <div class="pagination justify-content-center" >
   <!--Si esta paginado-->

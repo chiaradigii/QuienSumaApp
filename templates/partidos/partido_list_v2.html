@@ -1,0 +1,178 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block titulo %} 
+
+    Proximos partidos
+
+{% endblock titulo %}
+
+
+{% block head %} 
+<style>
+  pagination > li > a,
+.pagination > li > span {
+    color: #676b90; 
+}
+
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    background-color: #5f6bd2;
+    border-color:#1f2342;
+}
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #5f6bd2; 
+    border-color: #5f6bd2;
+}
+
+  body{
+background:var(--bs-body-color);
+}
+  h1{
+    color:aliceblue;
+  }
+  table {
+  margin: 15px;
+  padding: 15px;
+}
+
+</style>
+{% endblock head %}
+
+
+{% block body %}
+<!--INICIO DEL HEADER -->
+<header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
+    <nav class="nav nav-masthead justify-content-center float-md-end">
+<!--INICIO DEL LOGO CON ICONO -->
+<h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
+<img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
+
+{% if user.sexo == 'M' %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenido <strong>{{user.get_username}}</strong> </h3>  
+{% else %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenida <strong>{{user.get_username}}</strong> </h3>  
+{% endif %}
+
+<!--FIN  DEL LOGO CON ICONO -->
+
+
+        <!--INICIO BOTONES-->
+      <li class="nav-item col-xs-6 ">
+        
+        <!-- <button class="btn btn-dark  my-2 my-sm-0 " type="submit">Jugadores</button> -->
+        <a class="btn  rounded mx-1 btn-secondary" href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
+
+      </li> 
+      
+      <li class="nav-item">
+        <a class="btn mx-1 btn-secondary" href="{% url 'main_app:pagina_principal' %}">Inicio</a>
+
+      </li>           
+       <li class="nav-item"> 
+        <a class="btn mx-1 btn-secondary" href="{% url 'logout' %}">Cerrar sesión</a>
+      </li>
+    </li>           
+    <li class="nav-item"> 
+     <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
+    </li>
+    <li class="nav-item"> 
+        <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:crear_partido' %}">Crear partidos</a>
+       </li>
+       <!--FIN BOTONES-->
+    </nav>
+</header>
+<!--FIN DEL HEADER -->
+
+
+
+<!--INICIO DEL CONTENIDO-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Proximos partidos</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        {% for partido in partidos %}
+      <!-- Tarjeta de Partido -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h3 class="text-center">{{ partido.nombre }}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-center"><strong>Fecha:</strong>
+                  {% if partido.is_today %}
+                  Hoy
+                  {% elif partido.is_tomorrow %}
+                  Mañana
+                  {% elif partido.is_this_week %}
+                  {{ partido.get_day_of_week }}
+                  {% else %}
+                  {{ partido.get_day_of_week | date:"m/Y" }}
+                  {% endif %}</p>
+                  
+                  <p class="text-center"><strong>Hora:</strong> {{ partido.get_hora }}</p>
+                  <p class="text-center"><strong>Lugar:</strong> {{ partido.ubicacion }}</p>
+                  <p class="text-center"><strong>Cupos:</strong> {{ partido.cupos_disponibles }}</p>
+                  <p class="text-center"><strong>Organizador:</strong> {{ partido.creador }}</p>
+                  {% if not partido.jugadores %}
+                      <p class="text-center">Jugadores: No hay jugadores inscriptos</p>
+                  {% else %}
+                      <p class="text-center"><strong>Jugadores:</strong></p>
+                      <ul>
+                      {% for j in partido.jugadores.all %}
+                          <li>{{ j }}</li>
+                      {% endfor %}
+                      </ul>
+                  {% endif %}
+                  <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="btn btn-secondary btn-block">Ver más</a>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Fin Tarjeta de Partido -->
+        {% endfor %}
+    </div>
+
+    <!-- Paginacion -->
+<div class="pagination justify-content-center" >
+  <!--Si esta paginado-->
+  {% if is_paginated %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          
+          <!--page_obj hace referencia al obj que crea la paginacion
+          Si hay una pagina previa, mostrame el simbolo para ir para atras
+          sino mostramelo disabled-->
+               
+            <!--page_range tiene el num de paginas-->
+          {% for pagina in paginator.page_range  %}
+
+            {% if pagina == page_obj.number  %} 
+            <li class="page-item active"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+
+  {% endif %}
+    
+</div>
+ <!-- Fin de Paginacion -->
+
+
+{% endblock body %}
+
+

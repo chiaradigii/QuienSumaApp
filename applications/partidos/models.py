@@ -31,7 +31,12 @@ class Partido(models.Model):
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.SET_NULL, null=True, blank=True)
     posiciones = models.ForeignKey(PosicionCupo, on_delete=models.CASCADE,null=True, blank=True)
     jugadores = models.ManyToManyField(Jugador, through='PartidoJugador')
-   
+    gender = models.CharField(max_length=1, choices=(('M', 'Masculino'), ('F', 'Femenino'),('U', 'Mixto')), default='U')
+    def get_lugar(self):
+        ubicacion_parts = self.ubicacion.direccion.split(',')
+        return ubicacion_parts[0].strip()
+        
+
     def is_today(self):
         return self.fecha_hora.date() == timezone.now().date()
     

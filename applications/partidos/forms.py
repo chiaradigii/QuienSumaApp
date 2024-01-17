@@ -25,6 +25,18 @@ class PartidoForm(forms.ModelForm):
         format='%d-%m-%Y %H:%M'  
     )
 )
+    GENDER_CHOICES = ( 
+        ("M", "Masculino"), 
+        ("F", "Femenino"), 
+        ("U", "Mixto"), 
+    )
+    gender = forms.ChoiceField(
+        label='Gendero',
+        choices=GENDER_CHOICES,
+        widget=forms.RadioSelect,
+        initial='U',
+    )
+
     direccion = forms.CharField(
         label='Dirección',
         required=False,
@@ -37,7 +49,7 @@ class PartidoForm(forms.ModelForm):
     )
     class Meta:
         model = Partido
-        fields = ['tipo_futbol', 'fecha_hora', 'direccion', 'arqueros', 'defensas', 'medios', 'delanteros']
+        fields = ['tipo_futbol','gender','fecha_hora', 'direccion', 'arqueros', 'defensas', 'medios', 'delanteros']
         exclude = ('ubicacion','creador','geolocation')
 
     def clean_fecha_hora(self):

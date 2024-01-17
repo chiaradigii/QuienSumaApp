@@ -5,7 +5,7 @@ from .models import Partido, PosicionCupo
 from ..ubicaciones.models import Ubicacion
 from .forms import PartidoForm
 from django.views.generic import CreateView, ListView, DetailView
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -27,6 +27,7 @@ class PartidoCreateView(CreateView):
         ])
         fecha_hora = cleaned_data.get('fecha_hora')
         tipo_futbol=cleaned_data.get('tipo_futbol')
+        gender=cleaned_data.get('gender') 
         ubicacion, _ = Ubicacion.objects.get_or_create(direccion=direccion)
 
         partido = form.save(commit=False)
@@ -35,6 +36,7 @@ class PartidoCreateView(CreateView):
         partido.creador = self.request.user
         partido.ubicacion = ubicacion
         partido.cupos_disponibles = cupos
+        partido.gender = gender
         partido.save()
         posiciones = self.crear_posiciones_cupo(partido, cleaned_data)
         partido.posiciones = posiciones
@@ -76,6 +78,21 @@ class PartidoListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(PartidoListView,self).get_context_data(**kwargs)
         context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+        partidos = Partido.objects.all().order_by('-fecha_hora')
+        hoy = datetime.now(timezone.utc).date()
+        context['partidos_hoy'] = partidos.filter(fecha_hora__date=hoy)
+        context['partidos_manana'] = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
+        context['partidos_semana'] = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
+        context['partidos_otros'] = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7))).order_by('-fecha_hora')
+        context['partidos'] = [
+            {
+                'partido': partido,
+                'jugadores': partido.jugadores.all()  # get queryset iterable
+            }
+            for
+             partido in context['partidos']
+        ]
+        
         return context
 
 class PartidoDetailView(LoginRequiredMixin,DetailView):
