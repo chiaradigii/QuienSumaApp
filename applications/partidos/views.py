@@ -8,6 +8,7 @@ from django.views.generic import CreateView, ListView, DetailView
 from datetime import datetime, timedelta, timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.paginator import Paginator
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -15,7 +16,7 @@ class PartidoCreateView(CreateView):
     form_class = PartidoForm
     template_name = 'partidos/partido_form.html'
     success_url= reverse_lazy('partidos_app:listar_partidos')
-
+    
     def form_valid(self, form):     
         cleaned_data = form.cleaned_data
         direccion = cleaned_data.get('direccion')
@@ -74,6 +75,7 @@ class PartidoListView(ListView):
     context_object_name = 'partidos'
     paginate_by = 10
     ordering = ['-fecha_hora']
+    paginate_by = 10
     
     def get_context_data(self, **kwargs):
         context = super(PartidoListView,self).get_context_data(**kwargs)
@@ -84,20 +86,26 @@ class PartidoListView(ListView):
         context['partidos_manana'] = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
         context['partidos_semana'] = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
         context['partidos_otros'] = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7))).order_by('-fecha_hora')
-        context['partidos'] = [
-            {
-                'partido': partido,
-                'jugadores': partido.jugadores.all()  # get queryset iterable
-            }
-            for
-             partido in context['partidos']
-        ]
+
         
         return context
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        date_filter = self.request.GET.get('date_filter')
+
+        if date_filter:
+            try:
+                filter_date = datetime.strptime(date_filter, '%Y-%m-%d').date()
+                queryset = queryset.filter(fecha_hora__date=filter_date)
+            except ValueError:
+                pass
+        return queryset
 
 class PartidoDetailView(LoginRequiredMixin,DetailView):
     template_name = 'partidos/detalle_partido.html'
     model = Partido
+
     context_object_name = "partido"
     def get_context_data(self, **kwargs):
         context = super(PartidoDetailView, self).get_context_data(**kwargs)

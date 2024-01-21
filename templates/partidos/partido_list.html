@@ -38,10 +38,10 @@ border: 1px solid #2a2a2;
 }
 
 .list-group-item {
-  align-items:
+  align-items: left;
   justify-content: space-between;
   padding: 15px;
-  margin-bottom: 10px; 
+  margin-top: 10px;
   background-color: #1c1c1c; 
   color: #e1e1e1; /* Light text for list items */
   border: none; 
@@ -71,7 +71,7 @@ border: 1px solid #2a2a2;
   font-size: 1.25rem;
 }
 .partido-list-item a:hover {
-  color: #bbbbbb; /* Light grey for hover state */
+  color: #bbbbbb; 
 }
 .partido-list-item p {
   margin: 0px 0;
@@ -155,67 +155,48 @@ border: 1px solid #2a2a2;
 
 <!--INICIO DEL CONTENIDO-->
 
+
 <div class="container mt-4" style="margin-left: 20px;" >
   <h1 class="text-center mb-4 fecha-encabezado">Próximos partidos</h1>
+     
+  <!--filter dropdown-->
+<!-- Date Filter  -->
+<!-- Filter Modal Button -->
+<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
+  Filtrar por fecha
+</button>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filterModalLabel" style="color: black;">Filtrar por fecha</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <!-- Date Filter Form -->
+      <form id="filterForm" method="GET" action="{% url 'partidos_app:listar_partidos' %}">
+        <input type="date" id="dateFilter" name="date_filter" value="{{ request.GET.date_filter }}" min="2023-01-01">
+        <button type="button" onclick="submitFilter()">Filter by Date</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="clearFilter()">Clear Filter</button>
+        <button type="button" class="btn btn-primary" onclick="submitFilter()">Apply Filter</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="column" style="margin-left: 20px;">
-    <!-- Partidos de hoy -->
-    {% if partidos_hoy %}
-    <div class="list-group">
-    <h2 class="fecha-encabezado"><strong>Hoy - </strong><small>{% now "D j M Y" %}</small></h2>
-    {% for partido in partidos_hoy %}
-    <div class="list-group-item partido-list-item">
-      <h5>
-        {{ partido.get_lugar }}
-        <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
-          {{ partido.cupos_disponibles }} spots
-        </a>
-      </h5>
-      <p>
-        <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
-        <span>{{ partido.ubicacion }}</span>
-      </p>
-      <p>
-        <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
-        
-        <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
-      </p>
-      {% endfor %}
-    </div>
-      {% endif %}
-      
-      <!-- Partidos de mañana -->
-      {% if partidos_manana %}
-    <div class="list-group">
-      <h2 class="fecha-encabezado">Mañana - <small>{{ partidos_manana.0.fecha_hora | date:"D j M Y" }}</small></h2>
-      {% for partido in partidos_manana %}
-      <div class="list-group-item partido-list-item">
-        <h5>
-          {{ partido.get_lugar }}
-          <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
-            {{ partido.cupos_disponibles }} spots
-          </a>
-        </h5>
-        <p>
-          <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
-          <span>{{ partido.ubicacion }}</span>
-        </p>
-        <p>
-          <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
-          
-          <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
-        </p>
-        {% endfor %}
-
-      </div>
-        {% endif %}
-    
-        
-        <!-- Partidos de esta semana -->
-        {% if partidos_semana %}
-    <div class="list-group">
-        <h2 class="fecha-encabezado">Esta semana</h2>
-        {% for partido in partidos_semana %}
+    {% for partido in partidos %}
+      {% ifchanged partido.fecha_hora.date %}
+      <div class="list-group">
+          <br>
+        <h2 class="fecha-encabezado"> {{ partido.fecha_hora | date:"l, d F Y" }}</h2>
+          {% endifchanged %}
         <div class="list-group-item partido-list-item">
           <h5>
             {{ partido.get_lugar }}
@@ -231,68 +212,54 @@ border: 1px solid #2a2a2;
             <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
             
             <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
-          </p>
-          {% endfor %}
-          {% endif %}
-      </div>
-          <!-- Partidos restantes -->
-          {% for partido in partidos_otros %}
-            {% ifchanged partido.fecha_hora.date %}
-            <div class="list-group">
-              <br>
-            <h2 class="fecha-encabezado"> {{ partido.fecha_hora | date:"l, d F Y" }}</h2>
-              {% endifchanged %}
-            <div class="list-group-item partido-list-item">
-              <h5>
-                {{ partido.get_lugar }}
-                <a href="{% url 'partidos_app:detalle_partido' partido.id %}" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}">
-                  {{ partido.cupos_disponibles }} spots
-                </a>
-              </h5>
-              <p>
-                <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
-                <span>{{ partido.ubicacion }}</span>
-              </p>
-              <p>
-                <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
-                
-                <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
-              </p>    
-          {% endfor %}
-        </div>
-      </div>
-
+          </p> 
+        {% empty %}
+            <p>No matches found for the selected date.</p>
+      {% endfor %}
   </div>
+</div>
     <!-- Paginacion -->
 <div class="pagination justify-content-center" >
   <!--Si esta paginado-->
-  {% if is_paginated %}
+  <div class="pagination justify-content-center">
+    {% if is_paginated %}
       <nav aria-label="Page navigation example">
         <ul class="pagination">
-          
-          <!--page_obj hace referencia al obj que crea la paginacion
-          Si hay una pagina previa, mostrame el simbolo para ir para atras
-          sino mostramelo disabled-->
-               
-            <!--page_range tiene el num de paginas-->
-          {% for pagina in paginator.page_range  %}
-
-            {% if pagina == page_obj.number  %} 
-            <li class="page-item active"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+          {% for pagina in paginator.page_range %}
+            {% if pagina == page_obj.number %}
+              <li class="page-item active"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
             {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
       </nav>
-    </div>
-
-  {% endif %}
-    
-</div>
+    {% endif %}
+  </div>
  <!-- Fin de Paginacion -->
 
 
 {% endblock body %}
 
 
+{% block scripts %}
+{{ block.super }}
+
+<script>
+  function submitFilter() {
+    $('#filterForm').submit();
+  }
+
+  function clearFilter() {
+    $('#dateFilter').val(''); // Clear the date filter input
+    submitFilter(); // Submit the form without a date filter
+  }
+  
+  $(function () {
+    $('#dateFilter').datetimepicker({
+      format: 'DD-MM-YYYY'  
+    });
+  });
+</script>
+
+{% endblock scripts %}
