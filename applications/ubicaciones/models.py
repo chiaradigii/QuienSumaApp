@@ -6,10 +6,11 @@ from .utils import obtener_geolocalizacion
 from geopy.exc import GeocoderQueryError
 
 class Ubicacion(models.Model):
-    direccion = models.CharField(max_length=200)
-    geolocation = map_fields.GeoLocationField(max_length=100, default="-74.806981,10.987807")
+    direccion = map_fields.AddressField(max_length=200)
+    geolocation = map_fields.GeoLocationField(max_length=100)
 
     def save(self, *args, **kwargs):
+        # Si no hay geolocalización o la dirección ha cambiado
         if not self.geolocation:
             geolocation = obtener_geolocalizacion(self.direccion)
             if geolocation:

@@ -158,7 +158,11 @@ border: 1px solid #2a2a2;
 
 <div class="container mt-4" style="margin-left: 20px;" >
   <h1 class="text-center mb-4 fecha-encabezado">Próximos partidos</h1>
-     
+  
+  <!-- Botón para mostrar/ocultar el mapa y contenedor del mapa -->
+  <button type="button" class="btn btn-primary" onclick="toggleMap()">Mostrar en Mapa</button>
+  <div id="map" style="height: 400px; display: none;"></div>
+
   <!--filter form-->
 <!-- Date Filter  -->
 <!-- Filter Modal Button -->
@@ -231,7 +235,7 @@ border: 1px solid #2a2a2;
             <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
           </p> 
         {% empty %}
-            <p>No matches found for the selected date.</p>
+           <br> <p>No se encontraron partidos.</p>
       {% endfor %}
   </div>
 </div>
@@ -262,6 +266,24 @@ border: 1px solid #2a2a2;
 {% block scripts %}
 {{ block.super }}
 
+<!-- Google Maps API -->
+<!-- script for Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+
+
+</script><script type="text/javascript">
+  $(document).ready(function () {
+    $('#id_fecha_hora').datetimepicker({
+      format: 'DD-MM-YYYY HH:mm', 
+      sideBySide: true
+    });
+
+    $('#id_fecha_hora').on('dp.change', function(e) {
+      $('[name="fecha_hora"]').val(e.date.format('DD-MM-YYYY HH:mm'));
+    });
+  });
+</script>
+
 <script>
   function submitFilter() {
     $('#filterForm').submit();
@@ -278,5 +300,37 @@ border: 1px solid #2a2a2;
     });
   });
 </script>
+<script>
+    let map;
+    let markers = [];
 
+    function toggleMap() {
+        var mapContainer = document.getElementById('map');
+        mapContainer.style.display = mapContainer.style.display === 'none' ? 'block' : 'none';
+        if (mapContainer.style.display === 'block' && !map) {
+            initMap();
+        }
+    }
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 40.416775, lng: -3.703790},
+            zoom: 15
+        });
+
+        // Agregar marcadores para cada partido
+        {% for partido in partidos_con_ubicacion %}
+            addMarker({lat: {{ partido.lat }}, lng: {{ partido.lng }}}, "{{ partido.nombre }}");
+        {% endfor %}
+    }
+
+    function addMarker(location, title) {
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: title
+        });
+        markers.push(marker);
+    }
+</script>
 {% endblock scripts %}

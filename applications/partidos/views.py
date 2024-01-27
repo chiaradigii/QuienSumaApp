@@ -87,7 +87,20 @@ class PartidoListView(ListView):
         context['partidos_semana'] = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
         context['partidos_otros'] = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7))).order_by('-fecha_hora')
 
-        
+        # Agregar información geográfica
+        partidos_con_ubicacion = []
+        for partido in context['partidos']:
+            if partido.ubicacion and partido.ubicacion.geolocation:
+                geolocation = partido.ubicacion.geolocation
+                partidos_con_ubicacion.append({
+                    'id': partido.id,
+                    'nombre': str(partido),
+                    'lat': geolocation.lat,
+                    'lng': geolocation.lon,
+                })
+        context['partidos_con_ubicacion'] = partidos_con_ubicacion
+ 
+ 
         return context
     
     def get_queryset(self):
