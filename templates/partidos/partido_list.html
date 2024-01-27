@@ -159,11 +159,11 @@ border: 1px solid #2a2a2;
 <div class="container mt-4" style="margin-left: 20px;" >
   <h1 class="text-center mb-4 fecha-encabezado">Próximos partidos</h1>
      
-  <!--filter dropdown-->
+  <!--filter form-->
 <!-- Date Filter  -->
 <!-- Filter Modal Button -->
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
-  Filtrar por fecha
+  Filtrar
 </button>
 
 <!-- Filter Modal -->
@@ -171,20 +171,37 @@ border: 1px solid #2a2a2;
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="filterModalLabel" style="color: black;">Filtrar por fecha</h5>
+        <h5 class="modal-title" id="filterModalLabel" style="color: black;">Filtrar por fecha y género</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <!-- Date Filter Form -->
-      <form id="filterForm" method="GET" action="{% url 'partidos_app:listar_partidos' %}">
-        <input type="date" id="dateFilter" name="date_filter" value="{{ request.GET.date_filter }}" min="2023-01-01">
-        <button type="button" onclick="submitFilter()">Filter by Date</button>
-      </form>
+        <!--  Filter Form -->
+        <form id="filterForm" method="GET" action="{% url 'partidos_app:listar_partidos' %}">
+
+          <!-- Gender Filter Radio Buttons -->
+          <div>
+              <input type="radio" id="genderMixto" name="gender" value="U">
+              <label style="color: black;" for="genderMixto">Mixto</label>
+          </div>
+          <div>
+              <input type="radio" id="genderMasculino" name="gender" value="M">
+              <label style="color: black;" for="genderMasculino">Masculino</label>
+          </div>
+          <div>
+              <input type="radio" id="genderFemenino" name="gender" value="F">
+              <label style="color: black;" for="genderFemenino">Femenino</label>
+          </div>
+
+          <!-- Date Filter Input -->
+          <input type="date" id="dateFilter" name="date_filter" value="{{ request.GET.date_filter }}" min="2023-01-01">
+          <button type="button" onclick="submitFilter()">Filtrar fecha</button>
+        
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" onclick="clearFilter()">Clear Filter</button>
-        <button type="button" class="btn btn-primary" onclick="submitFilter()">Apply Filter</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" onclick="clearFilter()">Borrar filtro</button>
+        <button type="button" class="btn btn-primary" onclick="submitFilter()">Aplicar</button>
       </div>
     </div>
   </div>
