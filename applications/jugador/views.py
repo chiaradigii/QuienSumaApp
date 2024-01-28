@@ -66,7 +66,7 @@ class SignUpView(FormView):
         return context
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             return self.form_valid(form)
         else:
@@ -115,8 +115,8 @@ class JugadorListView(LoginRequiredMixin,ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        lista = Jugador.objects.all().order_by('nombre')
-        return lista
+        users = Jugador.objects.exclude(is_superuser=True)
+        return users
 
 class SuccessSignUpView(TemplateView):
     template_name = 'registration/success_signup.html'    
