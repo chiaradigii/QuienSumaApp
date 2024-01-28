@@ -320,16 +320,20 @@ border: 1px solid #2a2a2;
 
         // Agregar marcadores para cada partido
         {% for partido in partidos_con_ubicacion %}
-            addMarker({lat: {{ partido.lat }}, lng: {{ partido.lng }}}, "{{ partido.nombre }}");
+        addMarker({lat: {{ partido.lat }}, lng: {{ partido.lng }}}, "{{ partido.nombre }}", {{ partido.id }});
         {% endfor %}
     }
 
-    function addMarker(location, title) {
+    function addMarker(location, title, partidoId) {
         const marker = new google.maps.Marker({
             position: location,
             map: map,
             title: title
         });
+            // click event on marker
+        marker.addListener('click', function() {
+          window.location.href = '/detalle-partido/' + partidoId; 
+      });
         markers.push(marker);
     }
 </script>
