@@ -1,8 +1,66 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
-{% block title %}Detalle del Partido{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/estilo_partido_detalle.css' %}">
+<style>
+    .partido-container {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        margin: 0;
+        padding: 0;
+    }
 
+    .foto-portada {
+        width: 60%;
+        height: 100vh;
+        background: url("{% static 'img/background-photo.jpg' %}") no-repeat center center;
+        background-size: cover;
+        position: relative;
+    }
 
+    .informacion-partido {
+        width: 40%;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
 
+    .informacion-partido h2,
+    .informacion-partido h3,
+    .informacion-partido h4 {
+        margin-bottom: 20px;
+    }
+
+    .info-title {
+        text-transform: uppercase;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .info-content {
+        color: #555;
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="partido-container">
+    <div class="foto-portada"></div>
+    <div class="informacion-partido">
+        <h2 class="info-title">Fecha:</h2>
+        <h3 class="info-content">{{ object.fecha_hora | date:"d M, Y" }}</h3>
+        <h2 class="info-title">Lugar:</h2>
+        <h3 class="info-content">{{ object.get_lugar }}</h3>
+        <h2 class="info-title">Cantidad de jugadores:</h2>
+        <h3 class="info-content">{{ object.tipo_futbol }}v{{ object.tipo_futbol }}</h3>
+        <h2 class="info-title">Cupos Disponibles:</h2>
+        <h3 class="info-content">{{ object.cupos_disponibles }}</h3>
+        <h2 class="info-title">Género:</h2>
+        <h3 class="info-content">{{ object.get_gender_display }}</h3>
+    </div>
+</div>
+{% endblock body %}
