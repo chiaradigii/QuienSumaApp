@@ -4,6 +4,28 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/estilo_partido_detalle.css' %}">
 <style>
+    .btn-back {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        transition: background-color 0.3s ease; 
+    }
+    
+    .btn-back:hover {
+        background-color: #e2e6ea; 
+    }
+    
+    .container {
+        position: relative;
+    }
+    
     .partido-container {
         display: flex;
         width: 100%;
@@ -49,6 +71,7 @@
 
 {% block body %}
 <div class="partido-container">
+    <button onclick="history.back()" class="btn-back">Volver</button>
     <div class="foto-portada"></div>
     <div class="informacion-partido">
         <h2 class="info-title">Fecha:</h2>
