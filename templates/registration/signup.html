@@ -210,11 +210,20 @@ form i {
 
 <!-- Script for the autocompletion function -->
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initAutocomplete();
+    });
+  
     function initAutocomplete() {
-        var input = document.getElementById('id_direccion');
+      var input = document.getElementById('id_direccion');
+      if (input && input.tagName === 'INPUT') {
         var autocomplete = new google.maps.places.Autocomplete(input);
+      } else {
+        console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
+      }
     }
-</script>
+  </script>
+  
 
 <script type="text/javascript">
     $(function () {
