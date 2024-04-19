@@ -332,16 +332,20 @@ border: 1px solid #2a2a2;
     }
 
     function addMarker(location, title, partidoId) {
-        const marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            title: title
-        });
-            // click event on marker
+      console.log("Adding marker:", location, title, partidoId);
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: title
+      });
+      var infowindow = new google.maps.InfoWindow({
+        content: title
+       });
         marker.addListener('click', function() {
           window.location.href = '/detalle-partido/' + partidoId; 
       });
         markers.push(marker);
+        map.setCenter(location); 
     }
 </script>
 
