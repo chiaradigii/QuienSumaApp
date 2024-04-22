@@ -250,7 +250,7 @@ border: 1px solid #2a2a2;
             {% if pagina == page_obj.number %}
               <li class="page-item active"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
             {% else %}
-              <li class="page-item"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET. }}">{{ pagina }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -292,12 +292,14 @@ border: 1px solid #2a2a2;
 
 <script>
   function submitFilter() {
+    console.log("Submitting form with current filters");
     $('#filterForm').submit();
   }
 
   function clearFilter() {
-    $('#dateFilter').val(''); // Clear the date filter input
-    submitFilter(); // Submit the form without a date filter
+    $('#dateFilter').val(''); 
+    $('input[name="gender"]').prop('checked', false); // Uncheck all gender radio buttons
+    submitFilter(); // Submit the form without filter
   }
   
   $(function () {

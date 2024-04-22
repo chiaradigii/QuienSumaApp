@@ -106,6 +106,7 @@ class PartidoListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         date_filter = self.request.GET.get('date_filter')
+        gender_filter = self.request.GET.get('gender')
 
         if date_filter:
             try:
@@ -113,6 +114,10 @@ class PartidoListView(ListView):
                 queryset = queryset.filter(fecha_hora__date=filter_date)
             except ValueError:
                 pass
+        
+        if gender_filter:  
+            queryset = queryset.filter(gender=gender_filter)
+
         return queryset
 
 class PartidoDetailView(LoginRequiredMixin,DetailView):
