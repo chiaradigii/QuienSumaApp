@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/estilo_partido_detalle.css' %}">
 <style>
     .btn-back {
         position: absolute;
@@ -84,6 +83,41 @@
         <h3 class="info-content">{{ object.cupos_disponibles }}</h3>
         <h2 class="info-title">Género:</h2>
         <h3 class="info-content">{{ object.get_gender_display }}</h3>
+        <form action="{% url 'partidos_app:unirse_partido' partido_id=object.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit"  data-bs-toggle="#solicitudExitosaModal" class="btn btn-primary">Unirse</button>
+        </form>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock body %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    $(document).ready(function(){
+        {% if messages %}
+        $('#messageModal').modal('show');
+        {% endif %}
+    });
+    </script>
+{% endblock scripts %}

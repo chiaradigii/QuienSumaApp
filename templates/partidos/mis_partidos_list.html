@@ -1,0 +1,92 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    .btn-back {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        transition: background-color 0.3s ease; 
+    }
+    
+    .btn-back:hover {
+        background-color: #e2e6ea; 
+    }
+    
+    .container {
+        position: relative;
+    }
+    
+    .partido-container {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        margin: 0;
+        padding: 0;
+    }
+
+    .foto-portada {
+        width: 60%;
+        height: 100vh;
+        background: url("{% static 'img/background-photo.jpg' %}") no-repeat center center;
+        background-size: cover;
+        position: relative;
+    }
+
+    .informacion-partido {
+        width: 40%;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    .informacion-partido h2,
+    .informacion-partido h3,
+    .informacion-partido h4 {
+        margin-bottom: 20px;
+    }
+
+    .info-title {
+        text-transform: uppercase;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .info-content {
+        color: #555;
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="partido-container">
+    <button onclick="history.back()" class="btn-back">Volver</button>
+    <div class="foto-portada"></div>
+    <h1>Mis Partidos</h1>
+    <ul>
+        {% for partido in mis_partidos %}
+        <li>
+            {{ partido.tipo_futbol }} - {{ partido.get_lugar }} - {{ partido.fecha_hora|date:"d M Y H:i" }}
+            <br>
+            Cupos disponibles: {{ partido.cupos_disponibles }}
+            <br>
+            Solicitudes pendientes: {{ partido.solicitudes_pendientes }}
+            <br>
+            <a href="{% url 'partidos_app:mi_partido' partido.id %}">Ver Detalles</a>
+        </li>
+        {% empty %}
+        <p>No has organizado partidos.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock body %}

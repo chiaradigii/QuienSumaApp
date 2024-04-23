@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body %}
+<h1>{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
+<p>Fecha y hora: {{ partido.fecha_hora|date:"d M Y H:i" }}</p>
+<h2>Solicitudes Pendientes</h2>
+<ul>
+    {% for solicitud in solicitudes %}
+    <li>{{ solicitud.solicitante.username }} - <a href="{% url 'jugadores:profile' solicitud.solicitante.id %}">Perfil</a>
+        <form action="{% url 'partidos_app:aceptar_solicitud' solicitud.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Aceptar</button>
+        </form>
+        <form action="{% url 'partidos_app:rechazar_solicitud' solicitud.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Rechazar</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<h2>Jugadores Confirmados</h2>
+<ul>
+{% endblock body %}
