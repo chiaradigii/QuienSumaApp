@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load dict_filter %}
 
 {% block titulo %} 
 
@@ -10,20 +11,49 @@
 
 {% block head %} 
 <style>
+  .player-profile {
+    text-align: center;
+    margin-bottom: 20px; /* Space below each player profile */
+  }
+  .player-profile img {
+    width: 70px;
+    height: 70px; 
+    border-radius: 50%; 
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .player-name {
+    color: white; 
+    font-size: 0.9em;
+    text-align: center; 
+  }
+  
+
   .partido-row {
     display: flex;
     justify-content: space-between;
-}
+    align-items: flex-start;
+  }
+  
+  .partido-details {
+    flex: 3; 
+  }
+  
+  .partido-players {
+    margin-right: 30px; 
+    padding-right: 0; 
 
-.partido-details {
-    flex: 1;
-    /* Your styles for partido details */
-}
-
-.partido-players {
-    flex: 1;
-    /* Your styles for player profiles */
-}
+  }
+  
+  .jugadores-inscritos-heading {
+    font-size: 1em; 
+    color: white; 
+    text-align: right; 
+    margin-right: 30px; 
+    padding-bottom: 10px;
+  }
+  
   .pagination > li > a, .
   .pagination > li > span {
   color: #676b90;
@@ -238,57 +268,76 @@ border: 1px solid #2a2a2;
       <div class="match-player-container">
         <!-- Match Details -->
         <div class="list-group-item partido-list-item">
-          <h5>
-            {{ partido.get_lugar }}
-            <!-- Botón que activa el modal -->
-            <button type="button"  class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}" data-bs-toggle="modal" data-bs-target="#partidoModal{{ partido.id }}">
-              {{ partido.cupos_disponibles }} spots
-            </button>
-            <div class="modal fade" id="partidoModal{{ partido.id }}" tabindex="-1" aria-labelledby="partidoModalLabel{{ partido.id }}" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content" style="background-color: #f9f9f9;">
-                  <div class="modal-header">
-                    <p class="modal-title" style="color: black;">Envia una solicitud para unirte</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body" style="color: black; font-size: 1.2rem; padding: 20px;"> 
-                    <p>Fecha y hora: {{ partido.fecha_hora | date:"d M, Y H:i" }}</p>
-                    <p>Lugar: {{ partido.get_lugar }}</p>
-                    <p>Lugares Disponibles: {{ partido.cupos_disponibles }}</p>
-                    <hr>
-                    <ul>
-                      {% for partido_data in partidos_con_cupos %}
-                      {% if partido_data.partido.id == partido.id %}
-                          {% for posicion in partido_data.posiciones %}
-                          {% if posicion.cupos_disponibles > 0 %}
-                          <li style="display: flex; align-items: center;">
-                            <span style="margin-right: 10px;">{{ posicion.posicion }}: {{ posicion.cupos_disponibles }} disponibles</span>
-                            <!-- Formulario para unirse al partido -->
-                            <form action="{% url 'partidos_app:unirse_partido' partido_id=partido.id %}" method="post">
-                                {% csrf_token %}                 
-                                <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px;">Unirse</button>
-                            </form>
-                         </li>
+          <div class="partido-row" style="align-items: center;">
+           
+            <div class="partido-details">
+              <h5>
+                {{ partido.get_lugar }}
+                <!-- Botón que activa el modal -->
+                <button type="button"  class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}" data-bs-toggle="modal" data-bs-target="#partidoModal{{ partido.id }}">
+                  {{ partido.cupos_disponibles }} spots
+                </button>
+                <div class="modal fade" id="partidoModal{{ partido.id }}" tabindex="-1" aria-labelledby="partidoModalLabel{{ partido.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content" style="background-color: #f9f9f9;">
+                      <div class="modal-header">
+                        <p class="modal-title" style="color: black;">Envia una solicitud para unirte</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body" style="color: black; font-size: 1.2rem; padding: 20px;"> 
+                        <p>Fecha y hora: {{ partido.fecha_hora | date:"d M, Y H:i" }}</p>
+                        <p>Lugar: {{ partido.get_lugar }}</p>
+                        <p>Lugares Disponibles: {{ partido.cupos_disponibles }}</p>
+                        <hr>
+                        <ul>
+                          {% for partido_data in partidos_con_cupos %}
+                          {% if partido_data.partido.id == partido.id %}
+                              {% for posicion in partido_data.posiciones %}
+                              {% if posicion.cupos_disponibles > 0 %}
+                              <li style="display: flex; align-items: center;">
+                                <span style="margin-right: 10px;">{{ posicion.posicion }}: {{ posicion.cupos_disponibles }} disponibles</span>
+                                <!-- Formulario para unirse al partido -->
+                                <form action="{% url 'partidos_app:unirse_partido' partido_id=partido.id %}" method="post">
+                                    {% csrf_token %}                 
+                                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px;">Unirse</button>
+                                </form>
+                            </li>
+                              {% endif %}
+                              {% endfor %}
                           {% endif %}
-                          {% endfor %}
-                      {% endif %}
-                  {% endfor %}
-                  </ul>
-                  
-                  </div>         
-          </h5>
-          <p>
-            <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
-            <span>{{ partido.ubicacion }}</span>
-          </p>
-          <p>
-            <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
-            
-            <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
-          </p> 
+                      {% endfor %}
+                      </ul>
+                      
+                      </div>         
+              </h5>
+              <p>
+                <strong>{{ partido.fecha_hora | date:"H:i" }}</strong>
+                <span>{{ partido.ubicacion }}</span>
+              </p>
+              <p>
+                <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+                
+                <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+              </p> 
+            </div>
+            <div class="partido-players">
+              <div class="jugadores-inscritos-heading">Jugadores inscriptos</div>
+              {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
+                <div class="player-profile">
+                  <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
+                  <a href="{% url 'jugador_app:detalle_jugador' partido_jugador.jugador.id %}">
+                    <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
         {% empty %}
         <p>No hay partidos disponibles</p>
-        {% endfor %}
+       </div>
+
+      </div>
+  {% endfor %}
 
     <!-- Paginacion -->
 <div class="pagination justify-content-center" >

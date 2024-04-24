@@ -110,15 +110,12 @@ class PartidoListView(ListView):
                     'lng': geolocation.lon,
                 })
         context['partidos_con_ubicacion'] = partidos_con_ubicacion
-        
-        partidos_con_jugadores = []
+
+        partidos_con_jugadores = {}
         for partido in Partido.objects.all():
             jugadores = partido.partidojugador_set.all()
-            partidos_con_jugadores.append({
-                'partido': partido,
-                'jugadores': jugadores,
-            })
-
+            # Dictionary where partido id is the key
+            partidos_con_jugadores[partido.id] = jugadores
         context['partidos_con_jugadores'] = partidos_con_jugadores
         return context
     
