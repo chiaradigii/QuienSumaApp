@@ -1,24 +1,200 @@
 {% extends "base/base.html" %}
 {% load static %}
 
+{% block head %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .btn-back {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        transition: background-color 0.3s ease; 
+    }
+    .card-link {
+        font-size: 0.8rem; /* Ajusta el tamaño del texto del enlace */
+        margin: 0; /* Elimina los márgenes predeterminados */
+        padding: 5px 10px; /* Ajusta el relleno */
+    }
+    
+    .card-button {
+        font-size: 0.8rem; /* Ajusta el tamaño del texto del botón */
+        padding: 5px 10px; /* Ajusta el relleno */
+        margin-top: 10px; /* Espacio encima del botón */
+    }
+    
+
+    .partido-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .informacion-partido {
+        flex: 1 0 40%;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .info-title {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    .card-columns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; /* Espacio entre tarjetas */
+        justify-content: center;
+    }
+    
+    .card {
+        width: 200px; 
+        margin-bottom: 20px; 
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .card-body {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-title {
+        margin: 0;
+        color: #333;
+    }
+
+    .card-text {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 0px;
+    }
+
+    .card-body a {
+        display: inline-block;
+        margin: 10px;
+        text-decoration: none;
+        background-color: #5f6bd2;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .card-body a:hover {
+        background-color: #4a57a3;
+    }
+
+    .card-body form {
+        display: inline;
+    }
+
+    .card-body button {
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .card-body .btn-aceptar {
+        background-color: #28a745;
+        color: #fff;
+    }
+    .card-body .btn-rechazar {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .card-body button:hover {
+        opacity: 0.9;
+    }
+    .card-img-top {
+        height: 200px; 
+        object-fit: cover; 
+    }
+    .card-actions {
+        text-align: center; /* Centra los botones */
+    }
+    
+    .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+{% endblock head %}
+
 {% block body %}
-<h1>{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
-<p>Fecha y hora: {{ partido.fecha_hora|date:"d M Y H:i" }}</p>
-<h2>Solicitudes Pendientes</h2>
-<ul>
-    {% for solicitud in solicitudes %}
-    <li>{{ solicitud.solicitante.username }} - <a href="{% url 'jugadores:profile' solicitud.solicitante.id %}">Perfil</a>
-        <form action="{% url 'partidos_app:aceptar_solicitud' solicitud.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Aceptar</button>
-        </form>
-        <form action="{% url 'partidos_app:rechazar_solicitud' solicitud.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Rechazar</button>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
-<h2>Jugadores Confirmados</h2>
-<ul>
-{% endblock body %}
+<div class="container">
+    <button onclick="history.back()" class="btn-back">Volver</button>
+    <div class="partido-container">
+    <div class="informacion-partido">
+          <h1>{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
+          <p>Fecha y hora: {{ partido.fecha_hora|date:"d M Y H:i" }}</p>
+    <div class = "cards">
+    <h3>Solicitudes Pendientes</h3>
+    {% if solicitudes_pendientes %}
+    <div class="card-columns">
+        {% for solicitud in solicitudes %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                <div class="card-body">
+                  <h5 class="card-title">{{solicitud.solicitante.nombre}} {{solicitud.solicitante.apellido}}</h5>
+                  <p class="card-text">{{solicitud.solicitante.get_posicion_display}} </p>
+                  <p class="card-text">{{solicitud.solicitante.get_sexo_display}} - {{solicitud.solicitante.calcular_años}} años</p>
+                  <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id  %}" class="card-link"> Ver Perfil</a>               
+                </div>
+                <ul class="list-group list-group-flush">
+                  <div class="card-body">
+                    <div class="card-actions">
+                    <form action="{% url 'partidos_app:aceptar_solicitud' solicitud.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Aceptar</button>
+                    </form>
+                    <form action="{% url 'partidos_app:rechazar_solicitud' solicitud.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Rechazar</button>
+                    </form>
+                </div>
+            </div>
+              </div>
+        {% endfor %}
+    </div>
+    </div>
+    {% else %}
+    <p>No hay solicitudes pendientes.</p>
+    {% endif %}
+    <h2>Solicitudes Aceptadas</h2>
+    {% if solicitudes_aceptadas %}
+    <div class="card-columns">
+        {% for solicitud in solicitudes_aceptadas %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                <div class="card-body">
+                  <h5 class="card-title">{{solicitud.solicitante.nombre}} {{solicitud.solicitante.apellido}}</h5>
+                    <p class="card-text">{{solicitud.solicitante.get_posicion_display}} </p>
+                    <p class="card-text">{{solicitud.solicitante.get_sexo_display}} - {{solicitud.solicitante.calcular_años}} años</p>
+                    <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id  %}" class="card-link"> Ver Perfil</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+      <p>No hay solicitudes aceptadas.</p>
+    {% endif %}
+</div>
+{% endblock %}

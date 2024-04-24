@@ -117,7 +117,7 @@ class SolicitudUnirse(models.Model):
         self.cupo.cupos_ocupados += 1
         self.cupo.save()
         self.save()
-        self.partido.update_cupos_disponibles()
+        self.cupo.partido.update_cupos_disponibles()
     
     def rechazar(self):
         self.estado = 'rechazado'

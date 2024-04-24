@@ -6,10 +6,6 @@ app_name = 'partidos_app'
 urlpatterns = [
  path('crear-partido/', PartidoCreateView.as_view(), name='crear_partido'), 
  path('listar-partidos/', PartidoListView.as_view(), name='listar_partidos'),
- path('detalle-partido/<pk>/',
-    PartidoDetailView.as_view(),
-    name='detalle_partido',
-    ),
  path('mis-partidos/', MisPartidosListView.as_view(), name='mis_partidos'),
  path('mi-partido/<pk>/', MiPartidoDetailView.as_view(), name='mi_partido'),
  path('unirse/<int:partido_id>/', unirse_partido, name='unirse_partido'),

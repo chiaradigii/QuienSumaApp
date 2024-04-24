@@ -2,7 +2,7 @@ from django.forms import ValidationError
 from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
 from django.urls import reverse_lazy
-from .models import Partido, PosicionCupo, SolicitudUnirse
+from .models import Partido, PosicionCupo, SolicitudUnirse,PartidoJugador
 from ..ubicaciones.models import Ubicacion
 from .forms import PartidoForm
 from django.views.generic import CreateView, ListView, DetailView
@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.contrib import messages
-
+from django.core.paginator import Paginator
+from django.db.models import F
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -38,6 +39,7 @@ class PartidoCreateView(CreateView):
         total_cupos = self.crear_posiciones_cupo(partido, cleaned_data)
         partido.cupos_disponibles = total_cupos
         partido.save()
+        PartidoJugador.objects.create(partido=partido, jugador=self.request.user)
         return super().form_valid(form)
 
 
@@ -74,20 +76,29 @@ class PartidoListView(ListView):
     template_name = 'partidos/partido_list.html'
     context_object_name = 'partidos'
     paginate_by = 10
-    ordering = ['-fecha_hora']
-    paginate_by = 10
     
     def get_context_data(self, **kwargs):
         context = super(PartidoListView,self).get_context_data(**kwargs)
         context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
-        partidos = Partido.objects.all().order_by('-fecha_hora')
-        hoy = datetime.now(timezone.utc).date()
-        context['partidos_hoy'] = partidos.filter(fecha_hora__date=hoy)
-        context['partidos_manana'] = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
-        context['partidos_semana'] = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
-        context['partidos_otros'] = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7))).order_by('-fecha_hora')
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-        # Agregar información geográfica
+        context['page_obj'] = page_obj
+
+        partidos_con_cupos = []
+        for partido in context['partidos']:
+            posiciones = partido.posiciones_cupos.annotate(
+                cupos_disponibles=F('cupos_totales') - F('cupos_ocupados')
+            ).values('posicion', 'cupos_disponibles')
+
+            partidos_con_cupos.append({
+                'partido': partido,
+                'posiciones': posiciones
+            })
+
+        context['partidos_con_cupos'] = partidos_con_cupos
+
         partidos_con_ubicacion = []
         for partido in context['partidos']:
             if partido.ubicacion and partido.ubicacion.geolocation:
@@ -99,36 +110,26 @@ class PartidoListView(ListView):
                     'lng': geolocation.lon,
                 })
         context['partidos_con_ubicacion'] = partidos_con_ubicacion
- 
- 
+        
+        partidos_con_jugadores = []
+        for partido in Partido.objects.all():
+            jugadores = partido.partidojugador_set.all()
+            partidos_con_jugadores.append({
+                'partido': partido,
+                'jugadores': jugadores,
+            })
+
+        context['partidos_con_jugadores'] = partidos_con_jugadores
         return context
     
     def get_queryset(self):
-        queryset = super().get_queryset()
-        date_filter = self.request.GET.get('date_filter')
-        gender_filter = self.request.GET.get('gender')
-
-        if date_filter:
-            try:
-                filter_date = datetime.strptime(date_filter, '%Y-%m-%d').date()
-                queryset = queryset.filter(fecha_hora__date=filter_date)
-            except ValueError:
-                pass
-        
-        if gender_filter:  
-            queryset = queryset.filter(gender=gender_filter)
-
-        return queryset
-
-class PartidoDetailView(LoginRequiredMixin,DetailView):
-    template_name = 'partidos/detalle_partido.html'
-    model = Partido
-
-    context_object_name = "partido"
-    def get_context_data(self, **kwargs):
-        context = super(PartidoDetailView, self).get_context_data(**kwargs)
-        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
-        return context
+        hoy = datetime.now(timezone.utc).date()
+        partidos = Partido.objects.all().order_by('-fecha_hora')
+        partidos_hoy = partidos.filter(fecha_hora__date=hoy)
+        partidos_manana = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
+        partidos_semana = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
+        partidos_otros = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7)))
+        return list(partidos_hoy) + list(partidos_manana) + list(partidos_semana) + list(partidos_otros)
     
 class MisPartidosListView(LoginRequiredMixin,ListView):
     """Vista para listar los partidos creados por el usuario logueado"""
@@ -172,8 +173,18 @@ class MiPartidoDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         partido = context['partido']
-        partido.solicitudes = SolicitudUnirse.objects.filter(cupo__partido=partido).select_related('solicitante')
-        partido.jugadores_confirmados = partido.jugadores.all()
+        solicitudes_pendientes = SolicitudUnirse.objects.filter(
+            cupo__partido=partido, 
+            estado='pendiente'
+        ).select_related('solicitante')
+        
+        solicitudes_aceptadas = SolicitudUnirse.objects.filter(
+            cupo__partido=partido, 
+            estado='aceptado'
+        ).select_related('solicitante')
+
+        context['solicitudes_pendientes'] = solicitudes_pendientes
+        context['solicitudes_aceptadas'] = solicitudes_aceptadas
         return context
 
 @login_required
@@ -182,26 +193,33 @@ def unirse_partido(request, partido_id):
     cupo = partido.posiciones_cupos.filter(cupos_ocupados__lt=models.F('cupos_totales')).first()
     if not cupo:
             messages.error(request, "No hay cupos disponibles.")
-            return redirect('partidos_app:detalle_partido', pk=partido_id)
+            return redirect('partidos_app:listar_partidos')
 
     # Check if there's already a pending or accepted solicitud
     if SolicitudUnirse.objects.filter(cupo=cupo, solicitante=request.user).exists():
         messages.error(request, "Ya has enviado una solicitud para este partido.")
+    elif request.user == cupo.partido.creador:
+        messages.error(request, "No puedes unirte a tu propio partido.")
     else:
         SolicitudUnirse.objects.create(cupo=cupo, solicitante=request.user)
         messages.success(request, "La solicitud se ha enviado correctamente.")
-
-    return redirect('partidos_app:detalle_partido', pk=partido_id)
+    return redirect('partidos_app:listar_partidos')
     
 @login_required
 def aceptar_solicitud(request, solicitud_id):
-    solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, partido__creador=request.user)
+    solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, cupo__partido__creador=request.user)
+    partido_id = solicitud.cupo.partido.id
+    if request.user != solicitud.cupo.partido.creador:
+        messages.error(request, "No tienes permisos para aceptar esta solicitud.")
+        return redirect('partidos_app:listar_partidos')
+
     try:
-        solicitud.aceptar()  # Ensure this method handles all necessary logic
+        solicitud.aceptar()
         messages.success(request, "Solicitud aceptada con éxito.")
+        PartidoJugador.objects.create(partido=solicitud.cupo.partido, jugador=solicitud.solicitante)
     except ValidationError as e:
         messages.error(request, str(e))
-    return redirect('partidos_app:detalle_partido', pk=solicitud.partido.id)
+    return redirect('partidos_app:listar_partidos')
 
 
 @login_required
@@ -209,4 +227,4 @@ def rechazar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, partido__creador=request.user)
     solicitud.rechazar()  # This should handle setting the state and any other cleanup
     messages.info(request, "Solicitud rechazada.")
-    return redirect('partidos_app:detalle_partido', pk=solicitud.partido.id)
+    return redirect('partidos_app:listar_partidos')
