@@ -85,11 +85,7 @@
                       <h6 class="mb-0">Posiciones</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-
-                        {% for subcategoria in jugador.categoria.all %}
-                        {{subcategoria.nombre_subcategoria}}
-                        <br/>
-                        {% endfor %}
+                      {{jugador.posicion}}                      
                     </div>
                   </div>
                   <hr>
