@@ -11,9 +11,13 @@
 
 {% block head %} 
 <style>
+  .container {
+    width: 95%;
+    max-width: 95%;
+}
   .player-profile {
     text-align: center;
-    margin-bottom: 20px; /* Space below each player profile */
+    margin-bottom: 20px; 
   }
   .player-profile img {
     width: 70px;
@@ -21,6 +25,7 @@
     border-radius: 50%; 
     object-fit: cover;
     margin-bottom: 10px;
+    margin-right: 10px;
   }
   
   .player-name {
@@ -43,15 +48,9 @@
   .partido-players {
     margin-right: 30px; 
     padding-right: 0; 
+    display: flex; 
+    flex-wrap: wrap;
 
-  }
-  
-  .jugadores-inscritos-heading {
-    font-size: 1em; 
-    color: white; 
-    text-align: right; 
-    margin-right: 30px; 
-    padding-bottom: 10px;
   }
   
   .pagination > li > a, .
@@ -87,7 +86,7 @@ border: 1px solid #2a2a2;
   padding: 15px;
   margin-top: 10px;
   background-color: #1c1c1c; 
-  color: #e1e1e1; /* Light text for list items */
+  color: #e1e1e1; 
   border: none; 
 }
 .list-group-item + .list-group-item {
@@ -96,11 +95,11 @@ border: 1px solid #2a2a2;
 
  
 .list-group-item-heading {
-    color: #aaa; / Lighter text color for headings */
+    color: #aaa; 
     }
   
 .list-group-item small {
-      color: #ccc; /* Lighter text color for smaller text */
+      color: #ccc; 
       }
 
 .partido-list-item {
@@ -142,9 +141,9 @@ border: 1px solid #2a2a2;
   }
 
 .fecha-encabezado {
-    color: #fff; /* White color for the date header */
-    font-size: 1.5rem; /* Larger font size for visibility */
-    margin-bottom: 20px; /* Spacing below the header */
+    color: #fff; 
+    font-size: 1.5rem; 
+    margin-bottom: 20px; 
   }
 
   
@@ -320,8 +319,9 @@ border: 1px solid #2a2a2;
                 <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
               </p> 
             </div>
-            <div class="partido-players">
-              <div class="jugadores-inscritos-heading">Jugadores inscriptos</div>
+            <div>
+              <h4>Jugadores Inscriptos</h4>
+              <div class="partido-players" style="display: flex; flex-wrap: wrap;">
               {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
                 <div class="player-profile">
                   <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
@@ -332,6 +332,7 @@ border: 1px solid #2a2a2;
               {% endfor %}
             </div>
           </div>
+        </div>
         {% empty %}
         <p>No hay partidos disponibles</p>
        </div>
