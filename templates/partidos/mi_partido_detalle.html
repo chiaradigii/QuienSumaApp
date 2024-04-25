@@ -150,8 +150,8 @@
     <h3>Solicitudes Pendientes</h3>
     {% if solicitudes_pendientes %}
     <div class="card-columns">
-        {% for solicitud in solicitudes %}
-            <div class="card" style="width: 18rem;">
+        {% for solicitud in solicitudes_pendientes %}
+            <div class="card" style="width: 18rem; transform: scale(0.9);">
                 <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
                 <div class="card-body">
                   <h5 class="card-title">{{solicitud.solicitante.nombre}} {{solicitud.solicitante.apellido}}</h5>
