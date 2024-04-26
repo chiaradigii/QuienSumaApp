@@ -190,8 +190,6 @@ def unirse_partido(request, partido_id):
     cupo = partido.posiciones_cupos.filter(cupos_ocupados__lt=models.F('cupos_totales')).first()
     if not cupo:
             messages.error(request, "No hay cupos disponibles.")
-            return redirect('partidos_app:listar_partidos')
-
     # Check if there's already a pending or accepted solicitud
     if SolicitudUnirse.objects.filter(cupo=cupo, solicitante=request.user).exists():
         messages.error(request, "Ya has enviado una solicitud para este partido.")

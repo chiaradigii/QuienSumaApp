@@ -11,6 +11,19 @@
 
 {% block head %} 
 <style>
+  .modal-content {
+    background-color: #fff; 
+    color: black;
+  }
+  .modal-header {
+    border-bottom: 1px solid #dee2e6;
+  }
+  .modal-body {
+    padding: 20px; 
+  }
+  .modal-footer {
+    border-top: 1px solid #dee2e6; 
+  }
   .container {
     width: 95%;
     max-width: 95%;
@@ -152,6 +165,23 @@ border: 1px solid #2a2a2;
 
 
 {% block body %}
+
+  <!-- Submit request to join Modal -->
+  <div class="modal fade" id="unirseModal" tabindex="-1" aria-labelledby="unirseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body" id="modalMessage">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!--INICIO DEL HEADER -->
 <header class="bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white shadow-5-strong">    <nav class="nav nav-masthead justify-content-center float-md-end">
 <!--INICIO DEL LOGO CON ICONO -->
@@ -297,8 +327,11 @@ border: 1px solid #2a2a2;
                                 <span style="margin-right: 10px;">{{ posicion.posicion }}: {{ posicion.cupos_disponibles }} disponibles</span>
                                 <!-- Formulario para unirse al partido -->
                                 <form action="{% url 'partidos_app:unirse_partido' partido_id=partido.id %}" method="post">
-                                    {% csrf_token %}                 
-                                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px;">Unirse</button>
+                                    {% csrf_token %}       
+                                    <!-- Button trigger modal-->          
+                                    <button type="submit" id="modalTrigger" data-bs-toggle="modal" data-bs-target="#unirseModal" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px; ">
+                                      Unirse
+                                    </button>
                                 </form>
                             </li>
                               {% endif %}
@@ -323,7 +356,7 @@ border: 1px solid #2a2a2;
               <h4>Jugadores Inscriptos</h4>
               <div class="partido-players" style="display: flex; flex-wrap: wrap;">
               {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
-                <div class="player-profile">
+                <div class="player-profile"> 
                   <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
                   <a href="{% url 'jugador_app:detalle_jugador' partido_jugador.jugador.id %}">
                     <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
@@ -451,5 +484,31 @@ border: 1px solid #2a2a2;
         map.setCenter(location); 
     }
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var unirseModal = new bootstrap.Modal(document.getElementById('unirseModal'), {
+      keyboard: false,
+      backdrop: 'static'
+    });
+    // Check for Django messages
+    {% if messages %}
+      let messageHTML = '';
+      {% for message in messages %}
+      messageHTML += '<p class="alert {{ message.tags }}">{{ message|escapejs }}</p>'; // Use escapejs to prevent XSS
+      {% endfor %}
+      if (messageHTML.trim().length > 0) {
+        document.querySelector('#modalMessage').innerHTML = messageHTML;
+        unirseModal.show();
+      } else {
+        console.log('No messages to display in the modal.');
+      }
+    {% else %}
+      console.log('No messages block in template.');
+    {% endif %}
+  });
+</script>
+
+
 
 {% endblock scripts %}
