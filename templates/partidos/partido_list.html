@@ -355,14 +355,22 @@ border: 1px solid #2a2a2;
             <div>
               <h4>Jugadores Inscriptos</h4>
               <div class="partido-players" style="display: flex; flex-wrap: wrap;">
-              {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
-                <div class="player-profile"> 
-                  <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
-                  <a href="{% url 'jugador_app:detalle_jugador' partido_jugador.jugador.id %}">
-                    <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
-                  </a>
+                {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
+                <div class="player-profile">
+                    {% if partido_jugador.jugador.foto %}
+                        <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
+                    {% else %}
+                        {% if partido_jugador.jugador.get_sexo_display == 'Femenino' %}
+                            <img src="{% static 'img/WomanAvatar.png' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
+                        {% else %}
+                            <img src="{% static 'img/MasculinoAvatar.jpg' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
+                        {% endif %}
+                    {% endif %}
+                    <a href="{% url 'jugador_app:detalle_jugador' partido_jugador.jugador.id %}">
+                        <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
+                    </a>
                 </div>
-              {% endfor %}
+            {% endfor %}            
             </div>
           </div>
         </div>
