@@ -115,8 +115,13 @@ class JugadorListView(LoginRequiredMixin,ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        users = Jugador.objects.exclude(is_superuser=True)
-        return users
+        queryset = super(JugadorListView, self).get_queryset()
+        kword = self.request.GET.get('kword', '')
+
+        if kword:
+            queryset = queryset.filter(nombre__icontains=kword)
+
+        return queryset.exclude(is_superuser=True)
 
 class SuccessSignUpView(TemplateView):
     template_name = 'registration/success_signup.html'    
