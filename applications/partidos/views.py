@@ -13,6 +13,7 @@ from django.db import models
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import F
+from django.db.models import Q
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -137,13 +138,12 @@ class MisPartidosListView(LoginRequiredMixin,ListView):
     ordering = ['-fecha_hora']
     
     def get_queryset(self):
-        return Partido.objects.filter(creador=self.request.user).order_by('-fecha_hora')
+        return Partido.objects.filter(Q(creador=self.request.user) | Q(jugadores=self.request.user))
 
     def get_context_data(self, **kwargs):
         context = super(MisPartidosListView, self).get_context_data(**kwargs)
         partidos = context['mis_partidos']
         partidos_ids = partidos.values_list('id', flat=True)
-
         solicitudes = SolicitudUnirse.objects.filter(cupo__partido__id__in=partidos_ids).select_related('solicitante', 'cupo', 'cupo__partido')
 
         solicitudes_por_partido = {partido.id: [] for partido in partidos}

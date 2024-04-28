@@ -2,91 +2,100 @@
 {% load static %}
 
 {% block head %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
 <style>
     .btn-back {
-        position: absolute;
-        top: 10px;
-        left: 10px;
+        margin: 20px;
         padding: 10px 20px;
-        background-color: #f8f9fa;
+        background-color: #6c757d;
+        color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        z-index: 10; 
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
-        transition: background-color 0.3s ease; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background-color 0.3s ease;
     }
-    
     .btn-back:hover {
-        background-color: #e2e6ea; 
+        background-color: #5a6268;
     }
-    
-    .container {
-        position: relative;
-    }
-    
-    .partido-container {
-        display: flex;
-        width: 100%;
-        align-items: stretch;
-        margin: 0;
-        padding: 0;
-    }
-
-    .foto-portada {
-        width: 60%;
-        height: 100vh;
-        background: url("{% static 'img/background-photo.jpg' %}") no-repeat center center;
-        background-size: cover;
-        position: relative;
-    }
-
-    .informacion-partido {
-        width: 40%;
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background-color: #f8f9fa;
-    }
-
-    .informacion-partido h2,
-    .informacion-partido h3,
-    .informacion-partido h4 {
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: box-shadow 0.3s ease-in-out;
         margin-bottom: 20px;
     }
-
-    .info-title {
-        text-transform: uppercase;
-        color: #333;
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .card-header {
+        background-color: #007bff;
+        color: white;
         font-weight: bold;
     }
-
-    .info-content {
-        color: #555;
+    .card-body {
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+    .card-title {
+        margin-bottom: 15px;
+    }
+    .organizado {
+        border-left: 5px solid #28a745;
+    }
+    .participando {
+        border-left: 5px solid #ffc107;
+    }
+    .list-unstyled {
+        padding-left: 0;
+        list-style: none;
+    }
+    .partido-tipo {
+        display: inline-block;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+        margin-right: 5px;
+    }
+    .partido-tipo.organizado {
+        background-color: #28a745;
+        color: white;
+    }
+    .partido-tipo.participando {
+        background-color: #ffc107;
+        color: black;
     }
 </style>
 {% endblock head %}
 
 {% block body %}
-<div class="partido-container">
+<div class="container">
     <button onclick="history.back()" class="btn-back">Volver</button>
-    <div class="foto-portada"></div>
-    <h1>Mis Partidos</h1>
-    <ul>
+    <h1 class="mt-4 mb-4">Mis Partidos</h1>
+    {% if mis_partidos %}
         {% for partido in mis_partidos %}
-        <li>
-            {{ partido.tipo_futbol }} - {{ partido.get_lugar }} - {{ partido.fecha_hora|date:"d M Y H:i" }}
-            <br>
-            Cupos disponibles: {{ partido.cupos_disponibles }}
-            <br>
-            Solicitudes pendientes: {{ partido.solicitudes_pendientes }}
-            <br>
-            <a href="{% url 'partidos_app:mi_partido' partido.id %}">Ver Detalles</a>
-        </li>
-        {% empty %}
-        <p>No has organizado partidos.</p>
+        <div class="card {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
+            <div class="card-header">
+                Partido de {{ partido.tipo_futbol }} - {{ partido.get_lugar }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ partido.fecha_hora|date:"d M Y H:i" }}</h5>
+                <p>Cupos disponibles: {{ partido.cupos_disponibles }}</p>
+                <p>Solicitudes pendientes: {{ partido.solicitudes_pendientes }}</p>
+                <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
+            </div>
+            <div class="card-footer">
+                <span class="partido-tipo {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
+                    {% if partido.creador == request.user %}Organizado{% else %}Participando{% endif %}
+                </span>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    {% else %}
+    <p>No has organizado ni estás inscrito en partidos.</p>
+    {% endif %}
 </div>
 {% endblock body %}
