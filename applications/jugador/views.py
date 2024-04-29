@@ -18,7 +18,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-
+from applications.comunicaciones.models import ChatSession
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
     model = Jugador
@@ -135,4 +135,8 @@ class JugadorDetailView(LoginRequiredMixin,DetailView):
     def get_context_data(self, **kwargs):
         context = super(JugadorDetailView, self).get_context_data(**kwargs)
         context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+        jugador = context['jugador']
+
+        chat_session, created = ChatSession.get_or_create_session(self.request.user, jugador)
+        context['chat_id'] = chat_session.id
         return context
