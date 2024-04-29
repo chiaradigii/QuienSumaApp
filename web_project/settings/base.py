@@ -11,11 +11,18 @@ GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY')
 
 LOGIN_REDIRECT_URL= '/pagina-principal/'
 
-
+ASGI_APPLICATION = 'web_project.asgi.application'
 
 # Application definition
 
 INSTALLED_APPS = [
+    #local apps
+    'applications.jugador',
+    'applications.comunicaciones',
+    'applications.main',
+    'applications.partidos',
+    'applications.ubicaciones',  
+    #django apps 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,12 +33,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'crispy_forms',
     'django_google_maps',
-    #local apps
-    'applications.jugador',
-    'applications.comunicaciones',
-    'applications.main',
-    'applications.partidos',
-    'applications.ubicaciones',    
+    'channels',
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -109,3 +111,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'jugador.Jugador'
 from django.apps import AppConfig
 AppConfig.default = False
+
+CHANNEL_LAYERS = {
+    "default": {
+        # For now, in-memory storage system to handle channels and messages 
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
