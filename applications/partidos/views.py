@@ -215,7 +215,8 @@ def aceptar_solicitud(request, solicitud_id):
 
     try:
         solicitud.aceptar()
-        messages.success(request, "Solicitud aceptada con éxito.")
+        create_notification(request.user, f"{solicitud.solicitante.user} se ha unido a tu partido")
+        create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido aceptada.")
         PartidoJugador.objects.create(partido=solicitud.cupo.partido, jugador=solicitud.solicitante)
     except ValidationError as e:
         messages.error(request, str(e))
@@ -225,6 +226,7 @@ def aceptar_solicitud(request, solicitud_id):
 @login_required
 def rechazar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, partido__creador=request.user)
-    solicitud.rechazar()  # This should handle setting the state and any other cleanup
+    solicitud.rechazar()  
     messages.info(request, "Solicitud rechazada.")
+    create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido rechazada.")
     return redirect('partidos_app:listar_partidos')

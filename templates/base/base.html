@@ -59,7 +59,7 @@
                                 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
                                     <div class="toast-header">
                                         <strong class="me-auto">Notification</strong>
-                                        <small>Just now</small>
+                                        <small style="color: gray;">Just now</small>
                                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                     </div>
                                     <div class="toast-body" style="color: black;">${notification.message}</div>
@@ -97,7 +97,7 @@
     
         // Fetch notifications on page load and periodically
         fetchNotifications();
-        setInterval(fetchNotifications, 30000);
+        setInterval(fetchNotifications, 10000);
     </script>
     
     {% endblock scripts %}
