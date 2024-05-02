@@ -1,9 +1,12 @@
-# Views.py 
+# applications/comunicaciones/views.py 
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render, redirect
 from applications.jugador.models import Jugador
-from .models import ChatSession
+from .models import ChatSession, Notification
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
@@ -21,3 +24,21 @@ def chatPage(request, chat_id):
     # Render a template to display the chat or handle other logic
     print('Rendering chatPage with chat_id:', chat_id)
     return render(request, 'comunicaciones/chatPage.html', {'chat_id': chat_id})
+
+@csrf_exempt
+@login_required
+def mark_notification_read(request):
+    if request.method == 'POST':
+        notification_id = request.POST.get('notification_id')
+        notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+        notification.read = True
+        notification.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+@login_required
+def fetch_notifications(request):
+    notifications = Notification.objects.filter(recipient=request.user, read=False)
+    return JsonResponse({
+        "notifications": list(notifications.values("id", "message", "created_at"))
+    })

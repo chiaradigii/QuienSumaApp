@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models import Q
+from ..comunicaciones.models import create_notification
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -41,6 +42,8 @@ class PartidoCreateView(CreateView):
         partido.cupos_disponibles = total_cupos
         partido.save()
         PartidoJugador.objects.create(partido=partido, jugador=self.request.user)
+        create_notification(partido.creador, "Haz creado un partido!")
+
         return super().form_valid(form)
 
 
@@ -198,6 +201,8 @@ def unirse_partido(request, partido_id):
     else:
         SolicitudUnirse.objects.create(cupo=cupo, solicitante=request.user)
         messages.success(request, "La solicitud se ha enviado correctamente.")
+
+    create_notification(recipient=partido.creador, message=f"{request.user.user} quiere unirse a tu partido.")
     return redirect('partidos_app:listar_partidos')
     
 @login_required
