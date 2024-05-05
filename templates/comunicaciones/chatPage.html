@@ -189,6 +189,8 @@
     };
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        console.log(data);
+        if (typeof data.user === 'string') { // Ensure it's a string
         const messageContainer = document.querySelector("#id_chat_item_container");
         const div = document.createElement("div");
         div.className = (data.user === "{{ request.user.user }}") ? "chat-message right" : "chat-message left";
@@ -200,6 +202,9 @@
         document.querySelector("#id_message_send_input").value = "";
         messageContainer.appendChild(div);
         messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to the bottom of the chat container
+    } else {
+        console.error('Data.user is not a string:', data.user);
+    }
     };
 </script>
 {% endblock scripts %}

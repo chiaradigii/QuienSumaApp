@@ -18,11 +18,7 @@ def start_chat(request, jugador_id):
 
 
 def chatPage(request, chat_id):
-    # Assuming that ChatSession stores references to user IDs or similar
     chat_session = get_object_or_404(ChatSession, id=chat_id)
-
-    # Render a template to display the chat or handle other logic
-    print('Rendering chatPage with chat_id:', chat_id)
     return render(request, 'comunicaciones/chatPage.html', {'chat_id': chat_id})
 
 @csrf_exempt

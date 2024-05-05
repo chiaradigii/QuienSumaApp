@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from applications.jugador.models import Jugador
+from asgiref.sync import sync_to_async
 
 User = get_user_model()
 
@@ -25,6 +26,6 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.recipient.username} - {'Read' if self.read else 'Unread'}"
-
+@sync_to_async
 def create_notification(recipient, message):
     Notification.objects.create(recipient=recipient, message=message)
