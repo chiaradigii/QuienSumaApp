@@ -27,20 +27,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json.get('message')
         if message:
-            user = self.scope['user'].user
-            chat_session = await self.get_chat_session(self.scope['url_route']['kwargs']['chat_id'])
+            user = self.scope['user']
+            chat_id = self.scope['url_route']['kwargs']['chat_id']
+            chat_session = await self.get_chat_session(chat_id)
 
             if not chat_session:
                 print("Chat session not found.")
                 return
 
+            # Save the message
+            await self.save_message(chat_session, user, message)
+
             recipient = chat_session.user1 if chat_session.user2 == user else chat_session.user2
             await self.channel_layer.group_send(
                 self.room_group_name,
-                {'type': 'chat_message', 'message': message, 'user': user}
+                {'type': 'chat_message', 'message': message, 'user': user.user}
             )
 
-            await self.create_and_send_notification(recipient, user, message)
+            await self.create_and_send_notification(recipient, user.user, message)
+
+    @database_sync_to_async
+    def save_message(self, chat_session, user, message_text):
+        from .models import Message
+        Message.objects.create(chat_session=chat_session, sender=user, message=message_text)
 
     async def chat_message(self, event):
         # Send message to WebSocket

@@ -139,7 +139,19 @@
         {% endif %}
     </div>
     <div class="chat__item__container" id="id_chat_item_container">
-        <!-- Messages will be displayed here with a scrollbar -->
+        {% for message in messages %}
+        {% if message.sender == request.user %}
+            <div class="chat-message right">
+        {% else %}
+            <div class="chat-message left">
+        {% endif %}
+                <div class="message-content">
+                <span class="message-user">{{ message.sender.user }}</span>
+                <span class="message-text">{{ message.message }}</span>
+                <span class="message-timestamp">{{ message.timestamp|date:"H:i" }}</span>
+            </div>
+        </div>
+    {% endfor %}
     </div>
     <div class="chat-input-container">
         <input type="text" id="id_message_send_input" placeholder="Type your message..." />
