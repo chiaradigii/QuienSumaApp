@@ -49,10 +49,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
     <script>
         function fetchNotifications() {
+            console.log("Fetching notifications...");
             $.ajax({
                 url: "{% url 'comunicaciones_app:fetch_notifications' %}",  
                 type: 'GET',
                 success: function(data) {
+                    console.log("Notifications data:", data);
                     if (data.notifications.length > 0) {
                         data.notifications.forEach(function(notification) {
                             var toastHtml = `
@@ -71,6 +73,9 @@
                             // Mark notification as read
                             markNotificationRead(notification.id);
                         });
+                    }
+                    else {
+                        console.log("No new notifications.");
                     }
                 },
                 error: function(error) {

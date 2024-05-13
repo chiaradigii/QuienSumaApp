@@ -36,6 +36,7 @@ def mark_notification_read(request):
 @login_required
 def fetch_notifications(request):
     notifications = Notification.objects.filter(recipient=request.user, read=False)
+    print("Queryset result:", notifications)  # Add logging output
     return JsonResponse({
         "notifications": list(notifications.values("id", "message", "created_at"))
     })

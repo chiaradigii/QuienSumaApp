@@ -33,9 +33,11 @@ class Notification(models.Model):
     message = models.TextField()
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
-        return f"Notification for {self.recipient.username} - {'Read' if self.read else 'Unread'}"
-@sync_to_async
+        return f"Notification for {self.recipient.user} - {'Read' if self.read else 'Unread'}"
+
 def create_notification(recipient, message):
-    Notification.objects.create(recipient=recipient, message=message)
+    try:
+        Notification.objects.create(recipient=recipient, message=message)
+    except Exception as e:
+        print("Failed to create notification:", e)
