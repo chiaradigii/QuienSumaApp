@@ -18,7 +18,7 @@ class Jugador(AbstractBaseUser,PermissionsMixin):
         ('Delantero', 'Delantero'),
     )
 
-    user = models.CharField("username", max_length=50, default=" ")
+    user = models.CharField("username", max_length=50, default=" ", unique=True)
     nombre = models.CharField("nombre",max_length=50)
     apellido = models.CharField("apellido", max_length=60)
     fecha_nacimiento = models.DateField("fecha de nacimiento", auto_now=False, auto_now_add=False, default=date.today)
