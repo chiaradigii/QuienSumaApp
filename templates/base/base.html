@@ -35,17 +35,77 @@
 <body >
 
     {% block body %}
+
     {% endblock body %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
 
     {% block scripts %}
+    {{ block.super }}
     <!-- jQuery, Popper.js, moment js, Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <!-- Tempus Dominus JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
-  
+    <script>
+        function fetchNotifications() {
+            console.log("Fetching notifications...");
+            $.ajax({
+                url: "{% url 'comunicaciones_app:fetch_notifications' %}",  
+                type: 'GET',
+                success: function(data) {
+                    console.log("Notifications data:", data);
+                    if (data.notifications.length > 0) {
+                        data.notifications.forEach(function(notification) {
+                            var toastHtml = `
+                                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+                                    <div class="toast-header">
+                                        <strong class="me-auto">Notification</strong>
+                                        <small style="color: gray;">Just now</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body" style="color: black;">${notification.message}</div>
+                                </div>`;
+                            $('.toast-container').append(toastHtml);
+                            $('.toast').toast('show').on('hidden.bs.toast', function () {
+                                $(this).remove();
+                            });
+                            // Mark notification as read
+                            markNotificationRead(notification.id);
+                        });
+                    }
+                    else {
+                        console.log("No new notifications.");
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching notifications:', error);
+                }
+            });
+        }
+        function markNotificationRead(notificationId) {
+            $.ajax({
+                url: "{% url 'comunicaciones_app:mark_notification_read' %}",
+                type: 'POST',
+                data: {
+                    'notification_id': notificationId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    console.log('Notification marked as read:', notificationId);
+                },
+                error: function(error) {
+                    console.log('Error marking notification as read:', error);
+                }
+            });
+        }
+    
+        // Fetch notifications on page load and periodically
+        fetchNotifications();
+        setInterval(fetchNotifications, 10000);
+    </script>
+    
     {% endblock scripts %}
 </body>
 

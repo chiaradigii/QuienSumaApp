@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models import Q
+from ..comunicaciones.models import create_notification
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -41,6 +42,8 @@ class PartidoCreateView(CreateView):
         partido.cupos_disponibles = total_cupos
         partido.save()
         PartidoJugador.objects.create(partido=partido, jugador=self.request.user)
+        create_notification(partido.creador, "Haz creado un partido!")
+
         return super().form_valid(form)
 
 
@@ -198,6 +201,8 @@ def unirse_partido(request, partido_id):
     else:
         SolicitudUnirse.objects.create(cupo=cupo, solicitante=request.user)
         messages.success(request, "La solicitud se ha enviado correctamente.")
+
+    create_notification(recipient=partido.creador, message=f"{request.user.user} quiere unirse a tu partido.")
     return redirect('partidos_app:listar_partidos')
     
 @login_required
@@ -210,7 +215,8 @@ def aceptar_solicitud(request, solicitud_id):
 
     try:
         solicitud.aceptar()
-        messages.success(request, "Solicitud aceptada con éxito.")
+        create_notification(request.user, f"{solicitud.solicitante.user} se ha unido a tu partido")
+        create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido aceptada.")
         PartidoJugador.objects.create(partido=solicitud.cupo.partido, jugador=solicitud.solicitante)
     except ValidationError as e:
         messages.error(request, str(e))
@@ -220,6 +226,7 @@ def aceptar_solicitud(request, solicitud_id):
 @login_required
 def rechazar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, partido__creador=request.user)
-    solicitud.rechazar()  # This should handle setting the state and any other cleanup
+    solicitud.rechazar()  
     messages.info(request, "Solicitud rechazada.")
+    create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido rechazada.")
     return redirect('partidos_app:listar_partidos')
