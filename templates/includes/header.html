@@ -1,34 +1,37 @@
 
 {% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+
 <header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
-    <nav class="nav nav-masthead justify-content-center float-md-end">
-<!--INICIO DEL LOGO CON ICONO -->
-<h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
-<img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
+  <nav class="nav nav-masthead justify-content-center float-md-end">
+    <h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
+    <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
 
-{% if user.sexo == 'M' %}
-<h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenido <strong>{{user.get_username}}</strong> </h3>  
-{% else %}
-<h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenida <strong>{{user.get_username}}</strong> </h3>  
-{% endif %}
-<!--FIN  DEL LOGO CON ICONO -->
-        <!--INICIO BOTONES-->
-      <li class="nav-item col-xs-6 ">
-        <a class="btn  rounded mx-1 btn-secondary" href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
-
-      </li> 
-      
-      <li class="nav-item">
-        <a class="btn mx-1 btn-secondary" href="{% url 'main_app:pagina_principal' %}">Inicio</a>
-
-      </li>           
-       <li class="nav-item"> 
-        <a class="btn mx-1 btn-secondary" href="{% url 'logout' %}">Cerrar sesión</a>
-      </li>
-    </li>           
-    <li class="nav-item"> 
-     <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
+    {% if user.sexo == 'M' %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenido <strong>{{user.get_username}}</strong> </h3>  
+    {% else %}
+    <h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenida <strong>{{user.get_username}}</strong> </h3>  
+    {% endif %}
+    
+    <li class="nav-item" style="margin-right: 10px;">
+      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'main_app:pagina_principal' %}">Inicio</a>
+    </li>    
+    <li class="nav-item col-xs-6" style="margin-right: 10px;">
+      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
+    </li>              
+    <li class="nav-item" style="margin-right: 10px;"> 
+      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
     </li>
-       <!--FIN BOTONES-->
+    <li class="nav-item" style="margin-right: 10px;"> 
+      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'logout' %}">Cerrar sesión</a>
+    </li>   
+
+    <a href="{% url 'jugador_app:detalle_jugador' user.id %}" class="btn btn-dark btn-floating" data-mdb-ripple-initt style="margin-right: 20px;">
+      <i class="far fa-user"></i>
+    </a>
     </nav>
 </header>
+
+

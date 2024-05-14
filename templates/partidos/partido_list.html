@@ -182,50 +182,7 @@ border: 1px solid #2a2a2;
     </div>
   </div>
 
-<!--INICIO DEL HEADER -->
-<header class="bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white shadow-5-strong">    <nav class="nav nav-masthead justify-content-center float-md-end">
-<!--INICIO DEL LOGO CON ICONO -->
-<h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
-<img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
-
-{% if user.sexo == 'M' %}
-    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenido <strong>{{user.get_username}}</strong> </h3>  
-{% else %}
-    <h3 style="font-family: Calibri; margin-right:1.5rem;"> Bienvenida <strong>{{user.get_username}}</strong> </h3>  
-{% endif %}
-
-<!--FIN  DEL LOGO CON ICONO -->
-
-
-        <!--INICIO BOTONES-->
-      <li class="nav-item col-xs-6 ">
-        
-        <!-- <button class="btn btn-dark  my-2 my-sm-0 " type="submit">Jugadores</button> -->
-        <a class="btn  rounded mx-1 btn-secondary" href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
-
-      </li> 
-      
-      <li class="nav-item">
-        <a class="btn mx-1 btn-secondary" href="{% url 'main_app:pagina_principal' %}">Inicio</a>
-
-      </li>           
-       <li class="nav-item"> 
-        <a class="btn mx-1 btn-secondary" href="{% url 'logout' %}">Cerrar sesión</a>
-      </li>
-    </li>           
-    <li class="nav-item"> 
-     <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
-    </li>
-    <li class="nav-item"> 
-        <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:crear_partido' %}">Crear partidos</a>
-    </li>
-    <li class="nav-item"> 
-      <a class="btn mx-1 btn-secondary" href="{% url 'partidos_app:mis_partidos' %}">Mis partidos</a>
-    </li>
-       <!--FIN BOTONES-->
-    </nav>
-</header>
-<!--FIN DEL HEADER -->
+{% include 'includes/header.html' %}
 
 
 
@@ -286,6 +243,12 @@ border: 1px solid #2a2a2;
     </div>
   </div>
 </div>
+
+<!-- Button to create parties -->
+<button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:crear_partido' %}'">Crear partidos</button>
+<!-- Button to navigate to "Mis partidos" -->
+<button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:mis_partidos' %}'">Mis partidos</button>
+
 
 <div class="column" style="margin-left: 20px;">
     {% for partido in partidos %}
