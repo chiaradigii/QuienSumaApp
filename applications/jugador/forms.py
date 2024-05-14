@@ -2,7 +2,7 @@ from django import forms
 from .models import Jugador
 from .widgets import DatePickerInput 
 from django.contrib.auth import authenticate
-
+from applications.ubicaciones.models import Ubicacion
 
 class SignUpForm(forms.ModelForm):
 
@@ -119,24 +119,64 @@ class LoginForm(forms.Form):
             raise forms.ValidationError('Los datos del usuario no son correctos')
         return self.cleaned_data
 
-class PasswordChangeForm(forms.Form):
-    password1 = forms.CharField(
-        label='Contraseña',
-        required=True,
-        widget=forms.PasswordInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Contraseña'
-            }
-        )
+from django.core.exceptions import ValidationError
+
+class EditProfileAndPasswordForm(forms.ModelForm):
+    direccion = forms.CharField(
+        label='Dirección',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'id_direccion', 'placeholder': 'Nueva dirección'})
     )
-    password2 = forms.CharField(
-        label='Confirmar contraseña',
-        required=True,
-        widget=forms.PasswordInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Confirmar contraseña'
-            }
-        )
+    
+    posicion = forms.ChoiceField(
+        label='Posición',
+        choices=Jugador.posicion_choices,
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+    new_password1 = forms.CharField(
+        label='Nueva Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Nueva contraseña'}),
+        required=False
+    )
+    new_password2 = forms.CharField(
+        label='Confirmar Nueva Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar nueva contraseña'}),
+        required=False
+    )
+
+    class Meta:
+        model = Jugador
+        fields = ['posicion', 'direccion']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
+
+        if new_password1 and new_password1 != new_password2:
+            raise ValidationError("Las contraseñas no coinciden.")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        jugador = super().save(commit=False)
+        direccion = self.cleaned_data.get('direccion')
+        
+        if commit:
+            if jugador.ubicacion:
+                # Update existing Ubicacion
+                ubicacion = jugador.ubicacion
+                ubicacion.direccion = direccion
+                ubicacion.save()
+            else:
+                # Create new Ubicacion instance if not exists
+                ubicacion = Ubicacion.objects.create(direccion=direccion)
+                jugador.ubicacion = ubicacion
+            
+            new_password = self.cleaned_data.get('new_password1')
+            if new_password:
+                jugador.set_password(new_password)
+            
+            jugador.save()
+        
+        return jugador

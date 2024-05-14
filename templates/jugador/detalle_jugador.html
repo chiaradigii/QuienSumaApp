@@ -44,6 +44,9 @@
                       <h4>{{jugador.nombre}} {{jugador.apellido}}</h4>
                       <button class="btn btn-primary">Conectar</button>
                       <button class="btn btn-outline-primary" onclick="location.href='{% url 'comunicaciones_app:startChat' jugador.id %}'">Chat</button>
+                      {% if jugador.id == request.user.id %}
+                      <a href="{% url 'jugador_app:edit_profile' %}" class="btn btn-info">Editar Perfil</a>
+                      {% endif %}
                     </div>
                   </div>
                 </div>

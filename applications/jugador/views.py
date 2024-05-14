@@ -9,8 +9,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic.edit import FormView
-from .forms import SignUpForm, PasswordChangeForm
-from django.urls import reverse_lazy
+from .forms import SignUpForm, EditProfileAndPasswordForm
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from ..ubicaciones.models import Ubicacion
@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from applications.comunicaciones.models import ChatSession
+
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
     model = Jugador
@@ -91,22 +92,7 @@ class LogOutView(View):
         logout(request)
         return HttpResponseRedirect(reverse_lazy('home/home.html'))
 
-class UpdatePasswordView(FormView):
     template_name = 'registration/password_change_form.html'
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy('registration/login.html')
-
-    def form_valid(self, form):
-        usuario = self.request.user
-        user = authenticate(
-            username=usuario.user,
-            password=usuario.password
-        )
-        if user:
-            user.set_password(form.cleaned_data['password1'])
-            user.save()
-        logout(self.request)
-        return super(UpdatePasswordView, self).form_valid(form)
 
 class JugadorListView(LoginRequiredMixin,ListView):
     template_name = "jugador/jugadores_disponibles.html"
@@ -139,4 +125,27 @@ class JugadorDetailView(LoginRequiredMixin,DetailView):
 
         chat_session, created = ChatSession.get_or_create_session(self.request.user, jugador)
         context['chat_id'] = chat_session.id
+        return context
+
+from django.views.generic.edit import UpdateView
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    model = Jugador
+    form_class = EditProfileAndPasswordForm
+    template_name = 'jugador/edit_profile.html'
+
+    def get_object(self):
+        return self.request.user
+
+    def form_valid(self, form):
+        # handle saving both the Jugador and Ubicacion
+        self.object = form.save()  
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('jugador_app:detalle_jugador', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
         return context
