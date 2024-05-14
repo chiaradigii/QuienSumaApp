@@ -109,8 +109,6 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'jugador.Jugador'
-from django.apps import AppConfig
-AppConfig.default = False
 
 CHANNEL_LAYERS = {
     "default": {
