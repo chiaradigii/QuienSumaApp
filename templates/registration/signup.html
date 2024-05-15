@@ -206,24 +206,33 @@ form i {
 {{ block.super }}
 
 <!-- script for Google Maps API -->
+<script>
+    console.log('Google Maps API Key:', '{{ google_maps_api_key }}');
+</script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
 
 <!-- Script for the autocompletion function -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      initAutocomplete();
-    });
-  
     function initAutocomplete() {
-      var input = document.getElementById('id_direccion');
-      if (input && input.tagName === 'INPUT') {
-        var autocomplete = new google.maps.places.Autocomplete(input);
-      } else {
-        console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
-      }
+        console.log('initAutocomplete called');
+        var input = document.getElementById('id_direccion');
+        if (input && input.tagName === 'INPUT') {
+            console.log('Initializing Google Places Autocomplete');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        } else {
+            console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
+        }
     }
-  </script>
-  
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+        if (typeof google !== 'undefined') {
+            initAutocomplete();
+        } else {
+            console.error('Google Maps JavaScript API not loaded');
+        }
+    });
+</script>
 
 <script type="text/javascript">
     $(function () {
@@ -248,7 +257,7 @@ form i {
         password2.setAttribute('type', type);
         this.classList.toggle('bi-eye');
     });
-</script>
+</>
 
 {% endblock scripts %}
 ``` 
