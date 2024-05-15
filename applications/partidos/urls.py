@@ -11,5 +11,7 @@ urlpatterns = [
  path('unirse/<int:partido_id>/', unirse_partido, name='unirse_partido'),
  path('aceptar-solicitud/<int:solicitud_id>/', aceptar_solicitud, name='aceptar_solicitud'),
  path('rechazar-solicitud/<int:solicitud_id>/', rechazar_solicitud, name='rechazar_solicitud'),
-
+ path('abandonar-partido/<int:partido_id>/', abandonar_partido, name='abandonar_partido'),
+ path('cancelar-partido/<int:partido_id>/', cancelar_partido, name='cancelar_partido'),
+  
 ]

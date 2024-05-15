@@ -86,6 +86,11 @@
                 <p>Cupos disponibles: {{ partido.cupos_disponibles }}</p>
                 <p>Solicitudes pendientes: {{ partido.solicitudes_pendientes }}</p>
                 <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
+                {% if partido.creador == request.user %}
+                <a href="{% url 'partidos_app:cancelar_partido' partido.id %}" class="btn btn-danger">Cancelar Partido</a>
+                {% else %}
+                    <a href="{% url 'partidos_app:abandonar_partido' partido.id %}" class="btn btn-warning">Cancelar Participación</a>
+                {% endif %}
             </div>
             <div class="card-footer">
                 <span class="partido-tipo {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">

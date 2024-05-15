@@ -230,3 +230,22 @@ def rechazar_solicitud(request, solicitud_id):
     messages.info(request, "Solicitud rechazada.")
     create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido rechazada.")
     return redirect('partidos_app:listar_partidos')
+
+@login_required
+def abandonar_partido(request, partido_id):
+    partido = get_object_or_404(Partido, id=partido_id)
+    # Asegurar que el usuario está inscrito y no es el creador
+    if request.user != partido.creador:
+        PartidoJugador.objects.filter(partido=partido, jugador=request.user).delete()
+        partido.update_cupos_disponibles()
+        messages.success(request, "Has cancelado tu participación.")
+    else:
+        messages.error(request, "No puedes cancelar tu participación en un partido que organizaste.")
+    return redirect('partidos_app:mis_partidos')
+
+@login_required
+def cancelar_partido(request, partido_id):
+    partido = get_object_or_404(Partido, id=partido_id, creador=request.user)
+    partido.delete()
+    messages.success(request, "El partido ha sido cancelado con éxito.")
+    return redirect('partidos_app:mis_partidos')
