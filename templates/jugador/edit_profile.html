@@ -26,10 +26,32 @@
 
 {% block scripts %}
 {{ block.super }}
+<!-- script for Google Maps API -->
+<script>
+    console.log('Google Maps API Key:', '{{ google_maps_api_key }}');
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+
+<!-- Script for the autocompletion function -->
 <script>
     function initAutocomplete() {
+        console.log('initAutocomplete called');
         var input = document.getElementById('id_direccion');
-        var autocomplete = new google.maps.places.Autocomplete(input);
+        if (input && input.tagName === 'INPUT') {
+            console.log('Initializing Google Places Autocomplete');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        } else {
+            console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
+        }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+        if (typeof google !== 'undefined') {
+            initAutocomplete();
+        } else {
+            console.error('Google Maps JavaScript API not loaded');
+        }
+    });
 </script>
 {% endblock scripts %}
