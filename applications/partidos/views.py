@@ -151,7 +151,9 @@ class MisPartidosListView(LoginRequiredMixin,ListView):
 
         solicitudes_por_partido = {partido.id: [] for partido in partidos}
         for solicitud in solicitudes:
-            solicitudes_por_partido[solicitud.cupo.partido.id].append(solicitud)
+            partido_id = solicitud.cupo.partido.id
+            if partido_id in solicitudes_por_partido:
+                solicitudes_por_partido[partido_id].append(solicitud)
 
         context['solicitudes_por_partido'] = solicitudes_por_partido
 
