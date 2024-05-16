@@ -47,14 +47,14 @@
     <script>
         function fetchNotifications() {
             console.log("Fetching notifications...");
-            $.ajax({
-                url: "{% url 'comunicaciones_app:fetch_notifications' %}",  
-                type: 'GET',
-                success: function(data) {
+            fetch("{% url 'comunicaciones_app:fetch_notifications' %}")
+                .then(response => response.json())
+                .then(data => {
                     console.log("Notifications data:", data);
                     if (data.notifications.length > 0) {
-                        data.notifications.forEach(function(notification) {
-                            var toastHtml = `
+                        const container = document.querySelector('.toast-container');
+                        data.notifications.forEach(notification => {
+                            const toastHtml = `
                                 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
                                     <div class="toast-header">
                                         <strong class="me-auto">Notification</strong>
@@ -63,44 +63,50 @@
                                     </div>
                                     <div class="toast-body" style="color: black;">${notification.message}</div>
                                 </div>`;
-                            $('.toast-container').append(toastHtml);
-                            $('.toast').toast('show').on('hidden.bs.toast', function () {
-                                $(this).remove();
+                            container.insertAdjacentHTML('beforeend', toastHtml);
+                            const toastElement = container.lastChild;
+                            const toast = new bootstrap.Toast(toastElement);
+                            toast.show();
+                            toastElement.addEventListener('hidden.bs.toast', function () {
+                                this.remove();
                             });
-                            // Mark notification as read
+                            // Mark the notification as read
                             markNotificationRead(notification.id);
                         });
-                    }
-                    else {
+                    } else {
                         console.log("No new notifications.");
                     }
-                },
-                error: function(error) {
+                })
+                .catch(error => {
                     console.log('Error fetching notifications:', error);
-                }
-            });
+                });
         }
+    
         function markNotificationRead(notificationId) {
-            $.ajax({
-                url: "{% url 'comunicaciones_app:mark_notification_read' %}",
-                type: 'POST',
-                data: {
-                    'notification_id': notificationId,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+            fetch("{% url 'comunicaciones_app:mark_notification_read' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
                 },
-                success: function(data) {
+                body: `notification_id=${notificationId}`
+            })
+            .then(response => {
+                if (response.ok) {
                     console.log('Notification marked as read:', notificationId);
-                },
-                error: function(error) {
-                    console.log('Error marking notification as read:', error);
+                } else {
+                    console.error('Failed to mark notification as read:', response.statusText);
                 }
+            })
+            .catch(error => {
+                console.log('Error marking notification as read:', error);
             });
         }
     
         // Fetch notifications on page load and periodically
-        fetchNotifications();
-        setInterval(fetchNotifications, 10000);
-    </>
+        document.addEventListener('DOMContentLoaded', fetchNotifications);
+        setInterval(fetchNotifications, 30000); // Adjust the interval as needed, perhaps longer to reduce server load.
+    </script>
     
     {% endblock scripts %}
 </body>
