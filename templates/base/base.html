@@ -45,69 +45,38 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
     <script>
-        function fetchNotifications() {
-            console.log("Fetching notifications...");
-            fetch("{% url 'comunicaciones_app:fetch_notifications' %}")
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Notifications data:", data);
-                    if (data.notifications.length > 0) {
-                        const container = document.querySelector('.toast-container');
-                        data.notifications.forEach(notification => {
-                            const toastHtml = `
-                                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-                                    <div class="toast-header">
-                                        <strong class="me-auto">Notification</strong>
-                                        <small style="color: gray;">Just now</small>
-                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                    </div>
-                                    <div class="toast-body" style="color: black;">${notification.message}</div>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', toastHtml);
-                            const toastElement = container.lastChild;
-                            const toast = new bootstrap.Toast(toastElement);
-                            toast.show();
-                            toastElement.addEventListener('hidden.bs.toast', function () {
-                                this.remove();
-                            });
-                            // Mark the notification as read
-                            markNotificationRead(notification.id);
-                        });
-                    } else {
-                        console.log("No new notifications.");
-                    }
-                })
-                .catch(error => {
-                    console.log('Error fetching notifications:', error);
-                });
-        }
-    
-        function markNotificationRead(notificationId) {
-            fetch("{% url 'comunicaciones_app:mark_notification_read' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: `notification_id=${notificationId}`
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Notification marked as read:', notificationId);
-                } else {
-                    console.error('Failed to mark notification as read:', response.statusText);
-                }
-            })
-            .catch(error => {
-                console.log('Error marking notification as read:', error);
+        const notificationSocket = new WebSocket(
+            "ws://" + window.location.host + "/ws/notifications/"
+        );
+
+        notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const container = document.querySelector('.toast-container');
+            const toastHtml = `
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+                    <div class="toast-header">
+                        <strong class="me-auto">Notification</strong>
+                        <small style="color: gray;">Just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" style="color: black;">${data.message}</div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            const toastElement = container.lastChild;
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                this.remove();
             });
-        }
-    
-        // Fetch notifications on page load and periodically
-        document.addEventListener('DOMContentLoaded', fetchNotifications);
-        setInterval(fetchNotifications, 30000); // Adjust the interval as needed, perhaps longer to reduce server load.
+        };
+
+        notificationSocket.onclose = function(e) {
+            console.error('Notification socket closed unexpectedly');
+        };
     </script>
     
+    
+
     {% endblock scripts %}
 </body>
 

@@ -165,58 +165,69 @@
 {{ block.super }}
 
 <script>
+    function connectChatWebSocket() {
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        let chatSocket = new WebSocket(protocol + window.location.host + "/ws/chatPage/" + {{ chat_id }} + "/");
 
-    let chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chatPage/" + {{ chat_id }} + "/");
+        chatSocket.onopen = function (e) {
+            console.log("The connection was set up successfully!");
+        };
 
-    chatSocket.onopen = function (e) {
-        console.log("The connection was set up successfully!");
-    };
-    chatSocket.onclose = function (e) {
-        console.log("Connection closed unexpectedly, attempting to reconnect...");
-        setTimeout(function() {
-            chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chatPage/" +{{ chat_id }}+ "/");
-            // Re-assign event handlers here if necessary
-        }, 1000); // try to reconnect in 1 second
-    };
-    document.querySelector("#id_message_send_input").focus();
-    document.querySelector("#id_message_send_input").onkeyup = function (e) {
-        if (e.keyCode == 13) {
-            document.querySelector("#id_message_send_button").click();
-        }
-    };
-    document.querySelector("#id_message_send_button").onclick = function (e) {
-        var messageInput = document.querySelector("#id_message_send_input").value;
-        var currentTime = new Date();
-        var time = currentTime.toLocaleTimeString();
-    
-        if (chatSocket.readyState === WebSocket.OPEN) {
-            chatSocket.send(JSON.stringify({
-                message: messageInput,
-                user: "{{request.user.user}}",
-                time: time
-            }));
-        } else {
-            console.log("WebSocket is not open.");
-        }
-    };
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        console.log(data);
-        if (typeof data.user === 'string') { // Ensure it's a string
-        const messageContainer = document.querySelector("#id_chat_item_container");
-        const div = document.createElement("div");
-        div.className = (data.user === "{{ request.user.user }}") ? "chat-message right" : "chat-message left";
-        div.innerHTML = `<div class="message-content">
-            <span class="message-user">${data.user.charAt(0).toUpperCase() + data.user.slice(1)}</span>
-            <span class="message-text">${data.message}</span>
-            <span class="message-timestamp">${data.time}</span>
-        </div>`;
-        document.querySelector("#id_message_send_input").value = "";
-        messageContainer.appendChild(div);
-        messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to the bottom of the chat container
-    } else {
-        console.error('Data.user is not a string:', data.user);
+        chatSocket.onclose = function (e) {
+            console.log("Connection closed unexpectedly, attempting to reconnect...");
+            setTimeout(connectChatWebSocket, 1000); // try to reconnect in 1 second
+        };
+
+        document.querySelector("#id_message_send_input").focus();
+        document.querySelector("#id_message_send_input").onkeyup = function (e) {
+            if (e.keyCode == 13) {
+                document.querySelector("#id_message_send_button").click();
+            }
+        };
+
+        document.querySelector("#id_message_send_button").onclick = function (e) {
+            var messageInput = document.querySelector("#id_message_send_input").value;
+            var currentTime = new Date();
+            var time = currentTime.toLocaleTimeString();
+
+            if (chatSocket.readyState === WebSocket.OPEN) {
+                chatSocket.send(JSON.stringify({
+                    message: messageInput,
+                    user: "{{request.user.user}}",
+                    time: time
+                }));
+            } else {
+                console.log("WebSocket is not open.");
+            }
+        };
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+            if (typeof data.user === 'string') { // Ensure it's a string
+                const messageContainer = document.querySelector("#id_chat_item_container");
+                const div = document.createElement("div");
+                div.className = (data.user === "{{ request.user.user }}") ? "chat-message right" : "chat-message left";
+                div.innerHTML = `<div class="message-content">
+                    <span class="message-user">${data.user.charAt(0).toUpperCase() + data.user.slice(1)}</span>
+                    <span class="message-text">${data.message}</span>
+                    <span class="message-timestamp">${data.time}</span>
+                </div>`;
+                document.querySelector("#id_message_send_input").value = "";
+                messageContainer.appendChild(div);
+                messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to the bottom of the chat container
+            } else {
+                console.error('Data.user is not a string:', data.user);
+            }
+        };
     }
-    };
+
+    if ("WebSocket" in window) {
+        connectChatWebSocket();
+    } else {
+        console.error("WebSockets are not supported by your browser.");
+    }
 </script>
+
+
 {% endblock scripts %}

@@ -35,9 +35,20 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"Notification for {self.recipient.user} - {'Read' if self.read else 'Unread'}"
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 def create_notification(recipient, message):
     try:
-        Notification.objects.create(recipient=recipient, message=message)
+        notification = Notification.objects.create(recipient=recipient, message=message)
+        
+        # Send the notification via WebSocket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"notifications_{recipient.id}",
+            {
+                'type': 'send_notification',
+                'message': message,
+            }
+        )
     except Exception as e:
         print("Failed to create notification:", e)
