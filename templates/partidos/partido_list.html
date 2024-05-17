@@ -3,11 +3,8 @@
 {% load dict_filter %}
 
 {% block titulo %} 
-
     Proximos partidos
-
 {% endblock titulo %}
-
 
 {% block head %} 
 <style>
@@ -15,19 +12,18 @@
     background-color: #fff; 
     color: black;
   }
-  .modal-header {
+  .modal-header, .modal-footer {
     border-bottom: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
+    background-color: #f8f9fa;
   }
   .modal-body {
     padding: 20px; 
   }
-  .modal-footer {
-    border-top: 1px solid #dee2e6; 
-  }
   .container {
     width: 95%;
     max-width: 95%;
-}
+  }
   .player-profile {
     text-align: center;
     margin-bottom: 20px; 
@@ -40,233 +36,208 @@
     margin-bottom: 10px;
     margin-right: 10px;
   }
-  
   .player-name {
     color: white; 
     font-size: 0.9em;
     text-align: center; 
   }
-  
-
   .partido-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
-  
   .partido-details {
     flex: 3; 
   }
-  
   .partido-players {
     margin-right: 30px; 
     padding-right: 0; 
     display: flex; 
     flex-wrap: wrap;
-
   }
-  
-  .pagination > li > a, .
+  .pagination > li > a, 
   .pagination > li > span {
-  color: #676b90;
+    color: #676b90;
   }
-  
   .pagination > .active > a,
   .pagination > .active > a:focus,
   .pagination > .active > a:hover,
   .pagination > .active > span,
   .pagination > .active > span:focus,
   .pagination > .active > span:hover {
-  background-color: #5f6bd2;
-  border-color: #1f2342;
+    background-color: #5f6bd2;
+    border-color: #1f2342;
   }
   .page-item.active .page-link {
-  z-index: 1;
-  color: #fff;
-  background-color: #5f6bd2;
-  border-color: #5f6bd2;
+    z-index: 1;
+    color: #fff;
+    background-color: #5f6bd2;
+    border-color: #5f6bd2;
   }
-
-body {
-background: #1c1c1c; 
-color: #e1e1e1;
-border: 1px solid #2a2a2;
-}
-
-.list-group-item {
-  align-items: left;
-  justify-content: space-between;
-  padding: 15px;
-  margin-top: 10px;
-  background-color: #1c1c1c; 
-  color: #e1e1e1; 
-  border: none; 
-}
-.list-group-item + .list-group-item {
-  border-top: 1px solid #2a2a2a;
+  body {
+    background: #1c1c1c; 
+    color: #e1e1e1;
+    border: 1px solid #2a2a2;
   }
-
- 
-.list-group-item-heading {
+  .list-group-item {
+    align-items: left;
+    justify-content: space-between;
+    padding: 15px;
+    margin-top: 10px;
+    background-color: #1c1c1c; 
+    color: #e1e1e1; 
+    border: none; 
+  }
+  .list-group-item + .list-group-item {
+    border-top: 1px solid #2a2a2a;
+  }
+  .list-group-item-heading {
     color: #aaa; 
-    }
-  
-.list-group-item small {
-      color: #ccc; 
-      }
-
-.partido-list-item {
-  border: none;
-  padding: 0;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-}
-.partido-list-item h5 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-.partido-list-item a:hover {
-  color: #bbbbbb; 
-}
-.partido-list-item p {
-  margin: 0px 0;
-  color: #999999;
-}
-.partido-date {
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-.partido-cupos {
-  font-size: 0.8em;
-  display: inline-block; 
-  background: #28a745; 
-  color: #ffffff; 
-  padding: 5px 10px; 
-  border-radius: 15px;
-  margin-left: 10px;
-  text-decoration: none; 
-}
-
-.partido-cupos.full {
-  color: #dc3545; 
   }
-
-.fecha-encabezado {
+  .list-group-item small {
+    color: #ccc; 
+  }
+  .partido-list-item {
+    border: none;
+    padding: 0;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  .partido-list-item h5 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  .partido-list-item a:hover {
+    color: #bbbbbb; 
+  }
+  .partido-list-item p {
+    margin: 0px 0;
+    color: #999999;
+  }
+  .partido-date {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .partido-cupos {
+    font-size: 0.8em;
+    display: inline-block; 
+    background: #28a745; 
+    color: #ffffff; 
+    padding: 5px 10px; 
+    border-radius: 15px;
+    margin-left: 10px;
+    text-decoration: none; 
+  }
+  .partido-cupos.full {
+    color: #dc3545; 
+  }
+  .fecha-encabezado {
     color: #fff; 
     font-size: 1.5rem; 
     margin-bottom: 20px; 
   }
-
-  
 </style>
 {% endblock head %}
 
-
 {% block body %}
 
-  <!-- Submit request to join Modal -->
-  <div class="modal fade" id="unirseModal" tabindex="-1" aria-labelledby="unirseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body" id="modalMessage">
-          {% for message in messages %}
-            <p>{{ message }}</p>
-          {% endfor %}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+<!-- Submit request to join Modal -->
+<div class="modal fade" id="unirseModal" tabindex="-1" aria-labelledby="unirseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" id="modalMessage">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
 
 {% include 'includes/header.html' %}
 
-
-
 <!--INICIO DEL CONTENIDO-->
 
-
-<div class="container mt-4" style="margin-left: 20px;" >
+<div class="container mt-4" style="margin-left: 20px;">
   <h1 class="text-center mb-4 fecha-encabezado">Próximos partidos</h1>
   
   <!-- Botón para mostrar/ocultar el mapa y contenedor del mapa -->
   <button type="button" class="btn btn-primary" onclick="toggleMap()">Mostrar en Mapa</button>
   <div id="map" style="height: 400px; display: none;"></div>
 
-  <!--filter form-->
-<!-- Date Filter  -->
-<!-- Filter Modal Button -->
-<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
-  Filtrar
-</button>
+  <!-- Filter form -->
+  <!-- Filter Modal Button -->
+  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
+    Filtrar
+  </button>
 
-<!-- Filter Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="filterModalLabel" style="color: black;">Filtrar por fecha y género</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!--  Filter Form -->
-        <form id="filterForm" method="GET" action="{% url 'partidos_app:listar_partidos' %}">
-
-          <!-- Gender Filter Radio Buttons -->
-          <div>
-              <input type="radio" id="genderMixto" name="gender" value="U">
-              <label style="color: black;" for="genderMixto">Mixto</label>
-          </div>
-          <div>
-              <input type="radio" id="genderMasculino" name="gender" value="M">
-              <label style="color: black;" for="genderMasculino">Masculino</label>
-          </div>
-          <div>
-              <input type="radio" id="genderFemenino" name="gender" value="F">
-              <label style="color: black;" for="genderFemenino">Femenino</label>
-          </div>
-
-          <!-- Date Filter Input -->
-          <input type="date" id="dateFilter" name="date_filter" value="{{ request.GET.date_filter }}" min="2023-01-01">
-          <button type="button" onclick="submitFilter()">Filtrar fecha</button>
-        
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger" onclick="clearFilter()">Borrar filtro</button>
-        <button type="button" class="btn btn-primary" onclick="submitFilter()">Aplicar</button>
+  <!-- Filter Modal -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filterModalLabel" style="color: black;">Filtrar por fecha y género</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Filter Form -->
+          <form id="filterForm" method="GET" action="{% url 'partidos_app:listar_partidos' %}">
+            <!-- Gender Filter Radio Buttons -->
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="genderMixto" name="gender" value="U">
+              <label class="form-check-label" for="genderMixto" style="color: black;">Mixto</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="genderMasculino" name="gender" value="M">
+              <label class="form-check-label" for="genderMasculino" style="color: black;">Masculino</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="genderFemenino" name="gender" value="F">
+              <label class="form-check-label" for="genderFemenino" style="color: black;">Femenino</label>
+            </div>
+            <!-- Date Filter Input -->
+            <div class="mt-3">
+              <input class="form-control" type="date" id="dateFilter" name="date_filter" value="{{ request.GET.date_filter }}" min="2023-01-01">       
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <button type="button" class="btn btn-primary" onclick="submitFilter()">Aplicar</button>
+              <button type="button" class="btn btn-danger" onclick="clearFilter()">Borrar filtro</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Button to create parties -->
-<button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:crear_partido' %}'">Crear partidos</button>
-<!-- Button to navigate to "Mis partidos" -->
-<button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:mis_partidos' %}'">Mis partidos</button>
+  <!-- Button to create parties -->
+  <button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:crear_partido' %}'">Crear partidos</button>
+  <!-- Button to navigate to "Mis partidos" -->
+  <button type="button" class="btn mx-1 btn-secondary" onclick="location.href='{% url 'partidos_app:mis_partidos' %}'">Mis partidos</button>
 
-
-<div class="column" style="margin-left: 20px;">
+  <div class="column" style="margin-left: 20px;">
     {% for partido in partidos %}
       {% ifchanged partido.fecha_hora.date %}
       <div class="list-group">
-          <br>
-        <h2 class="fecha-encabezado"> {{ partido.fecha_hora | date:"l, d F Y" }}</h2>
+        <br>
+        <h2 class="fecha-encabezado">{{ partido.fecha_hora | date:"l, d F Y" }}</h2>
       {% endifchanged %}
       <div class="match-player-container">
         <!-- Match Details -->
         <div class="list-group-item partido-list-item">
           <div class="partido-row" style="align-items: center;">
-           
             <div class="partido-details">
               <h5>
                 {{ partido.get_lugar }}
                 <!-- Botón que activa el modal -->
-                <button type="button"  class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}" data-bs-toggle="modal" data-bs-target="#partidoModal{{ partido.id }}">
+                <button type="button" class="partido-cupos {% if partido.cupos_disponibles == 0 %}full{% endif %}" data-bs-toggle="modal" data-bs-target="#partidoModal{{ partido.id }}">
                   {{ partido.cupos_disponibles }} spots
                 </button>
                 <div class="modal fade" id="partidoModal{{ partido.id }}" tabindex="-1" aria-labelledby="partidoModalLabel{{ partido.id }}" aria-hidden="true">
@@ -283,26 +254,25 @@ border: 1px solid #2a2a2;
                         <hr>
                         <ul>
                           {% for partido_data in partidos_con_cupos %}
-                          {% if partido_data.partido.id == partido.id %}
+                            {% if partido_data.partido.id == partido.id %}
                               {% for posicion in partido_data.posiciones %}
-                              {% if posicion.cupos_disponibles > 0 %}
-                              <li style="display: flex; align-items: center;">
-                                <span style="margin-right: 10px;">{{ posicion.posicion }}: {{ posicion.cupos_disponibles }} disponibles</span>
-                                <!-- Formulario para unirse al partido -->
-                                <form action="{% url 'partidos_app:unirse_partido' partido_id=partido.id %}" method="post">
-                                    {% csrf_token %}       
-                                    <!-- Button trigger modal-->          
-                                    <button type="submit" id="modalTrigger" data-bs-toggle="modal" data-bs-target="#unirseModal" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px; ">
-                                      Unirse
-                                    </button>
-                                </form>
-                            </li>
-                              {% endif %}
+                                {% if posicion.cupos_disponibles > 0 %}
+                                  <li style="display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">{{ posicion.posicion }}: {{ posicion.cupos_disponibles }} disponibles</span>
+                                    <!-- Formulario para unirse al partido -->
+                                    <form action="{% url 'partidos_app:unirse_partido' partido_id=partido.id %}" method="post">
+                                      {% csrf_token %}       
+                                      <!-- Button trigger modal-->          
+                                      <button type="submit" id="modalTrigger" data-bs-toggle="modal" data-bs-target="#unirseModal" class="btn btn-primary" style="background-color: #007bff; border-radius: 15px; font-size: 0.8rem; padding: 5px 7px; margin-bottom: 3px;">
+                                        Unirse
+                                      </button>
+                                    </form>
+                                  </li>
+                                {% endif %}
                               {% endfor %}
-                          {% endif %}
-                      {% endfor %}
-                      </ul>
-                      
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
                       </div>         
               </h5>
               <p>
@@ -310,43 +280,40 @@ border: 1px solid #2a2a2;
                 <span>{{ partido.ubicacion }}</span>
               </p>
               <p>
-                <span >{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
-                
-                <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span > {{ partido.get_gender_display }}</span>
+                <span>{{ partido.tipo_futbol }}v{{ partido.tipo_futbol }} -</span>
+                <i class="fa fa-venus-mars {% if partido.gender == 'M' %}fa fa-mars-stroke{% elif partido.gender == 'F' %}fa fa-venus{% endif %}" aria-hidden="true"></i> <span>{{ partido.get_gender_display }}</span>
               </p> 
             </div>
             <div>
               <h4>Jugadores Inscriptos</h4>
               <div class="partido-players" style="display: flex; flex-wrap: wrap;">
                 {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
-                <div class="player-profile">
+                  <div class="player-profile">
                     {% if partido_jugador.jugador.foto %}
-                        <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
+                      <img src="{{ partido_jugador.jugador.foto.url }}" alt="{{ partido_jugador.jugador.nombre }}">
                     {% else %}
-                        {% if partido_jugador.jugador.get_sexo_display == 'Femenino' %}
-                            <img src="{% static 'img/WomanAvatar.png' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
-                        {% else %}
-                            <img src="{% static 'img/MasculinoAvatar.jpg' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
-                        {% endif %}
+                      {% if partido_jugador.jugador.get_sexo_display == 'Femenino' %}
+                        <img src="{% static 'img/WomanAvatar.png' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
+                      {% else %}
+                        <img src="{% static 'img/MasculinoAvatar.jpg' %}" alt="{{ partido_jugador.jugador.nombre }}" class="rounded-circle" width="70" height="70">
+                      {% endif %}
                     {% endif %}
                     <a href="{% url 'jugador_app:detalle_jugador' partido_jugador.jugador.id %}">
-                        <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
+                      <div class="player-name">{{ partido_jugador.jugador.nombre }}</div>
                     </a>
-                </div>
-            {% endfor %}            
+                  </div>
+                {% endfor %}            
+              </div>
             </div>
           </div>
         </div>
         {% empty %}
         <p>No hay partidos disponibles</p>
-       </div>
-
       </div>
+    </div>
   {% endfor %}
 
-    <!-- Paginacion -->
-<div class="pagination justify-content-center" >
-  <!--Si esta paginado-->
+  <!-- Paginacion -->
   <div class="pagination justify-content-center">
     {% if is_paginated %}
       <nav aria-label="Page navigation example">
@@ -355,24 +322,21 @@ border: 1px solid #2a2a2;
             {% if pagina == page_obj.number %}
               <li class="page-item active"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
             {% else %}
-              <li class="page-item"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET. }}">{{ pagina }}</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ pagina }}&date_filter={{ request.GET.date_filter }}">{{ pagina }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
       </nav>
     {% endif %}
   </div>
- <!-- Fin de Paginacion -->
-
+  <!-- Fin de Paginacion -->
 
 {% endblock body %}
-
 
 {% block scripts %}
 {{ block.super }}
 
 <!-- Google Maps API -->
-<!-- script for Google Maps API -->
 <script>
   console.log('Google Maps API Key:', '{{ google_maps_api_key }}');
 </script>
@@ -381,27 +345,27 @@ border: 1px solid #2a2a2;
 <!-- Script for the autocompletion function -->
 <script>
   function initAutocomplete() {
-      console.log('initAutocomplete called');
-      var input = document.getElementById('id_direccion');
-      if (input && input.tagName === 'INPUT') {
-          console.log('Initializing Google Places Autocomplete');
-          var autocomplete = new google.maps.places.Autocomplete(input);
-      } else {
-          console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
-      }
+    console.log('initAutocomplete called');
+    var input = document.getElementById('id_direccion');
+    if (input && input.tagName === 'INPUT') {
+      console.log('Initializing Google Places Autocomplete');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+    } else {
+      console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM fully loaded and parsed');
-      if (typeof google !== 'undefined') {
-          initAutocomplete();
-      } else {
-          console.error('Google Maps JavaScript API not loaded');
-      }
+    console.log('DOM fully loaded and parsed');
+    if (typeof google !== 'undefined') {
+      initAutocomplete();
+    } else {
+      console.error('Google Maps JavaScript API not loaded');
+    }
   });
 </script>
 
-</script><script type="text/javascript">
+<script type="text/javascript">
   $(document).ready(function () {
     $('#id_fecha_hora').datetimepicker({
       format: 'DD-MM-YYYY HH:mm', 
@@ -413,66 +377,71 @@ border: 1px solid #2a2a2;
     });
   });
 </script>
-
 <script>
-  function submitFilter() {
-    console.log("Submitting form with current filters");
-    $('#filterForm').submit();
-  }
-
-  function clearFilter() {
-    $('#dateFilter').val(''); 
-    $('input[name="gender"]').prop('checked', false); // Uncheck all gender radio buttons
-    submitFilter(); // Submit the form without filter
-  }
+  $(document).ready(function() {
+    function submitFilter() {
+      console.log("Submitting form with current filters");
+      document.getElementById('filterForm').submit();
+    }
   
-  $(function () {
+    function clearFilter() {
+      document.getElementById('dateFilter').value = ''; 
+      var genderInputs = document.querySelectorAll('input[name="gender"]');
+      genderInputs.forEach(function(input) {
+        input.checked = false;
+      });
+      submitFilter(); // Submit the form without filter
+    }
+  
     $('#dateFilter').datetimepicker({
       format: 'DD-MM-YYYY'  
     });
+  
+    // Make the functions available globally
+    window.submitFilter = submitFilter;
+    window.clearFilter = clearFilter;
   });
-
 </script>
 <script>
-    let map;
-    let markers = [];
+  let map;
+  let markers = [];
 
-    function toggleMap() {
-        var mapContainer = document.getElementById('map');
-        mapContainer.style.display = mapContainer.style.display === 'none' ? 'block' : 'none';
-        if (mapContainer.style.display === 'block' && !map) {
-            initMap();
-        }
+  function toggleMap() {
+    var mapContainer = document.getElementById('map');
+    mapContainer.style.display = mapContainer.style.display === 'none' ? 'block' : 'none';
+    if (mapContainer.style.display === 'block' && !map) {
+      initMap();
     }
+  }
 
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 40.416775, lng: -3.703790},
-            zoom: 15
-        });
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.416775, lng: -3.703790},
+      zoom: 15
+    });
 
-        // Agregar marcadores para cada partido
-        {% for partido in partidos_con_ubicacion %}
-        addMarker({lat: {{ partido.lat }}, lng: {{ partido.lng }}}, "{{ partido.nombre }}", {{ partido.id }});
-        {% endfor %}
-    }
+    // Agregar marcadores para cada partido
+    {% for partido in partidos_con_ubicacion %}
+    addMarker({lat: {{ partido.lat }}, lng: {{ partido.lng }}}, "{{ partido.nombre }}", {{ partido.id }});
+    {% endfor %}
+  }
 
-    function addMarker(location, title, partidoId) {
-      console.log("Adding marker:", location, title, partidoId);
-      var marker = new google.maps.Marker({
-        position: location,
-        map: map,
-        title: title
-      });
-      var infowindow = new google.maps.InfoWindow({
-        content: title
-       });
-        marker.addListener('click', function() {
-          window.location.href = '/detalle-partido/' + partidoId; 
-      });
-        markers.push(marker);
-        map.setCenter(location); 
-    }
+  function addMarker(location, title, partidoId) {
+    console.log("Adding marker:", location, title, partidoId);
+    var marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      title: title
+    });
+    var infowindow = new google.maps.InfoWindow({
+      content: title
+    });
+    marker.addListener('click', function() {
+      window.location.href = '/detalle-partido/' + partidoId; 
+    });
+    markers.push(marker);
+    map.setCenter(location); 
+  }
 </script>
 
 <script>
@@ -498,7 +467,5 @@ border: 1px solid #2a2a2;
     {% endif %}
   });
 </script>
-
-
 
 {% endblock scripts %}

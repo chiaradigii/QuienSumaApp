@@ -130,6 +130,18 @@ class PartidoListView(ListView):
     def get_queryset(self):
         hoy = datetime.now(timezone.utc).date()
         partidos = Partido.objects.all().order_by('-fecha_hora')
+
+        # Manejo de filtros
+        gender_filter = self.request.GET.get('gender')
+        date_filter = self.request.GET.get('date_filter')
+        if gender_filter:
+            partidos = partidos.filter(gender=gender_filter)
+        if date_filter:
+            try:
+                date_filter = datetime.strptime(date_filter, '%Y-%m-%d')
+                partidos = partidos.filter(fecha_hora__date=date_filter)
+            except ValueError:
+                pass
         partidos_hoy = partidos.filter(fecha_hora__date=hoy)
         partidos_manana = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
         partidos_semana = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
