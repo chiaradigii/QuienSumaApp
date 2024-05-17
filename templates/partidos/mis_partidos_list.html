@@ -5,26 +5,26 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
 <style>
     .btn-back {
-        margin: 20px;
+        margin: 20px 0;
         padding: 10px 20px;
         background-color: #6c757d;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         transition: background-color 0.3s ease;
     }
     .btn-back:hover {
         background-color: #5a6268;
     }
     .card {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s ease-in-out;
         margin-bottom: 20px;
     }
     .card:hover {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     .card-header {
         background-color: #007bff;
@@ -72,35 +72,39 @@
 {% endblock head %}
 
 {% block body %}
-<div class="container">
+<div class="container mt-4">
     <button onclick="history.back()" class="btn-back">Volver</button>
-    <h1 class="mt-4 mb-4">Mis Partidos</h1>
+    <h1 class="mb-4">Mis Partidos</h1>
     {% if mis_partidos %}
-        {% for partido in mis_partidos %}
-        <div class="card {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
-            <div class="card-header">
-                Partido de {{ partido.tipo_futbol }} - {{ partido.get_lugar }}
+        <div class="row">
+            {% for partido in mis_partidos %}
+            <div class="col-md-6">
+                <div class="card {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
+                    <div class="card-header">
+                        Partido de {{ partido.tipo_futbol }} - {{ partido.get_lugar }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ partido.fecha_hora|date:"d M Y H:i" }}</h5>
+                        <p class="card-text">Cupos disponibles: {{ partido.cupos_disponibles }}</p>
+                        <p class="card-text">Solicitudes pendientes: {{ partido.solicitudes_pendientes }}</p>
+                        <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
+                        {% if partido.creador == request.user %}
+                        <a href="{% url 'partidos_app:cancelar_partido' partido.id %}" class="btn btn-danger">Cancelar Partido</a>
+                        {% else %}
+                        <a href="{% url 'partidos_app:abandonar_partido' partido.id %}" class="btn btn-warning">Cancelar Participación</a>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <span class="partido-tipo {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
+                            {% if partido.creador == request.user %}Organizado{% else %}Participando{% endif %}
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ partido.fecha_hora|date:"d M Y H:i" }}</h5>
-                <p>Cupos disponibles: {{ partido.cupos_disponibles }}</p>
-                <p>Solicitudes pendientes: {{ partido.solicitudes_pendientes }}</p>
-                <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
-                {% if partido.creador == request.user %}
-                <a href="{% url 'partidos_app:cancelar_partido' partido.id %}" class="btn btn-danger">Cancelar Partido</a>
-                {% else %}
-                    <a href="{% url 'partidos_app:abandonar_partido' partido.id %}" class="btn btn-warning">Cancelar Participación</a>
-                {% endif %}
-            </div>
-            <div class="card-footer">
-                <span class="partido-tipo {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
-                    {% if partido.creador == request.user %}Organizado{% else %}Participando{% endif %}
-                </span>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     {% else %}
-    <p>No has organizado ni estás inscrito en partidos.</p>
+    <p class="mt-4">No has organizado ni estás inscrito en partidos.</p>
     {% endif %}
 </div>
 {% endblock body %}
