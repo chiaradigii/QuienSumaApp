@@ -1,4 +1,4 @@
-# Urls de la app comunicaciones
+# applications/comunicaciones/urls.py
 from django.urls import path
 from .views import chatPage,start_chat, mark_notification_read, fetch_notifications
 

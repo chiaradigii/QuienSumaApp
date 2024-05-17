@@ -1,5 +1,95 @@
 {% load static %}
+{% block head %}
 
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap');
+
+  nav {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      position: relative;
+  }
+  
+  .icon {
+      cursor: pointer;
+  }
+  
+  .icon img {
+      width: 20px;
+  }
+  
+  .icon:hover {
+      opacity: .7;
+  }
+  
+  .logo {
+      flex: 1;
+      color: #eee;
+      font-size: 20px;
+      font-family: monospace;
+  }
+  
+  .notifications {
+    width: 300px;
+    max-height: 400px; 
+    opacity: 0;
+    position: absolute;
+    top: 63px;
+    right: 62px;
+    z-index: 9999;
+    border-radius: 5px 0px 5px 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: opacity 0.3s, height 0.3s;
+    overflow-y: auto;
+}
+  .notifications h2 {
+      font-size: 14px;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      color: #999;
+  }
+  
+  .notifications h2 span {
+      color: #f00;
+  }
+  
+  .notifications-item {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      padding: 6px 9px;
+      margin-bottom: 0px;
+      cursor: pointer;
+  }
+  
+  .notifications-item:hover {
+      background-color: #eee;
+  }
+  
+  .notifications-item img {
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin-right: 9px;
+      border-radius: 50%;
+      margin-top: 2px;
+  }
+  
+  .notifications-item .text h4 {
+      color: #777;
+      font-size: 16px;
+      margin-top: 3px;
+  }
+  
+  .notifications-item .text p {
+      color: #aaa;
+      font-size: 12px;
+  }
+  
+</style>
+
+{% endblock head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
 
@@ -26,11 +116,41 @@
     <li class="nav-item" style="margin-right: 10px;"> 
       <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'logout' %}">Cerrar sesión</a>
     </li>   
-
+    <li class="nav-item" style="margin-right: 10px;">
     <a href="{% url 'jugador_app:detalle_jugador' user.id %}" class="btn btn-dark btn-floating" data-mdb-ripple-initt style="margin-right: 20px;">
       <i class="far fa-user"></i>
     </a>
+    </li>
+
+            <!-- Notification Icon and Dropdown -->
+    <li class="nav-item" style="margin-right: 10px;">
+      <div class="icon" id="bell">
+          <img src="https://i.imgur.com/AC7dgLA.png" alt="">
+      </div>
+      <div class="notifications" id="box">
+        <h2>Notificaciones - 
+          <span id="notification-count" class="{% if request.user.notifications.all.count == 0 %}text-danger{% else %}text-success{% endif %}">
+              {{ request.user.notifications.all.count }}
+          </span>
+      </h2>
+          <div id="notification-items">
+            {% for notification in request.user.notifications.all %}
+              <div class="notifications-item">
+                <i class="fa fa-flag" style="color: black; margin-right: 5px; margin-top: 5px;"></i>
+                <div class="text">
+                  <h4>{{ notification.message }}</h4>
+                  <p>{{ notification.created_at|date:"F d, Y H:i" }}</p>
+                </div>
+              </div>
+              {% empty %}
+              <div class="notifications-item">
+                  <div class="text">
+                      <h4>No hay notificaciones</h4>
+                  </div>
+            {% endfor %}
+          </div>
+      </div>
+    </li>
     </nav>
 </header>
-
 

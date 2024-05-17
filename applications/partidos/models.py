@@ -6,7 +6,8 @@ from django.db import models
 from django.conf import settings
 from ..jugador.models import Jugador
 from ..ubicaciones.models import Ubicacion
-
+from django.utils.dateformat import DateFormat
+from django.utils.formats import date_format
 
 class PosicionCupo(models.Model):
     POSICIONES_NECESARIAS_CHOICES = (
@@ -88,8 +89,8 @@ class Partido(models.Model):
         PartidoJugador.objects.filter(partido=self).delete()
         super().delete(*args, **kwargs)
 
-    def __str__(self):
-        return '{} - {} - {}'.format(self.tipo_futbol, self.fecha_hora, self.ubicacion)
+def __str__(self):
+        return f"{self.tipo_futbol} - {self.get_lugar()} - {date_format(self.fecha_hora, 'DATE_FORMAT')}"
 
 class PartidoJugador(models.Model):
     partido = models.ForeignKey(Partido, on_delete=models.CASCADE)

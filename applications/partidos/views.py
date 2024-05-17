@@ -15,6 +15,10 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from django.db.models import Q
 from ..comunicaciones.models import create_notification
+from django.utils.dateformat import DateFormat
+from django.utils.formats import date_format
+import locale
+from django.utils import translation
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -202,7 +206,7 @@ def unirse_partido(request, partido_id):
         messages.error(request, "No puedes unirte a tu propio partido.")
     else:
         SolicitudUnirse.objects.create(cupo=cupo, solicitante=request.user)
-        messages.success(request, "La solicitud se ha enviado correctamente.")
+        messages.success(request, "Solicitud enviada")
 
     create_notification(recipient=partido.creador, message=f"{request.user.user} quiere unirse a tu partido.")
     return redirect('partidos_app:listar_partidos')
@@ -210,16 +214,28 @@ def unirse_partido(request, partido_id):
 @login_required
 def aceptar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudUnirse, id=solicitud_id, cupo__partido__creador=request.user)
-    partido_id = solicitud.cupo.partido.id
+    partido = solicitud.cupo.partido
+    translation.activate('es-es')
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
     if request.user != solicitud.cupo.partido.creador:
         messages.error(request, "No tienes permisos para aceptar esta solicitud.")
         return redirect('partidos_app:listar_partidos')
 
     try:
         solicitud.aceptar()
-        create_notification(request.user, f"{solicitud.solicitante.user} se ha unido a tu partido")
-        create_notification(solicitud.solicitante, f"Tu solicitud para unirte al partido {solicitud.cupo.partido} ha sido aceptada.")
-        PartidoJugador.objects.create(partido=solicitud.cupo.partido, jugador=solicitud.solicitante)
+        
+        # Formatear la fecha
+        fecha_partido = partido.fecha_hora.strftime('%A, %d de %B')
+        lugar_partido = partido.get_lugar()
+        posicion = solicitud.cupo.get_posicion_display()
+        
+        mensaje_solicitante = f"Tu solicitud para jugar el {fecha_partido} en {lugar_partido} como {posicion} fue aceptada!"
+        create_notification(solicitud.solicitante, mensaje_solicitante)
+        
+        mensaje_creador = f"{solicitud.solicitante.user} se ha unido a tu partido el {fecha_partido} en {lugar_partido}."
+        create_notification(request.user, mensaje_creador)
+        
+        PartidoJugador.objects.create(partido=partido, jugador=solicitud.solicitante)
     except ValidationError as e:
         messages.error(request, str(e))
     return redirect('partidos_app:listar_partidos')
