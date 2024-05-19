@@ -67,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_and_send_notification(self, recipient, user, message):
-        notification_message = f"{user} sent you a message: {message}"
+        notification_message = f"{user} te envio un mensaje: {message}"
         from applications.comunicaciones.models import create_notification
         create_notification(recipient, notification_message)
 

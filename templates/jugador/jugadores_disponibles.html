@@ -8,18 +8,20 @@
 {% block head %} 
 <style>
     body {
-        background: #2c2f33; /* Dark background for the whole page */
-        color: #fff;
+        background: #212529; /* Dark background for the whole page */
+        color: #D3D3D3; /* Light text color */
+        font-family: 'Merriweather', serif; /* Consistent font */
     }
 
     h1 {
-        color: white;
+        color: #FFFDD0; /* Light color for headings */
         margin-top: 20px;
         margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif; /* Consistent font */
     }
 
     .form-container {
-        background-color: #23272a;
+        background-color: #23272a; /* Darker background for form container */
         padding: 20px;
         border-radius: 10px;
         margin-bottom: 20px;
@@ -27,14 +29,14 @@
 
     .form-control, .btn-outline-secondary {
         border-radius: 20px;
-        background-color: #2c2f33;
-        color: #fff;
-        border: 1px solid #fff;
+        background-color: #2c2f33; /* Matching background color */
+        color: #fff; /* White text */
+        border: 1px solid #fff; /* White border */
     }
 
     .btn-outline-secondary:hover {
-        background-color: #fff;
-        color: #2c2f33;
+        background-color: #fff; /* White background on hover */
+        color: #2c2f33; /* Dark text on hover */
     }
 
     .table {
@@ -48,23 +50,23 @@
     }
 
     .table thead th {
-        background-color: #23272a;
-        color: white;
+        background-color: #23272a; /* Darker background for table header */
+        color: #FFFDD0; /* Light text color */
     }
 
     .table-dark {
-        background-color: #2c2f33;
+        background-color: #2c2f33; /* Dark background for table */
     }
 
     .btn-light {
         border-radius: 20px;
-        background-color: #fff;
-        color: #2c2f33;
+        background-color: #fff; /* White background */
+        color: #2c2f33; /* Dark text */
     }
 
     .pagination > li > a,
     .pagination > li > span {
-        color: #676b90; 
+        color: #676b90; /* Light color for pagination links */
     }
 
     .pagination > .active > a,
@@ -73,15 +75,15 @@
     .pagination > .active > span,
     .pagination > .active > span:focus,
     .pagination > .active > span:hover {
-        background-color: #5f6bd2;
-        border-color: #1f2342;
+        background-color: #5f6bd2; /* Active page background */
+        border-color: #1f2342; /* Active page border */
     }
 
     .page-item.active .page-link {
         z-index: 1;
-        color: #fff;
-        background-color: #5f6bd2; 
-        border-color: #5f6bd2;
+        color: #fff; /* White text for active page */
+        background-color: #5f6bd2; /* Background color for active page */
+        border-color: #5f6bd2; /* Border color for active page */
     }
 </style>
 {% endblock head %}
@@ -99,7 +101,7 @@
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="Buscar jugador" name="kword" id="kword" aria-label="Jugador a buscar" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                        <button class="btn btn-outline-secondary"style="margin-left: 10px;" type="submit">Buscar</button>
                     </div>
                 </div>
             </div>

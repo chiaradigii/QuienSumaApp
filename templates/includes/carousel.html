@@ -1,8 +1,20 @@
-
 {% load static %}
 {% block head %}
-
 <style>
+  .carousel-item {
+    height: 65vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    background-color: #339999;
+    background-size: cover;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .custom-carousel-caption {
     display: flex;
     flex-direction: column;
@@ -12,110 +24,93 @@
   }
 
   .custom-carousel-caption h1 {
-    font-size: 10rem;
+    font-size: 3rem;
     font-weight: bold;
     text-align: left;
     text-shadow: 2px 2px 4px #000000;
     margin-bottom: 2rem;
+    color: #FFFDD0;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .custom-carousel-caption h5 {
+    color: #FFFDD0;
+    font-family: 'Montserrat', sans-serif;
   }
 
   @media (max-width: 768px) {
     .custom-carousel-caption h1 {
-      font-size: 2.5rem; /* Tamaño más pequeño para pantallas más pequeñas */
+      font-size: 2.5rem; /* Smaller size for smaller screens */
     }
   }
 </style>
 
 {% endblock head %}
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+    <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+    <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+  </ol>
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'img/carrousel1.jpg' %}" class="d-block w-100" alt="Primera imagen">
+      <div class="custom-carousel-caption carousel-caption d-none d-md-block">
+        <h1>TU PARTIDO.<br>TU CANCHA.<br>TUS REGLAS.</h1>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/carrousel4.jpg' %}" class="d-block w-100" alt="Segunda imagen">
+      <div class="custom-carousel-caption carousel-caption d-none d-md-block">
+        <h1>Encontra tu equipo ideal</h1>
+        <h5>No dejes de jugar.</h5>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/carrousel3.jpg' %}" class="d-block w-100" alt="Tercera imagen">
+      <div class="custom-carousel-caption carousel-caption d-none d-md-block">
+        <h1>Que no te falten jugadores</h1>
+        <h5>No dejes de jugar.</h5>
+      </div>
+    </div>
+  </div>
+  <!-- Controls -->
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </a>
+</div>
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
-
-     <!--Indicadores-->
-   <ol class="carousel-indicators">
-     <li data-target="#myCarousel" data-slide="0" class="item1 active" ></li>
-     <li data-target="#myCarousel" data-slide="1" class="item2" ></li>
-     <li data-target="#myCarousel" data-slide="2" class="item3 " ></li>
-   </ol>
-     <!--Wrapper for slides-->
-   <div class="carousel-inner">
-       <div class="carousel-item active" >
-           <img src= "{% static 'img/carrousel2.jpg' %}"  class="d-block w-100" alt="Primera imagen">
-           <div class="custom-carousel-caption carousel-caption d-none d-md-block">
-            <h1 style="font-size: 3rem; font-weight: bold;">TU PARTIDO.<br>TU CANCHA.<br>TUS REGLAS.</h1>
-           </div>
-       </div>
-
-       <div class="carousel-item " >
-           <img src= "{% static 'img/carrousel5.jpg' %}"  class="d-block w-100" alt="">
-           <div class="carousel-caption">
-           <h1>Encontra tu equipo ideal</h1>
-           <h5>No dejes de jugar.</h5>
-       </div>
-       </div>
-
-       <div class="carousel-item " >
-         <img src= "{% static 'img/carrousel1.jpg' %}"  class="d-block w-100" alt="">
-         <div class="carousel-caption">
-         <h1>Que no te falten jugadores</h1>
-         <h5>No dejes de jugar.</h5>
-       </div>
-       </div>
-       <div class="carousel-item " >
-         <img src= "{% static 'img/carrousel7.jpg' %}"  class="d-block w-100" alt="">
-         <div class="carousel-caption">
-         <h1>Que no te falten jugadores</h1>
-         <h5>No dejes de jugar.</h5>
-       </div>
-       </div>
-       <div class="carousel-item " >
-         <img src= "{% static 'img/carousel6.jpg' %}"  class="d-block w-100" alt="">
-         <div class="carousel-caption">
-         <h1>Que no te falten jugadores</h1>
-         <h5>No dejes de jugar.</h5>
-       </div>
-       </div>
-      
-   </div>
-     <!--Controles-->
-     <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-       <span class="sr-only">Anterior</span>
-     </a>
-     <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-       <span class="carousel-control-next-icon" aria-hidden="true"></span>
-       <span class="sr-only">Siguiente</span>
-     </a>
-   </div>
-
-<!--Codigo javascript-->
-<!-- jQuery -->
+<!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 <script>
-  $(document).ready(function(){
-  // Enable Carousel Indicators
-  $(".item1").click(function(){
-  $("#myCarousel").carousel(0);
-  });
-  $(".item2").click(function(){
-  $("#myCarousel").carousel(1);
-  });
-  $(".item3").click(function(){
-  $("#myCarousel").carousel(2);
-  });
-  $(".item4").click(function(){
-  $("#myCarousel").carousel(3);
-  });
-  
-  // Enable Carousel Controls
-  $(".left").click(function(){
-  $("#myCarousel").carousel("prev");
-  });
-  $(".right").click(function(){
-  $("#myCarousel").carousel("next");
-  });
-  });
-  
-  </script>
+  $(document).ready(function() {
+    // Enable Carousel Indicators
+    $(".item1").click(function() {
+      $("#carouselExampleIndicators").carousel(0);
+    });
+    $(".item2").click(function() {
+      $("#carouselExampleIndicators").carousel(1);
+    });
+    $(".item3").click(function() {
+      $("#carouselExampleIndicators").carousel(2);
+    });
+    $(".item4").click(function() {
+      $("#carouselExampleIndicators").carousel(3);
+    });
 
-
+    // Enable Carousel Controls
+    $(".left").click(function() {
+      $("#carouselExampleIndicators").carousel("prev");
+    });
+    $(".right").click(function() {
+      $("#carouselExampleIndicators").carousel("next");
+    });
+  });
+</script>

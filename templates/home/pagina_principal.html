@@ -7,120 +7,114 @@
 {% block head %} 
 
 <style>
-*, ::after, ::before {
+  *, ::after, ::before {
     box-sizing: border-box;
 }
 
 body {
-  text-align: center;
-  background-color: #212529;
-
+    text-align: center;
+    background-color: #212529;
+    color: #D3D3D3;
+    font-family: 'Merriweather', serif;
+}
+.btn {
+  background-color: #006666; 
+  color: #FFFDD0; 
+  border: none; 
+  padding: 10px 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer; 
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; 
 }
 
+.btn:hover {
+  background-color: #339999; 
+  color: #FFFFFF; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
 .cover-container {
-  max-width: 40em;
+    max-width: 40em;
+    margin: 0 auto;
 }
 
-
-.fondocard{
-
-    background-color: #cbd1f2;
-}
-.fondonavegacion{
-
-    background-color: #cbd1f2;
+.fondocard, .fondonavegacion {
+    background-color: #CBD1F2;
 }
 
-.carta-block , .img-container{
+.carta-block, .img-container {
     position: relative;
     margin: 0 auto 20px auto;
     max-width: 819px;
     box-sizing: border-box;
 }
 
-.fade.in{
+.fade.in {
     opacity: 1;
 }
+
 section.content.light a:not(.btn) {
     color: black;
 }
+
 a:active, a:hover {
     outline: 0;
 }
 
 .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
 
+.main-content {
+    padding: 20px;
+}
 
+.lead {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
 
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #339999;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #339999;
+    font-family: 'Montserrat', sans-serif;
+}
 </style>
 {% endblock head %} 
 
 {% block body %}
 
 {% include 'includes/header.html' %}
-
-
-
-
-<!--Fin de navbar -->
-
-<!--Carousel-->
-
+<!-- Carousel -->
 {% include 'includes/carousel.html' %}
 
-
-<!--Fin de Carousel-->
-
-<div id="acercaDeNosotros" class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column  text-white bg-dark">
-
-  
-    <br><br>
-
-
-<!-- inicio de About us-->
-
-    <div class="cover-container d-flexp-3 mx-auto flex-column">
-    
-      <main class="px-3">
-
-        <h1>CONECTAMOS JUGADORES CON EQUIPOS.</h1><br>
-        <p class="lead">Estas cansado de quedarte en casa sin jugar? Ahora podes organizar, invitar o sumarte a partidos. </p>
-        <br><h4><strong>Contactanos</strong></h4>
-        <p class="lead">
-          info@quiensuma.com
-        </p>
-
-
-      </main>
-    
-      
-    </div>
-
-<!-- Fin de About us-->
-
-<!--INICIO PIE DE PÁGINA-->
-
-{% include 'includes/footer.html' %}
-
-
-<!-- FIN DE PIE DE PAGINA -->
-
+<!-- About Us Section -->
+<div id="acercaDeNosotros" class="container text-center py-5">
+    <h1>CONECTAMOS JUGADORES CON EQUIPOS.</h1>
+    <h2>QuienSuma para todo@s</h2>
+    <p class="lead">¿Estás cansado de quedarte en casa sin jugar? Ahora puedes organizar tus partidos, invitar o sumarte a partidos. Si ningún equipo te interesa... <strong>¡organízate uno!</strong></p>
+    <h4><strong>Contáctanos</strong></h4>
+    <p class="lead">info@quiensuma.com</p>
 </div>
 
-
-
-
-
+<!-- Footer -->
+{% include 'includes/footer.html' %}
 {% endblock body %}

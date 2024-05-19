@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,30 +8,16 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">        
-    <!-- font para "Quien Suma?"-->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">    
+    <!-- font for "Quien Suma? using google fonts"-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     {% block head %} 
-    
     {% endblock head %}
-
-    <link rel="icon" type="image/png"  href= "{% static 'img/logo2.png' %}">
-
-        <title>
-            {% block titulo %} 
-
-            {% endblock titulo %}
-        </title>
-
- 
-        
+    <link rel="icon" type="image/png"  href="{% static 'img/logo.png' %}">
+    <title>{% block titulo %}{% endblock titulo %}</title>
 </head>
 
-
-
-<body >
-
+<body>
     {% block body %}
-
     {% endblock body %}
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
 
@@ -74,33 +59,24 @@
             console.error('Notification socket closed unexpectedly');
         };
     </script>
-    
     <script>
         $(document).ready(function(){
           var down = false;
           
           $('#bell').click(function(e){
-            
               var color = $(this).text();
               if(down){
-                  
                   $('#box').css('height','0px');
                   $('#box').css('opacity','0');
                   down = false;
               }else{
-                  
                   $('#box').css('height','auto');
                   $('#box').css('opacity','1');
                   down = true;
-                  
               }
-              
           });
-              
-              });
-      </script>
-
+        });
+    </script>
     {% endblock scripts %}
 </body>
-
 </html>

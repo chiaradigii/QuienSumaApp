@@ -2,32 +2,60 @@
 {% block head %}
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap');
-
-  nav {
-      display: flex;
-      align-items: center;
-      height: 60px;
-      position: relative;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Merriweather:wght@400;700&display=swap');
   
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    height: 60px;
+    position: relative;
+    background-color: #006666; 
+  }
+
+  .nav-item {
+    margin-right: 10px;
+  }
+
+  .navbar-brand {
+    margin-right: auto;
+    font-family: 'Great Vibes', cursive; 
+    color: #FFFDD0; 
+  }
+
+  .navbar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1; 
+  }
+
+  .nav-link {
+    color: #FFFDD0;
+    margin: 0 10px; 
+  }
+
+  .navbar-toggler {
+    margin-left: auto; 
+  }
+
   .icon {
-      cursor: pointer;
+    cursor: pointer;
   }
   
   .icon img {
-      width: 20px;
+    width: 20px;
   }
   
   .icon:hover {
-      opacity: .7;
+    opacity: .7;
   }
   
   .logo {
-      flex: 1;
-      color: #eee;
-      font-size: 20px;
-      font-family: monospace;
+    flex: 1;
+    color: #FFFDD0; 
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
   }
   
   .notifications {
@@ -39,102 +67,109 @@
     right: 62px;
     z-index: 9999;
     border-radius: 5px 0px 5px 5px;
-    background-color: #fff;
+    background-color: #FFF;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition: opacity 0.3s, height 0.3s;
     overflow-y: auto;
-}
+  }
+  
   .notifications h2 {
-      font-size: 14px;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      color: #999;
+    font-size: 14px;
+    padding: 10px;
+    border-bottom: 1px solid #EEE;
+    color: #999;
   }
   
   .notifications h2 span {
-      color: #f00;
+    color: #F00;
   }
   
   .notifications-item {
-      display: flex;
-      border-bottom: 1px solid #eee;
-      padding: 6px 9px;
-      margin-bottom: 0px;
-      cursor: pointer;
+    display: flex;
+    border-bottom: 1px solid #EEE;
+    padding: 6px 9px;
+    margin-bottom: 0px;
+    cursor: pointer;
   }
   
   .notifications-item:hover {
-      background-color: #eee;
+    background-color: #EEE;
   }
   
   .notifications-item img {
-      display: block;
-      width: 50px;
-      height: 50px;
-      margin-right: 9px;
-      border-radius: 50%;
-      margin-top: 2px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-right: 9px;
+    border-radius: 50%;
+    margin-top: 2px;
   }
   
   .notifications-item .text h4 {
-      color: #777;
-      font-size: 16px;
-      margin-top: 3px;
+    color: #777;
+    font-size: 16px;
+    margin-top: 3px;
   }
   
   .notifications-item .text p {
-      color: #aaa;
-      font-size: 12px;
+    color: #AAA;
+    font-size: 12px;
   }
-  
 </style>
 
 {% endblock head %}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
-
-<header class=" bg-dark mb-auto d-flex w-100 h-50 p-3 mx-auto flex-column text-center text-white  shadow-5-strong">
-  <nav class="nav nav-masthead justify-content-center float-md-end">
-    <h3 style="font-family: 'Great Vibes', cursive; margin-right:1.5rem; text-align: left;">Quien Suma?</h3>
-    <img src= "{% static 'img/logo2.png' %}" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-right: 20px;">
-
-    {% if user.sexo == 'M' %}
-    <h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenido <strong>{{user.get_username}}</strong> </h3>  
-    {% else %}
-    <h3 style="font-family: Calibri; margin-right:1.5rem;">Bienvenida <strong>{{user.get_username}}</strong> </h3>  
-    {% endif %}
-    
-    <li class="nav-item" style="margin-right: 10px;">
-      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'main_app:pagina_principal' %}">Inicio</a>
-    </li>    
-    <li class="nav-item col-xs-6" style="margin-right: 10px;">
-      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
-    </li>              
-    <li class="nav-item" style="margin-right: 10px;"> 
-      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
-    </li>
-    <li class="nav-item" style="margin-right: 10px;"> 
-      <a class="btn btn-dark" data-mdb-ripple-init href="{% url 'logout' %}">Cerrar sesión</a>
-    </li>   
-    <li class="nav-item" style="margin-right: 10px;">
-    <a href="{% url 'jugador_app:detalle_jugador' user.id %}" class="btn btn-dark btn-floating" data-mdb-ripple-initt style="margin-right: 20px;">
-      <i class="far fa-user"></i>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+      Quien Suma?
     </a>
-    </li>
-
-            <!-- Notification Icon and Dropdown -->
-    <li class="nav-item" style="margin-right: 10px;">
-      <div class="icon" id="bell">
-          <img src="https://i.imgur.com/AC7dgLA.png" alt="">
-      </div>
-      <div class="notifications" id="box">
-        <h2>Notificaciones - 
-          <span id="notification-count" class="{% if request.user.notifications.all.count == 0 %}text-danger{% else %}text-success{% endif %}">
-              {{ request.user.notifications.all.count }}
-          </span>
-      </h2>
-          <div id="notification-items">
-            {% for notification in request.user.notifications.all %}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        {% if user.sexo == 'M' %}
+        <li class="nav-item">
+          <span class="navbar-text">Bienvenido <strong>{{user.get_username}}</strong></span>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <span class="navbar-text">Bienvenida <strong>{{user.get_username}}</strong></span>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'main_app:pagina_principal' %}">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'jugador_app:jugadores_disponibles' %}">Jugadores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'partidos_app:listar_partidos' %}">Partidos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'jugador_app:detalle_jugador' user.id %}" class="nav-link">
+            <i class="far fa-user"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <div class="icon" id="bell" onclick="toggleNotifications()">
+            <img src="https://i.imgur.com/AC7dgLA.png" alt="">
+          </div>
+          <div class="notifications" id="box">
+            <h2>Notificaciones - 
+              <span id="notification-count" class="{% if request.user.notifications.all.count == 0 %}text-danger{% else %}text-success{% endif %}">
+                {{ request.user.notifications.all.count }}
+              </span>
+            </h2>
+            <div id="notification-items">
+              {% for notification in request.user.notifications.all %}
               <div class="notifications-item">
                 <i class="fa fa-flag" style="color: black; margin-right: 5px; margin-top: 5px;"></i>
                 <div class="text">
@@ -144,13 +179,28 @@
               </div>
               {% empty %}
               <div class="notifications-item">
-                  <div class="text">
-                      <h4>No hay notificaciones</h4>
-                  </div>
-            {% endfor %}
+                <div class="text">
+                  <h4>No hay notificaciones</h4>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
           </div>
-      </div>
-    </li>
-    </nav>
-</header>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
+<script>
+  function toggleNotifications() {
+    var notificationsBox = document.getElementById('box');
+    if (notificationsBox.style.opacity === '1') {
+      notificationsBox.style.opacity = '0';
+      notificationsBox.style.height = '0';
+    } else {
+      notificationsBox.style.opacity = '1';
+      notificationsBox.style.height = 'auto';
+    }
+  }
+</script>

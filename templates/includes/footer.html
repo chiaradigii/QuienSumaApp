@@ -1,10 +1,37 @@
   
-  <!--INICIO PIE DE PÁGINA-->
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <p style="font-family: 'Great Vibes', cursive;">
-        <strong>¿Quien suma?</strong> por <a href="https://www.linkedin.com/in/chiara-di-giannantonio-558bb0188/">Chiara Di Giannantonio</a>.  Twitter <a href="https://twitter.com/ChiaraDiGianna1" class="text-white">@ChiaraDiGianna</a>.</p>
+{% block head %}
+<style>
+  .footer {
+    background-color: #006666; 
+    color: #FFFDD0; 
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer a {
+    color: #FFFDD0;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer p {
+    font-family: 'Montserrat', sans-serif; 
+    font-size: 1.1em;
+}
+</style>
+{% endblock head %}
+<!--INICIO PIE DE PÁGINA-->
+<footer class="footer">
+  <div class="content has-text-centered">
+      <p>
+          <strong>¿Quien suma?</strong> por 
+          <a href="https://www.linkedin.com/in/chiara-di-giannantonio-558bb0188/">Chiara Di Giannantonio</a>. 
+          Twitter <a href="https://twitter.com/ChiaraDiGianna1">@ChiaraDiGianna</a>. 
+          GitHub <a href="https://github.com/chiaradigii">chiaradigii</a>.
       </p>
-    </div>
-  </footer>
+  </div>
+</footer>
 <!-- FIN DE PIE DE PAGINA -->

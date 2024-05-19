@@ -1,150 +1,127 @@
 {% extends "base/base.html" %}
-
 {% load static %}
 
+{% block titulo %}home{% endblock titulo %}
+{% block head %}
+<style>
+body {
+    background-color: #212529;
+    color: #D3D3D3; 
+    font-family: 'Merriweather', serif;
+}
+.btn {
+  background-color: #006666; 
+  color: #FFFDD0; 
+  border: none; 
+  padding: 10px 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer; 
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; 
+}
 
-{% block titulo %} 
-
-    home
-
-{% endblock titulo %}
-
+.btn:hover {
+  background-color: #339999; 
+  color: #FFFFFF; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+.navbar {
+   background-color: #006666;
+}
+.navbar-brand {
+  color: #FFFDD0;
+}
+.nav-link {
+  color: #FFFDD0;
+}
+.carousel-item {
+    height: 65vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    background-color: #339999;
+    background-size: cover;
+}
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Montserrat', sans-serif;
+}
+h1, h2 {
+  color: #339999;
+}
+p {
+  color: #D3D3D3;
+}
+</style>
+{% endblock head %}
 {% block body %}
-
-
-<!--navbar Inicio-->
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="#" style="font-family: 'Great Vibes', cursive;">
-    <img src= "{% static 'img/logo2.png' %}" width="30" height="30" style="font-family: 'Great Vibes', cursive;" class="d-inline-block align-top" alt="">
-    Quien suma?
-  </a>
-  <form class="form-inline">
-    <a type="button" class="btn btn btn-dark my-2 my-sm-0 " href="{% url 'jugador_app:login' %}">Iniciar sesion</a>
-    <a class="btn btn-dark my-2 my-sm-0 ml-2" href="{% url 'jugador_app:signup' %}">Crear cuenta</a>
-</form>
-
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="font-family: 'Great Vibes', cursive;">
+            <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+            Quien suma?
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="btn btn-dark nav-link" href="{% url 'jugador_app:login' %}">Iniciar sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-dark nav-link" href="{% url 'jugador_app:signup' %}">Crear cuenta</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
 
-<!--Fin de navbar -->
-
-{% block head %} 
-
-<style>
-*, ::after, ::before {
-    box-sizing: border-box;
-}
-
-body {
-  text-align: center;
-  background-color: #212529;
-
-}
-
-.cover-container {
-  max-width: 40em;
-}
-
-
-.fondocard{
-
-    background-color: #cbd1f2;
-}
-.fondonavegacion{
-
-    background-color: #cbd1f2;
-}
-
-.carta-block , .img-container{
-    position: relative;
-    margin: 0 auto 20px auto;
-    max-width: 819px;
-    box-sizing: border-box;
-}
-
-.fade.in{
-    opacity: 1;
-}
-section.content.light a:not(.btn) {
-    color: black;
-}
-a:active, a:hover {
-    outline: 0;
-}
-
-.bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-
-
-</style>
-{% endblock head %} 
-
-<!--Fin de navbar -->
-
-<!--Carousel-->
-
-{% include 'includes/carousel.html' %}
-
-
-<!--Fin de Carousel-->
-
-<div id="acercaDeNosotros" class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column  text-white bg-dark">
-
-  
-    <br><br>
-
-
-<!-- inicio de About us-->
-
-    <div class="cover-container d-flexp-3 mx-auto flex-column">
-    
-      <main class="px-3">
-        <h1 style="font-family:'Zilla Slab', sans-serif;">CONECTAMOS JUGADORES CON EQUIPOS.</h1>
-        <h2 style="font-family:'Zilla Slab', sans-serif;">QuienSuma para todo@s</h2>
-        <br>
-        <p class="lead" style="font-family:'Zilla Slab', sans-serif;" >Estas cansado de quedarte en casa sin jugar? Ahora podes organizar tus partidos, invitar o sumarte a partidos. Si ningun equipo te interesa... <strong>¡organizate uno!</strong></p>
-        <br><h4><strong>Contactanos</strong></h4>
-        <p class="lead">
-          info@quiensuma.com
-        </p>
-
-
-      </main>
-    
-      
+<!-- Carousel -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+        <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{% static 'img/carrousel1.jpg' %}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'img/carrousel4.jpg' %}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'img/carrousel3.jpg' %}" class="d-block w-100" alt="...">
+        </div>
     </div>
-
-<!-- Fin de About us-->
-
-<!--INICIO PIE DE PÁGINA-->
-
-{% include 'includes/footer.html' %}
-
-
-<!-- FIN DE PIE DE PAGINA -->
-
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </a>
 </div>
 
+<!-- About Us Section -->
+<div id="acercaDeNosotros" class="container text-center py-5">
+    <h1>CONECTAMOS JUGADORES CON EQUIPOS.</h1>
+    <h2>QuienSuma para todo@s</h2>
+    <p class="lead">¿Estás cansado de quedarte en casa sin jugar? Ahora puedes organizar tus partidos, invitar o sumarte a partidos. Si ningún equipo te interesa... <strong>¡organízate uno!</strong></p>
+    <h4><strong>Contáctanos</strong></h4>
+    <p class="lead">info@quiensuma.com</p>
+</div>
 
-
-
-
+<!-- Footer -->
+{% include 'includes/footer.html' %}
 {% endblock body %}
 
 {% block scripts %}
 {{ block.super }}
-
-
 {% endblock scripts %}
-```

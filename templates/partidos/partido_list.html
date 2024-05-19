@@ -3,31 +3,42 @@
 {% load dict_filter %}
 
 {% block titulo %} 
-    Proximos partidos
+    Próximos partidos
 {% endblock titulo %}
 
 {% block head %} 
 <style>
+  body {
+    background: #212529; 
+    color: #D3D3D3; 
+    font-family: 'Merriweather', serif;
+  }
+  
   .modal-content {
     background-color: #fff; 
     color: black;
   }
+  
   .modal-header, .modal-footer {
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
     background-color: #f8f9fa;
   }
+  
   .modal-body {
     padding: 20px; 
   }
+  
   .container {
     width: 95%;
     max-width: 95%;
   }
+  
   .player-profile {
     text-align: center;
     margin-bottom: 20px; 
   }
+  
   .player-profile img {
     width: 70px;
     height: 70px; 
@@ -36,29 +47,35 @@
     margin-bottom: 10px;
     margin-right: 10px;
   }
+  
   .player-name {
-    color: white; 
+    color: #D3D3D3; 
     font-size: 0.9em;
     text-align: center; 
   }
+  
   .partido-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
+  
   .partido-details {
     flex: 3; 
   }
+  
   .partido-players {
     margin-right: 30px; 
     padding-right: 0; 
     display: flex; 
     flex-wrap: wrap;
   }
+  
   .pagination > li > a, 
   .pagination > li > span {
     color: #676b90;
   }
+  
   .pagination > .active > a,
   .pagination > .active > a:focus,
   .pagination > .active > a:hover,
@@ -68,35 +85,36 @@
     background-color: #5f6bd2;
     border-color: #1f2342;
   }
+  
   .page-item.active .page-link {
     z-index: 1;
     color: #fff;
     background-color: #5f6bd2;
     border-color: #5f6bd2;
   }
-  body {
-    background: #1c1c1c; 
-    color: #e1e1e1;
-    border: 1px solid #2a2a2;
-  }
+  
   .list-group-item {
     align-items: left;
     justify-content: space-between;
     padding: 15px;
     margin-top: 10px;
-    background-color: #1c1c1c; 
-    color: #e1e1e1; 
+    background-color: #212529; 
+    color: #D3D3D3; 
     border: none; 
   }
+  
   .list-group-item + .list-group-item {
     border-top: 1px solid #2a2a2a;
   }
+  
   .list-group-item-heading {
     color: #aaa; 
   }
+  
   .list-group-item small {
     color: #ccc; 
   }
+  
   .partido-list-item {
     border: none;
     padding: 0;
@@ -104,22 +122,28 @@
     margin-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
   }
+  
   .partido-list-item h5 {
     margin: 0;
     font-size: 1.25rem;
+    color: #FFFDD0;
   }
+  
   .partido-list-item a:hover {
     color: #bbbbbb; 
   }
+  
   .partido-list-item p {
     margin: 0px 0;
     color: #999999;
   }
+  
   .partido-date {
     font-weight: bold;
     margin-bottom: 20px;
     color: #333;
   }
+  
   .partido-cupos {
     font-size: 0.8em;
     display: inline-block; 
@@ -130,11 +154,13 @@
     margin-left: 10px;
     text-decoration: none; 
   }
+  
   .partido-cupos.full {
-    color: #dc3545; 
+    background: #dc3545; 
   }
+  
   .fecha-encabezado {
-    color: #fff; 
+    color: #FFFDD0; 
     font-size: 1.5rem; 
     margin-bottom: 20px; 
   }
@@ -244,7 +270,7 @@
                   <div class="modal-dialog">
                     <div class="modal-content" style="background-color: #f9f9f9;">
                       <div class="modal-header">
-                        <p class="modal-title" style="color: black;">Envia una solicitud para unirte</p>
+                        <p class="modal-title" style="color: black;">Envía una solicitud para unirte</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body" style="color: black; font-size: 1.2rem; padding: 20px;"> 
@@ -285,7 +311,7 @@
               </p> 
             </div>
             <div>
-              <h4>Jugadores Inscriptos</h4>
+              <h4 style="color: #FFFDD0;">Jugadores Inscriptos</h4>
               <div class="partido-players" style="display: flex; flex-wrap: wrap;">
                 {% for partido_jugador in partidos_con_jugadores|get_item:partido.id %}
                   <div class="player-profile">
