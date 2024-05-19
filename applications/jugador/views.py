@@ -25,15 +25,13 @@ class SignUpView(FormView):
     model = Jugador
     form_class = SignUpForm
     template_name = 'registration/signup.html'
-    success_url = reverse_lazy('jugador_app:success_signup')
 
     def form_valid(self, form):
         cleaned_data = form.cleaned_data
-        # Create or Update the Ubicacion instance
         direccion = cleaned_data.get('direccion')
         ubicacion = Ubicacion(direccion=direccion)
         ubicacion.save()
-        # Create the Jugador instance
+
         user = Jugador.objects.create_user(
             user=form.cleaned_data['user'],
             nombre=form.cleaned_data['nombre'],
@@ -43,37 +41,37 @@ class SignUpView(FormView):
             correo=form.cleaned_data['correo'],
             posicion=form.cleaned_data['posicion'],
             foto=form.cleaned_data['foto'],
-            ubicacion = ubicacion,
+            ubicacion=ubicacion,
             password=form.cleaned_data['password1']
         )
         user.save()
-        # Session variable to show a success message in the login page
+
         self.request.session['registro_exitoso'] = True
         self.request.session.save()
-        return super().form_valid(form)
-    
+
+        return JsonResponse({'status': 'success'}, status=200)
+
     def form_invalid(self, form):
-        print(form.errors)
-        return super().form_invalid(form)
-    
+        return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+
     def get(self, request, *args, **kwargs):
         if 'registro_exitoso' in request.session:
             del request.session['registro_exitoso']
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(SignUpView,self).get_context_data(**kwargs)
+        context = super(SignUpView, self).get_context_data(**kwargs)
         context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+        context['registration_successful'] = self.request.session.get('registro_exitoso', False)
         return context
-    
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             return self.form_valid(form)
         else:
-            print(form.errors)
             return self.form_invalid(form)
-        
+              
 class LoginView(FormView):
     template_name = 'registration/login.html'
     form_class = AuthenticationForm 
@@ -108,11 +106,6 @@ class JugadorListView(LoginRequiredMixin,ListView):
             queryset = queryset.filter(nombre__icontains=kword)
 
         return queryset.exclude(is_superuser=True)
-
-class SuccessSignUpView(TemplateView):
-    template_name = 'registration/success_signup.html'    
-    model = Jugador
-    form_class = SignUpForm
 
 class JugadorDetailView(LoginRequiredMixin,DetailView):
     template_name = "jugador/detalle_jugador.html"

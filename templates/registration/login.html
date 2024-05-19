@@ -1,151 +1,173 @@
-
 {% extends "base/base.html" %}
 
-
-
 {% block head %}
+<!-- CSS files for fonts and styles -->
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
-
-.main-head{
-    height: 150px;
-    background: #FFF;
-   
-}
-
-.sidenav {
-    height: 100%;
-    background-color: #000;
-    overflow-x: hidden;
-    padding-top: 20px;
-}
-
-
-.main {
-    padding: 0px 15px;
-}
-
-@media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-}
-
-@media screen and (max-width: 450px) {
-    .login-form{
-        margin-top: 10%;
+    body {
+        background: #212529; /* Dark background */
+        color: #D3D3D3; /* Light text color */
+        font-family: 'Merriweather', serif; /* Consistent font */
+        margin: 0;
+        padding: 0;
     }
 
-    .register-form{
-        margin-top: 10%;
-    }
-}
-
-@media screen and (min-width: 768px){
-    .main{
-        margin-left: 40%; 
-    }
-
-    .sidenav{
-        width: 40%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
+    .main-head {
+        height: 150px;
+        background: #006666; /* Matching background color */
+        color: #FFFDD0; /* Light text color */
+        font-family: 'Great Vibes', cursive;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .login-form{
-        margin-top: 50%;
+    .sidenav {
+        height: 100%;
+        background-color: #000;
+        overflow-x: hidden;
+        padding-top: 20px;
     }
 
-    .register-form{
+    .main {
+        padding: 0px 15px;
+        color: #D3D3D3;
+    }
+
+    @media screen and (max-height: 450px) {
+        .sidenav {padding-top: 15px;}
+    }
+
+    @media screen and (max-width: 450px) {
+        .login-form {
+            margin-top: 10%;
+        }
+
+        .register-form {
+            margin-top: 10%;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .main {
+            margin-left: 40%; 
+        }
+
+        .sidenav {
+            width: 40%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+
+        .login-form {
+            margin-top: 50%;
+        }
+
+        .register-form {
+            margin-top: 20%;
+        }
+    }
+
+    .login-main-text {
         margin-top: 20%;
+        padding: 60px;
+        color: #fff;
     }
-}
 
+    .login-main-text h1 {
+        font-family: 'Great Vibes', cursive;
+    }
 
-.login-main-text{
-    margin-top: 20%;
-    padding: 60px;
-    color: #fff;
-}
+    .login-main-text h3 {
+        font-family: 'Montserrat', sans-serif;
+        color: #FFFDD0; /* Light text color */
+    }
 
-.login-main-text h2{
-    font-weight: 300;
-}
+    .btn-primary {
+        background-color: #006666;
+        border: none;
+        color: #FFFDD0;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+    }
 
-.btn-black{
-    background-color: #000 !important;
-    color: #fff;
-}
+    .btn-primary:hover {
+        background-color: #339999;
+        color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    form p {
+        font-family: 'Montserrat', sans-serif;
+        color: #FFFDD0;
+    }
 </style>
 {% endblock head %}
-
-
-
 
 {% block body %}
 {% load crispy_forms_tags %}
 
+<!-- revisar errores -->
+<!-- Usuario authenticado
+    login
+    formulario -->
 
+{% if form.errors %}
+    <p style="color: red;">La contraseña o el usuario no son correctos</p>
+{% endif %}
 
+<!-- CASOS
+1) Usuario logueado pero sin acceso
+2) usuario no logueado
+3) formulario de logueo -->
 
-    <!-- revisar errores -->
-    <!-- Usuario authenticado
-        login
-        formilario -->
+<!-- caso 1) ir a la siguiente pagina
+quiere decir que no estan authenticados o no tienen permisos para ver esapagina -->
 
-    {% if form.errors %}
-        <p>La contraseña o el usuario no son correctos</p>
+{% if next %}    
+    {% if user.is_authenticated %}
+        <!-- esta authenticado pero no tiene permisos para ver la pagina -->
+        <p>No tenes permisos para acceder a esta pagina</p>
+    {% else %}
+        <p>Login para ver esta pagina</p><br>
     {% endif %}
-        
+{% endif %}
 
-
-
-    <!-- CASOS
-    1) Usuario logueado pero sin acceso
-    2) usuario no logueado
-    3) formulario de logueo -->
-
-    <!-- caso 1) ir a la siguiente pagina
-    quiere decir que no estan authenticados o no tienen permisos para ver esapagina -->
-
-    {% if next %}    
-        {% if user.is_authenticated %}
-            <!-- esta authenticado pero no tiene permisos para ver la pagina -->
-            <p>No tenes permisos para acceder a esta pagina</p>
-        {% else %}
-            <p>Login para ver esta pagina</p><br>
-        {% endif %}
-    {% endif %}
-
-    <div class="sidenav">
-        <div class="login-main-text">
-        <h1 style="font-family: 'Great Vibes', cursive;">Quien suma?</h1>        
-        <h3 style="color: white;">Inicia sesión</h3>
+<div class="sidenav">
+    <div class="login-main-text">
+        <h1>Quien suma?</h1>        
+        <h3>Inicia sesión</h3>
     </div>
-        
-    </div>
-    <div class="main">
-        <div class="col-md-6 col-sm-12">
-            <div class="login-form">
-                <form method="post" action="{% url  'jugador_app:login' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    {{form.username|as_crispy_field}}
-                </div>
-                <div class="form-group">
-                    {{form.password|as_crispy_field}}
-                </div>
-                <!-- input para registrarse -->
-                <br>
-                <button type="submit" value="login" class="btn btn-black" style="margin-bottom: 15px;">Login</button>
-                <p>Aún no tienes tu cuenta? <a href="{% url 'jugador_app:signup' %}">Sign Up</a></p>
-
-                <!-- hidden input para el caso de next, se fija si tiene permisos para ver el next -->
-                <input type="hidden" name="next" value="{{next}}">
-
-                </form>
+</div>
+<div class="main">
+    <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+            <form method="post" action="{% url 'jugador_app:login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username|as_crispy_field }}
             </div>
+            <div class="form-group">
+                {{ form.password|as_crispy_field }}
+            </div>
+            <!-- input para registrarse -->
+            <br>
+            <button type="submit" value="login" class="btn btn-primary" style="margin-bottom: 15px;">Login</button>
+            <p>Aún no tienes tu cuenta? <a href="{% url 'jugador_app:signup' %}" style="color: #339999;">Sign Up</a></p>
+
+            <!-- hidden input para el caso de next, se fija si tiene permisos para ver el next -->
+            <input type="hidden" name="next" value="{{ next }}">
+
+            </form>
         </div>
     </div>
-
+</div>
 {% endblock body %}
-

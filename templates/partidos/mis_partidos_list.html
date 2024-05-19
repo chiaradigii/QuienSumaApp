@@ -2,8 +2,15 @@
 {% load static %}
 
 {% block head %}
+<!-- CSS files for datetimepicker -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
 <style>
+    body {
+        background: #212529; /* Dark background */
+        color: #D3D3D3; /* Light text color */
+        font-family: 'Merriweather', serif; /* Consistent font */
+    }
+
     .btn-back {
         margin: 20px 0;
         padding: 10px 20px;
@@ -13,41 +20,56 @@
         border-radius: 5px;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
     }
+
     .btn-back:hover {
         background-color: #5a6268;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
     .card {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s ease-in-out;
         margin-bottom: 20px;
+        background: #1c1c1c; /* Darker background for card */
+        color: #FFFDD0; /* Light text color */
     }
+
     .card:hover {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
+
     .card-header {
-        background-color: #007bff;
-        color: white;
+        background-color: #006666; /* Matching background color */
+        color: #FFFDD0; /* Light text color */
         font-weight: bold;
+        font-family: 'Montserrat', sans-serif; /* Consistent font for headers */
     }
+
     .card-body {
         padding: 20px;
-        background-color: #f8f9fa;
     }
+
     .card-title {
         margin-bottom: 15px;
+        font-family: 'Montserrat', sans-serif; /* Consistent font for titles */
     }
+
     .organizado {
         border-left: 5px solid #28a745;
     }
+
     .participando {
         border-left: 5px solid #ffc107;
     }
+
     .list-unstyled {
         padding-left: 0;
         list-style: none;
     }
+
     .partido-tipo {
         display: inline-block;
         padding: .25em .4em;
@@ -60,21 +82,46 @@
         border-radius: .25rem;
         margin-right: 5px;
     }
+
     .partido-tipo.organizado {
         background-color: #28a745;
         color: white;
     }
+
     .partido-tipo.participando {
         background-color: #ffc107;
         color: black;
+    }
+
+    .btn-primary {
+        background-color: #006666;
+        border-color: #006666;
+        color: #FFFDD0;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #339999;
+        border-color: #339999;
+        color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-danger, .btn-warning {
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-danger:hover, .btn-warning:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 </style>
 {% endblock head %}
 
 {% block body %}
+{% include 'includes/header.html' %}
 <div class="container mt-4">
     <button onclick="history.back()" class="btn-back">Volver</button>
-    <h1 class="mb-4">Mis Partidos</h1>
+    <h1 class="mb-4" style="font-family: 'Montserrat', sans-serif;">Mis Partidos</h1>
     {% if mis_partidos %}
         <div class="row">
             {% for partido in mis_partidos %}

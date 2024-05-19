@@ -2,13 +2,17 @@
 {% load static %}
 
 {% block head %}
+<!-- CSS files for fonts and styles -->
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
     body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f4f4;
+        background: #212529; /* Dark background */
+        color: #D3D3D3; /* Light text color */
+        font-family: 'Merriweather', serif; /* Consistent font */
         margin: 0;
         padding: 0;
     }
+
     .btn-back {
         margin: 20px 0;
         padding: 10px 20px;
@@ -18,28 +22,42 @@
         border-radius: 5px;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
     }
+
     .btn-back:hover {
         background-color: #5a6268;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
     .card-link {
         font-size: 0.8rem; 
         margin: 0; 
         padding: 5px 10px; 
+        background-color: #006666;
+        color: #FFFDD0;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
     
+    .card-link:hover {
+        background-color: #339999;
+        color: #ffffff;
+    }
+
     .card-button {
         margin-top: 10px; 
     }
-    
+
     .partido-container {
         margin-top: 20px;
     }
 
     .informacion-partido {
         padding: 20px;
-        background-color: #f8f9fa;
+        background-color: #1c1c1c;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
@@ -48,19 +66,24 @@
     .info-title {
         text-transform: uppercase;
         font-weight: bold;
+        font-family: 'Montserrat', sans-serif;
     }
+
     .card-columns {
         display: flex;
         flex-wrap: wrap;
         gap: 20px; 
         justify-content: center;
     }
-    
+
     .card {
-        width: 200px; 
+        width: 18rem; 
         margin-bottom: 20px; 
+        background: #1c1c1c; /* Darker background for card */
+        color: #FFFDD0; /* Light text color */
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -73,12 +96,13 @@
 
     .card-title {
         margin: 0;
-        color: #333;
+        color: #FFFDD0; /* Light text color */
         font-size: 1rem;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .card-text {
-        color: #666;
+        color: #D3D3D3; /* Light text color */
         font-size: 0.9rem; 
         margin-bottom: 0px;
     }
@@ -87,15 +111,16 @@
         display: inline-block;
         margin: 10px;
         text-decoration: none;
-        background-color: #5f6bd2;
-        color: #fff;
+        background-color: #006666;
+        color: #FFFDD0;
         padding: 5px 10px;
         border-radius: 5px;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .card-body a:hover {
-        background-color: #4a57a3;
+        background-color: #339999;
+        color: #ffffff;
     }
 
     .card-body form {
@@ -108,31 +133,35 @@
         margin: 5px 2px;
         border-radius: 5px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .btn-aceptar {
         background-color: #28a745;
         color: #fff;
     }
+
     .btn-rechazar {
         background-color: #dc3545;
         color: #fff;
     }
 
     .card-body button:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         opacity: 0.9;
     }
+
     .card-img-top {
         height: 150px; /* Reduced height for images */
         object-fit: cover;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
+
     .card-actions {
         text-align: center; 
     }
-    
+
     .list-group-item {
         display: flex;
         justify-content: space-between;
@@ -143,60 +172,63 @@
 
 {% block body %}
 <div class="container">
+    {% include 'includes/header.html' %}
     <button onclick="history.back()" class="btn-back">Volver</button>
     <div class="partido-container">
-    <div class="informacion-partido">
-          <h1>{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
-          <p>Fecha y hora: {{ partido.fecha_hora|date:"d M Y H:i" }}</p>
-    <div class = "cards">
-    <h3>Solicitudes Pendientes</h3>
-    {% if solicitudes_pendientes %}
-    <div class="card-columns">
-        {% for solicitud in solicitudes_pendientes %}
-            <div class="card" style="width: 18rem; transform: scale(0.9);">
+        <div class="informacion-partido">
+            <h1 style="font-family: 'Montserrat', sans-serif;">{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
+            <p>Fecha y hora: {{ partido.fecha_hora|date:"d M Y H:i" }}</p>
+        </div>
+        <div class="cards">
+            <h3 style="font-family: 'Montserrat', sans-serif;">Solicitudes Pendientes</h3>
+            {% if solicitudes_pendientes %}
+            <div class="card-columns">
+                {% for solicitud in solicitudes_pendientes %}
+                <div class="card">
+                    <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }}</h5>
+                        <p class="card-text">{{ solicitud.solicitante.get_posicion_display }}</p>
+                        <p class="card-text">{{ solicitud.solicitante.get_sexo_display }} - {{ solicitud.solicitante.calcular_años }} años</p>
+                        <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id %}" class="card-link">Ver Perfil</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-actions">
+                            <form action="{% url 'partidos_app:aceptar_solicitud' solicitud.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-aceptar">Aceptar</button>
+                            </form>
+                            <form action="{% url 'partidos_app:rechazar_solicitud' solicitud.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-rechazar">Rechazar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No hay solicitudes pendientes.</p>
+            {% endif %}
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif;">Solicitudes Aceptadas</h3>
+        {% if solicitudes_aceptadas %}
+        <div class="card-columns">
+            {% for solicitud in solicitudes_aceptadas %}
+            <div class="card">
                 <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
                 <div class="card-body">
-                  <h5 class="card-title">{{solicitud.solicitante.nombre}} {{solicitud.solicitante.apellido}}</h5>
-                  <p class="card-text">{{solicitud.solicitante.get_posicion_display}} </p>
-                  <p class="card-text">{{solicitud.solicitante.get_sexo_display}} - {{solicitud.solicitante.calcular_años}} años</p>
-                  <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id  %}" class="card-link"> Ver Perfil</a>               
-                </div>
-                <ul class="list-group list-group-flush">
-                  <div class="card-body">
-                    <div class="card-actions">
-                    <form action="{% url 'partidos_app:aceptar_solicitud' solicitud.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Aceptar</button>
-                    </form>
-                    <form action="{% url 'partidos_app:rechazar_solicitud' solicitud.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Rechazar</button>
-                    </form>
+                    <h5 class="card-title">{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }}</h5>
+                    <p class="card-text">{{ solicitud.solicitante.get_posicion_display }}</p>
+                    <p class="card-text">{{ solicitud.solicitante.get_sexo_display }} - {{ solicitud.solicitante.calcular_años }} años</p>
+                    <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id %}" class="card-link">Ver Perfil</a>
                 </div>
             </div>
-              </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No hay solicitudes aceptadas.</p>
+        {% endif %}
     </div>
-    </div>
-    {% else %}
-    <p>No hay solicitudes pendientes.</p>
-    {% endif %}
-    <h2>Solicitudes Aceptadas</h2>
-    {% if solicitudes_aceptadas %}
-    <div class="card-columns">
-        {% for solicitud in solicitudes_aceptadas %}
-            <div class="card" style="width: 18rem;">
-                <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
-                <div class="card-body">
-                  <h5 class="card-title">{{solicitud.solicitante.nombre}} {{solicitud.solicitante.apellido}}</h5>
-                    <p class="card-text">{{solicitud.solicitante.get_posicion_display}} </p>
-                    <p class="card-text">{{solicitud.solicitante.get_sexo_display}} - {{solicitud.solicitante.calcular_años}} años</p>
-                    <a href="{% url 'jugador_app:detalle_jugador' solicitud.solicitante.id  %}" class="card-link"> Ver Perfil</a>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-      <p>No hay solicitudes aceptadas.</p>
-    {% endif %}
 </div>
-{% endblock %}
+{% endblock body %}

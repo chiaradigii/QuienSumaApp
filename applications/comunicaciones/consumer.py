@@ -92,7 +92,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
-        pass  # No need to handle incoming messages for notifications
+        pass  # No need to handle incoming messages 
 
     async def send_notification(self, event):
         await self.send(text_data=json.dumps({

@@ -2,38 +2,47 @@
 {% load static %}
 
 {% block head %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Merriweather', serif;
+        background-color: #1c1c1c;
     }
 
     .chat-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 10px;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .chat-header {
         text-align: center;
-        background-color: #075e54;
-        color: #fff;
+        background-color: #006666;
+        color: #FFFDD0;
         padding: 10px;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
+        border-radius: 10px 10px 0 0;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .chat-header h1 {
         font-size: 24px;
+        margin: 0;
     }
 
     .chat-logout {
         text-align: right;
         padding: 10px;
+        color: #FFFDD0;
     }
 
     .chat-logout a {
         text-decoration: none;
-        color: #075e54;
+        color: #FFFDD0;
         font-weight: bold;
     }
 
@@ -42,39 +51,44 @@
     }
 
     .chat__item__container {
-        background-color: #f5f5f5;
+        background-color: #2c2c2c;
         padding: 10px;
         border-radius: 10px;
         height: 300px;
         max-height: 300px;
-        /* Set a maximum height for the chat container */
         overflow-y: auto;
-        /* Add a vertical scrollbar when needed */
     }
 
     .chat-input-container {
         display: flex;
         align-items: center;
+        margin-top: 10px;
     }
 
     #id_message_send_input {
         flex: 1;
-        /* Take up available space */
-        padding: 5px;
+        padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 16px;
+        margin-right: 10px;
     }
 
     #id_message_send_button {
-        padding: 5px 10px;
-        background-color: #075e54;
-        color: #fff;
+        padding: 10px 20px;
+        background-color: #006666;
+        color: #FFFDD0;
         border: none;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        margin-left: 10px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #id_message_send_button:hover {
+        background-color: #339999;
+        color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .chat-message {
@@ -86,7 +100,8 @@
     }
 
     .chat-message.right {
-            background-color: black;
+        background-color: black;
+        color: white;
         width: 80%;
         float: right;
         clear: both;
@@ -95,7 +110,8 @@
     }
 
     .chat-message.left {
-        background-color: #075e54;
+        background-color: #006666;
+        color: #FFFDD0;
         width: 80%;
         float: left;
         clear: both;
@@ -105,7 +121,6 @@
 
     .chat-message span {
         font-weight: bold;
-        color: white;
     }
 
     .message-timestamp {
@@ -122,19 +137,17 @@
         right: 5px;
     }
 </style>
-{% endblock head%}
+{% endblock head %}
 
 {% block body %}
-
 <div class="chat-container">
     <div class="chat-header">
         <h1>Chat <i class="fas fa-comment"></i></h1>
     </div>
     <div class="chat-logout">
         {% if request.user.is_authenticated %}
-        <div style="float: left;font-weight: bold; color: #036358;">{{ request.user|title }} </div>
-        <div style="float: right;"><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a>
-        </div>
+        <div style="float: left; font-weight: bold;">{{ request.user|title }} </div>
+        <div style="float: right;"><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a></div>
         <div style="clear: both;"></div>
         {% endif %}
     </div>
@@ -151,19 +164,17 @@
                 <span class="message-timestamp">{{ message.timestamp|date:"H:i" }}</span>
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
     <div class="chat-input-container">
         <input type="text" id="id_message_send_input" placeholder="Type your message..." />
         <button type="submit" id="id_message_send_button"><i class="fas fa-paper-plane"></i> Send</button>
     </div>
 </div>
-
 {% endblock body %}
 
 {% block scripts %}
 {{ block.super }}
-
 <script>
     function connectChatWebSocket() {
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
@@ -228,6 +239,4 @@
         console.error("WebSockets are not supported by your browser.");
     }
 </script>
-
-
 {% endblock scripts %}
