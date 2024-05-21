@@ -114,17 +114,37 @@
     .btn-danger:hover, .btn-warning:hover {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .pagination span {
+        margin: 0 5px;
+    }
+
+    .pagination a {
+        color: #FFFDD0;
+        text-decoration: none;
+    }
+
+    .pagination .current {
+        font-weight: bold;
+    }
 </style>
 {% endblock head %}
 
 {% block body %}
 {% include 'includes/header.html' %}
 <div class="container mt-4">
-    <button onclick="history.back()" class="btn-back">Volver</button>
+    <a class="btn-back" href="{% url 'partidos_app:listar_partidos'%}"><i class="fa fa-angle-left"></i></a>
+    <hr>
     <h1 class="mb-4" style="font-family: 'Montserrat', sans-serif;">Mis Partidos</h1>
     {% if mis_partidos %}
         <div class="row">
-            {% for partido in mis_partidos %}
+            {% for partido in page_obj %}
             <div class="col-md-6">
                 <div class="card {% if partido.creador == request.user %}organizado{% else %}participando{% endif %}">
                     <div class="card-header">
@@ -149,6 +169,23 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
     {% else %}
     <p class="mt-4">No has organizado ni estás inscrito en partidos.</p>

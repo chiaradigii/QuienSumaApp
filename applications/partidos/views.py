@@ -7,7 +7,7 @@ from .models import Partido, PosicionCupo, SolicitudUnirse,PartidoJugador
 from ..ubicaciones.models import Ubicacion
 from .forms import PartidoForm
 from django.views.generic import CreateView, ListView, DetailView
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.db import models
@@ -129,6 +129,7 @@ class PartidoListView(ListView):
         return context
     
     def get_queryset(self):
+        from datetime import timezone
         hoy = datetime.now(timezone.utc).date()
         partidos = Partido.objects.all().order_by('-fecha_hora')
 
@@ -149,19 +150,23 @@ class PartidoListView(ListView):
         partidos_otros = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7)))
         return list(partidos_hoy) + list(partidos_manana) + list(partidos_semana) + list(partidos_otros)
     
-class MisPartidosListView(LoginRequiredMixin,ListView):
-    """Vista para listar los partidos creados por el usuario logueado"""
+class MisPartidosListView(LoginRequiredMixin, ListView):
     model = Partido
     template_name = 'partidos/mis_partidos_list.html'
     context_object_name = 'mis_partidos'
     paginate_by = 10
     ordering = ['-fecha_hora']
-    
+
     def get_queryset(self):
-        return Partido.objects.filter(Q(creador=self.request.user) | Q(jugadores=self.request.user))
+        from django.utils import timezone
+        ahora = timezone.now()
+        return Partido.objects.filter(
+            (Q(creador=self.request.user) | Q(jugadores=self.request.user)),
+            fecha_hora__gte=ahora
+        ).order_by('-fecha_hora')
 
     def get_context_data(self, **kwargs):
-        context = super(MisPartidosListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         partidos = context['mis_partidos']
         partidos_ids = partidos.values_list('id', flat=True)
         solicitudes = SolicitudUnirse.objects.filter(cupo__partido__id__in=partidos_ids).select_related('solicitante', 'cupo', 'cupo__partido')

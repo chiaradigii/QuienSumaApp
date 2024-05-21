@@ -173,7 +173,8 @@
 {% block body %}
 <div class="container">
     {% include 'includes/header.html' %}
-    <button onclick="history.back()" class="btn-back">Volver</button>
+    <a class="btn-back" href="{% url 'partidos_app:mis_partidos'%}"><i class="fa fa-angle-left"></i></a>
+    <hr>
     <div class="partido-container">
         <div class="informacion-partido">
             <h1 style="font-family: 'Montserrat', sans-serif;">{{ partido.tipo_futbol }} en {{ partido.get_lugar }}</h1>
