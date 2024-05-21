@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block head %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
@@ -15,23 +16,40 @@
         max-width: 600px;
         margin: 20px auto;
         padding: 20px;
-        background-color: #333;
+        background-color: #2e2e2e;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .chat-header {
         text-align: center;
-        background-color: #006666;
+        background-color: #004d4d;
         color: #FFFDD0;
-        padding: 10px;
+        padding: 15px;
         border-radius: 10px 10px 0 0;
         font-family: 'Montserrat', sans-serif;
+        position: relative;
     }
 
     .chat-header h1 {
         font-size: 24px;
         margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-header h1 i {
+        margin-left: 10px;
+    }
+
+    .back-button {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #FFFDD0;
+        cursor: pointer;
     }
 
     .chat-logout {
@@ -51,32 +69,38 @@
     }
 
     .chat__item__container {
-        background-color: #2c2c2c;
+        background-color: #1f1f1f;
         padding: 10px;
         border-radius: 10px;
-        height: 300px;
-        max-height: 300px;
+        height: 400px;
+        max-height: 400px;
         overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
 
     .chat-input-container {
         display: flex;
         align-items: center;
         margin-top: 10px;
+        border-top: 1px solid #444;
+        padding-top: 10px;
     }
 
     #id_message_send_input {
         flex: 1;
         padding: 10px;
-        border: 1px solid #ccc;
+        border: none;
         border-radius: 5px;
         font-size: 16px;
         margin-right: 10px;
+        background-color: #333;
+        color: #fff;
     }
 
     #id_message_send_button {
         padding: 10px 20px;
-        background-color: #006666;
+        background-color: #004d4d;
         color: #FFFDD0;
         border: none;
         border-radius: 5px;
@@ -92,64 +116,71 @@
     }
 
     .chat-message {
-        background-color: #e4f9f5;
+        background-color: #333;
         border-radius: 10px;
-        margin: 10px 0;
+        margin: 5px 0;
         padding: 10px;
         position: relative;
+        color: #fff;
+        display: inline-block;
+        max-width: 80%;
+        word-wrap: break-word;
     }
 
     .chat-message.right {
-        background-color: black;
-        color: white;
-        width: 80%;
-        float: right;
-        clear: both;
-        margin-left: auto;
-        margin-right: 0;
+        background-color: #006666;
+        color: #FFFDD0;
+        align-self: flex-end;
     }
 
     .chat-message.left {
-        background-color: #006666;
-        color: #FFFDD0;
-        width: 80%;
-        float: left;
-        clear: both;
-        margin-left: 0;
-        margin-right: auto;
+        background-color: #444;
+        align-self: flex-start;
     }
 
-    .chat-message span {
-        font-weight: bold;
+    .message-content {
+        display: flex;
+        flex-direction: column;
     }
 
     .message-timestamp {
         font-size: 10px;
-        position: absolute;
-        top: 5px;
-        right: 5px;
+        margin-top: 5px;
+        text-align: right;
     }
 
     .message-user {
         font-size: 12px;
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .rounded-circle {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-left: 12px;
+    }
+
+    .chat-header img {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-left: 10px;
     }
 </style>
 {% endblock head %}
 
 {% block body %}
+{% include 'includes/header.html' %}
 <div class="chat-container">
     <div class="chat-header">
-        <h1>Chat <i class="fas fa-comment"></i></h1>
-    </div>
-    <div class="chat-logout">
-        {% if request.user.is_authenticated %}
-        <div style="float: left; font-weight: bold;">{{ request.user|title }} </div>
-        <div style="float: right;"><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a></div>
-        <div style="clear: both;"></div>
-        {% endif %}
+        <a class="back-button" href="{% url 'jugador_app:detalle_jugador' other_user.id %}"><i class="fa fa-angle-left"></i></a>
+        <h1>
+            Chat with {{ other_user.user }} <i class="fas fa-comment"></i>
+            <img src="{{ other_user.foto.url }}" alt="Foto" class="rounded-circle">
+        </h1>
     </div>
     <div class="chat__item__container" id="id_chat_item_container">
         {% for message in messages %}
@@ -159,11 +190,11 @@
             <div class="chat-message left">
         {% endif %}
                 <div class="message-content">
-                <span class="message-user">{{ message.sender.user }}</span>
-                <span class="message-text">{{ message.message }}</span>
-                <span class="message-timestamp">{{ message.timestamp|date:"H:i" }}</span>
+                    <span class="message-user">{{ message.sender.user }}</span>
+                    <span class="message-text">{{ message.message }}</span>
+                    <span class="message-timestamp">{{ message.timestamp|custom_date }}</span>
+                </div>
             </div>
-        </div>
         {% endfor %}
     </div>
     <div class="chat-input-container">

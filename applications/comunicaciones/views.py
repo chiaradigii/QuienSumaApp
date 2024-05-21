@@ -20,7 +20,13 @@ def start_chat(request, jugador_id):
 def chatPage(request, chat_id):
     chat_session = get_object_or_404(ChatSession, id=chat_id)
     messages = chat_session.messages.all().order_by('timestamp')
-    return render(request, 'comunicaciones/chatPage.html', {'chat_id': chat_id, 'messages': messages})
+
+    if chat_session.user1 == request.user:
+        other_user = chat_session.user2
+    else:
+        other_user = chat_session.user1
+
+    return render(request, 'comunicaciones/chatPage.html', {'chat_id': chat_id, 'messages': messages, 'other_user': other_user})
 
 @csrf_exempt
 @login_required
