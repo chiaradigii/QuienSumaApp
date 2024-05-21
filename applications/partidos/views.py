@@ -1,3 +1,4 @@
+# applications/partidos/views.py
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
@@ -247,7 +248,7 @@ def aceptar_solicitud(request, solicitud_id):
         mensaje_creador = f"{solicitud.solicitante.user} se ha unido a tu partido el {fecha_partido} en {lugar_partido}."
         create_notification(request.user, mensaje_creador)
         
-        PartidoJugador.objects.create(partido=partido, jugador=solicitud.solicitante)
+        PartidoJugador.objects.create(partido=partido, jugador=solicitud.solicitante, posicion=solicitud.cupo.posicion)
     except ValidationError as e:
         messages.error(request, str(e))
     return redirect('partidos_app:listar_partidos')
@@ -266,12 +267,22 @@ def abandonar_partido(request, partido_id):
     partido = get_object_or_404(Partido, id=partido_id)
     # Asegurar que el usuario está inscrito y no es el creador
     if request.user != partido.creador:
-        PartidoJugador.objects.filter(partido=partido, jugador=request.user).delete()
-        partido.update_cupos_disponibles()
-        messages.success(request, "Has cancelado tu participación.")
+        partidojugador = PartidoJugador.objects.filter(partido=partido, jugador=request.user).first()
+        if partidojugador:
+            posicion_cupo = PosicionCupo.objects.filter(partido=partido, posicion=partidojugador.posicion).first()
+            if posicion_cupo:
+                posicion_cupo.cupos_ocupados -= 1
+                posicion_cupo.save()
+            partidojugador.delete()
+            # Update available spots
+            partido.update_cupos_disponibles()
+            messages.success(request, "Has cancelado tu participación.")
+        else:
+            messages.error(request, "No estás inscrito en este partido.")
     else:
         messages.error(request, "No puedes cancelar tu participación en un partido que organizaste.")
     return redirect('partidos_app:mis_partidos')
+
 
 @login_required
 def cancelar_partido(request, partido_id):

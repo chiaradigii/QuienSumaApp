@@ -1,4 +1,4 @@
-"""La app partidos gestionara todo lo relacionado con la creación, visualización y gestión de partidos."""
+# applications/partidos/models.py
 from collections.abc import Iterable
 from django.forms import ValidationError
 from django.utils import timezone
@@ -95,6 +95,7 @@ def __str__(self):
 class PartidoJugador(models.Model):
     partido = models.ForeignKey(Partido, on_delete=models.CASCADE)
     jugador = models.ForeignKey(Jugador, on_delete=models.SET_NULL, null=True, blank=True)
+    posicion = models.CharField(max_length=100)  
 
 class SolicitudUnirse(models.Model):
     """ 
