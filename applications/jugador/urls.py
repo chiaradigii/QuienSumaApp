@@ -6,6 +6,7 @@ app_name = 'jugador_app'
 urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.LogOutView.as_view(), name='logout'),
     path('jugadores-disponibles/',
     views.JugadorListView.as_view(),
     name='jugadores_disponibles',

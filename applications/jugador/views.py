@@ -88,7 +88,7 @@ class LoginView(FormView):
 class LogOutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponseRedirect(reverse_lazy('home/home.html'))
+        return HttpResponseRedirect(reverse_lazy('main_app:home'))
 
     template_name = 'registration/password_change_form.html'
 
