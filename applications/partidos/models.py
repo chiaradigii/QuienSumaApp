@@ -77,11 +77,21 @@ class Partido(models.Model):
         self.cupos_disponibles -= 1
         self.save()
         PartidoJugador.objects.create(partido=self, jugador=jugador)
+        for posicion_cupo in self.posiciones_cupos.all():
+            if posicion_cupo.cupos_ocupados < posicion_cupo.cupos_totales:
+                posicion_cupo.cupos_ocupados += 1
+                posicion_cupo.save()
+                break
         self.update_cupos_disponibles()
     
     def abandonar(self, jugador):
-        self.cupos_disponibles += 1
-        self.save()
+        if not PartidoJugador.objects.filter(partido=self, jugador=jugador).exists():
+            raise ValidationError("El jugador no está en este partido.")
+        for posicion_cupo in self.posiciones_cupos.all():
+            if posicion_cupo.cupos_ocupados > 0:
+                posicion_cupo.cupos_ocupados -= 1
+                posicion_cupo.save()
+                break
         PartidoJugador.objects.filter(partido=self, jugador=jugador).delete()
         self.update_cupos_disponibles()
 
@@ -106,6 +116,10 @@ class SolicitudUnirse(models.Model):
     estado = models.CharField(max_length=10, choices=(('pendiente', 'Pendiente'), ('aceptado', 'Aceptado'), ('rechazado', 'Rechazado')), default='pendiente')
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def partido(self):
+        return self.cupo.partido
+    
     def get_Solicitudes(self):
         return self.partido.solicitudes.all()
 
@@ -119,7 +133,7 @@ class SolicitudUnirse(models.Model):
         self.cupo.cupos_ocupados += 1
         self.cupo.save()
         self.save()
-        self.cupo.partido.update_cupos_disponibles()
+        self.partido.update_cupos_disponibles()
     
     def rechazar(self):
         self.estado = 'rechazado'

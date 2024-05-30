@@ -55,21 +55,21 @@ class SignUpViewTest(TestCase):
             'user': 'testuser_signup',
             'nombre': 'Test',
             'apellido': 'User',
-            'fecha_nacimiento': '01-01-1990',  # Use correct date format
+            'fecha_nacimiento': '01-01-1990', 
             'sexo': 'M',
             'correo': 'testuser_signup@example.com',
             'posicion': 'Medio',
             'password1': 'Password123',
-            'password2': 'Password123',  # Ensure password confirmation matches
+            'password2': 'Password123', 
             'foto': 'default_foto',
-            'direccion': 'Valid Address',  # Provide a valid address
+            'direccion': 'Valid Address',  
             'is_staff': False,
             'is_superuser': False
         }
         response = self.client.post(self.url, form_data)
         
         if response.status_code == 400:
-            print(response.json())  # Print the error messages to debug
+            print(response.json()) 
 
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {'status': 'success'})
@@ -79,7 +79,7 @@ class SignUpViewTest(TestCase):
             'user': 'testuser_signup_invalid',
             'nombre': 'Test',
             'apellido': 'User',
-            'fecha_nacimiento': '01-01-1990',  # Use correct date format
+            'fecha_nacimiento': '01-01-1990',  
             'sexo': 'M',
             'correo': 'testuser_signup_invalid@example.com',
             'posicion': 'Medio',
@@ -115,7 +115,7 @@ class LoginViewTest(TestCase):
 
     def test_login_view_post_valid(self):
         form_data = {
-            'username': 'testuser_login',  # Use 'username' instead of 'user'
+            'username': 'testuser_login', 
             'password': 'Password123',
         }
         response = self.client.post(reverse_lazy('jugador_app:login'), form_data)
@@ -123,7 +123,7 @@ class LoginViewTest(TestCase):
 
     def test_login_view_post_invalid(self):
         form_data = {
-            'username': 'testuser_login',  # Use 'username' instead of 'user'
+            'username': 'testuser_login',  
             'password': 'wrongpassword',
         }
         response = self.client.post(self.url, form_data)
