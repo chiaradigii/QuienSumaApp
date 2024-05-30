@@ -10,11 +10,16 @@ class Ubicacion(models.Model):
     geolocation = map_fields.GeoLocationField(max_length=100)
 
     def save(self, *args, **kwargs):
-        # Si no hay geolocalización o la dirección ha cambiado
         if not self.geolocation:
-            geolocation = obtener_geolocalizacion(self.direccion)
-            if geolocation:
-                self.geolocation = geolocation
+            print(f"Attempting to geolocate address: {self.direccion}")
+            try:
+                geolocation = obtener_geolocalizacion(self.direccion)
+                if geolocation:
+                    self.geolocation = geolocation
+                else:
+                    print(f"Geolocation not found for address: {self.direccion}")
+            except GeocoderQueryError as e:
+                print(f"Geolocation error for address: {self.direccion}, error: {e}")
         super(Ubicacion, self).save(*args, **kwargs)
 
     def __str__(self):
