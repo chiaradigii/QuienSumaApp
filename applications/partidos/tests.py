@@ -206,3 +206,7 @@ class MiPartidoDetailViewTest(TestCase):
         self.user.delete()
         self.ubicacion.delete()
         self.partido.delete()
+
+
+if __name__ == "__main__":
+    TestCase.main()

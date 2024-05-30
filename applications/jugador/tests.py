@@ -222,3 +222,6 @@ class JugadorDetailViewTest(TestCase):
     def tearDown(self):
         self.user.delete()
         self.jugador.delete()
+
+if __name__ == "__main__":
+    TestCase.main()

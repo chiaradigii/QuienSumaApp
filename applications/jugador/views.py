@@ -86,6 +86,7 @@ class LoginView(FormView):
         return super(LoginView,self).form_valid(form)
 
 class LogOutView(View):
+    success_url = reverse_lazy('main_app:home')
     def get(self, request, *args, **kwargs):
         logout(request)
         return HttpResponseRedirect(reverse_lazy('main_app:home'))
