@@ -1,4 +1,4 @@
-# jugador/tests.py
+# applications/jugador/tests.py
 from .models import Jugador
 from datetime import date
 from django.utils import timezone
