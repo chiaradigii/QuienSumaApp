@@ -105,6 +105,7 @@
                 <h4 style="font-family: 'Montserrat', sans-serif;">{{ jugador.nombre }} {{ jugador.apellido }}</h4>
                 {% if jugador.id == request.user.id %}
                 <a href="{% url 'jugador_app:edit_profile' %}" class="btn btn-info">Editar Perfil</a>
+                <a href="{% url 'jugador_app:edit_password' %}" class="btn btn-info">Modificar Contraseña</a>
                 {% else %}
                 <button class="btn btn-outline-primary" onclick="location.href='{% url 'comunicaciones_app:startChat' jugador.id %}'">Chat</button>
                 {% endif %}

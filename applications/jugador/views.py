@@ -9,7 +9,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic.edit import FormView
-from .forms import SignUpForm, EditProfileAndPasswordForm
+from .forms import SignUpForm, EditProfileForm, EditPasswordForm
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.conf import settings
@@ -20,6 +20,8 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from applications.comunicaciones.models import ChatSession
 from django.db import transaction
+from .forms import LoginForm  
+from django.contrib import messages
 
 class SignUpView(FormView):
     model = Jugador
@@ -77,7 +79,7 @@ class SignUpView(FormView):
               
 class LoginView(FormView):
     template_name = 'registration/login.html'
-    form_class = AuthenticationForm 
+    form_class = LoginForm
     success_url = reverse_lazy('main_app:pagina_principal')
 
     def form_valid(self, form):
@@ -85,9 +87,13 @@ class LoginView(FormView):
             username=form.cleaned_data['username'],
             password=form.cleaned_data['password']
         )
-        login(self.request, user)
-        return super(LoginView,self).form_valid(form)
-
+        if user is not None:
+            login(self.request, user)
+            return super(LoginView, self).form_valid(form)
+        else:
+            form.add_error(None, 'Las credenciales son incorrectas')
+            return self.form_invalid(form)
+    
 class LogOutView(View):
     success_url = reverse_lazy('main_app:home')
     def get(self, request, *args, **kwargs):
@@ -128,7 +134,7 @@ from django.views.generic.edit import UpdateView
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Jugador
-    form_class = EditProfileAndPasswordForm
+    form_class = EditProfileForm
     template_name = 'jugador/edit_profile.html'
 
     def get_object(self):
@@ -141,6 +147,26 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('jugador_app:detalle_jugador', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
+        return context
+
+class EditPasswordView(LoginRequiredMixin, UpdateView):
+    form_class = EditPasswordForm
+    template_name = 'jugador/edit_password.html'
+
+    def get_object(self):
+        return self.request.user
+
+    def form_valid(self, form):
+        # Save the new password
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('jugador_app:detalle_jugador', kwargs={'pk': self.request.user.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

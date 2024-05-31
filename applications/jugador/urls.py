@@ -16,5 +16,5 @@ urlpatterns = [
     name='detalle_jugador',
     ),
     path('edit-profile/', views.EditProfileView.as_view(), name='edit_profile'),
-
+    path('edit-password/', views.EditPasswordView.as_view(), name='edit_password'),
 ]

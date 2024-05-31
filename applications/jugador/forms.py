@@ -5,6 +5,7 @@ from .widgets import DatePickerInput
 from django.contrib.auth import authenticate
 from applications.ubicaciones.models import Ubicacion
 from django.core.validators import EmailValidator
+from django.contrib.auth import get_user_model
 
 class SignUpForm(forms.ModelForm):
 
@@ -128,7 +129,7 @@ class SignUpForm(forms.ModelForm):
     
 
 class LoginForm(forms.Form):
-    user = forms.CharField(
+    username = forms.CharField(
         label='Usuario',
         required=True,
         widget=forms.TextInput(
@@ -146,44 +147,87 @@ class LoginForm(forms.Form):
                 'class': 'form-control',
                 'placeholder': 'Contraseña'
             }
-        ))
-    # validation
+        )
+    )
+
     def clean(self):
         cleaned_data = super(LoginForm, self).clean()
-        user = self.cleaned_data['user']
-        password = self.cleaned_data['password']
-        if not authenticate(user=user, password=password):
-            raise forms.ValidationError('Los datos del usuario no son correctos')
-        return self.cleaned_data
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user is None:
+                raise forms.ValidationError('Las credenciales son incorrectas')
+        return cleaned_data
 
 from django.core.exceptions import ValidationError
 
-class EditProfileAndPasswordForm(forms.ModelForm):
+class EditProfileForm(forms.ModelForm):
     direccion = forms.CharField(
+        required=False,
         label='Dirección',
         widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'id_direccion', 'placeholder': 'Nueva dirección'})
     )
     
     posicion = forms.ChoiceField(
+        required=False,
         label='Posición',
         choices=Jugador.posicion_choices,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-
-    new_password1 = forms.CharField(
-        label='Nueva Contraseña',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Nueva contraseña'}),
-        required=False
-    )
-    new_password2 = forms.CharField(
-        label='Confirmar Nueva Contraseña',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar nueva contraseña'}),
-        required=False
+    foto = forms.ImageField(
+        required=False,
+        label='Foto',
+        widget=forms.FileInput(attrs={'class': 'form-control-file'})
     )
 
     class Meta:
         model = Jugador
-        fields = ['posicion', 'direccion']
+        fields = ['posicion', 'direccion', 'foto']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
+
+    def save(self, commit=True):
+        jugador = super().save(commit=False)
+        direccion = self.cleaned_data.get('direccion')
+        foto = self.cleaned_data.get('foto')
+        
+        if commit:
+            if direccion and jugador.ubicacion:
+                # Update existing Ubicacion
+                ubicacion = jugador.ubicacion
+                ubicacion.direccion = direccion
+                ubicacion.save()
+            elif direccion:
+                # Create new Ubicacion instance if not exists
+                ubicacion = Ubicacion.objects.create(direccion=direccion)
+                jugador.ubicacion = ubicacion  
+            
+            if foto:
+                jugador.foto = foto
+
+            jugador.save()
+        
+        return jugador
+
+class EditPasswordForm(forms.ModelForm):
+    new_password1 = forms.CharField(
+        label='Nueva Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Nueva contraseña'}),
+        required=True
+    )
+    new_password2 = forms.CharField(
+        label='Confirmar Nueva Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar nueva contraseña'}),
+        required=True
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = []
 
     def clean(self):
         cleaned_data = super().clean()
@@ -196,24 +240,10 @@ class EditProfileAndPasswordForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        jugador = super().save(commit=False)
-        direccion = self.cleaned_data.get('direccion')
-        
+        user = super().save(commit=False)
+        new_password = self.cleaned_data.get('new_password1')
+        if new_password:
+            user.set_password(new_password)
         if commit:
-            if jugador.ubicacion:
-                # Update existing Ubicacion
-                ubicacion = jugador.ubicacion
-                ubicacion.direccion = direccion
-                ubicacion.save()
-            else:
-                # Create new Ubicacion instance if not exists
-                ubicacion = Ubicacion.objects.create(direccion=direccion)
-                jugador.ubicacion = ubicacion
-            
-            new_password = self.cleaned_data.get('new_password1')
-            if new_password:
-                jugador.set_password(new_password)
-            
-            jugador.save()
-        
-        return jugador
+            user.save()
+        return user

@@ -115,32 +115,6 @@
 {% block body %}
 {% load crispy_forms_tags %}
 
-<!-- revisar errores -->
-<!-- Usuario authenticado
-    login
-    formulario -->
-
-{% if form.errors %}
-    <p style="color: red;">La contraseña o el usuario no son correctos</p>
-{% endif %}
-
-<!-- CASOS
-1) Usuario logueado pero sin acceso
-2) usuario no logueado
-3) formulario de logueo -->
-
-<!-- caso 1) ir a la siguiente pagina
-quiere decir que no estan authenticados o no tienen permisos para ver esapagina -->
-
-{% if next %}    
-    {% if user.is_authenticated %}
-        <!-- esta authenticado pero no tiene permisos para ver la pagina -->
-        <p>No tenes permisos para acceder a esta pagina</p>
-    {% else %}
-        <p>Login para ver esta pagina</p><br>
-    {% endif %}
-{% endif %}
-
 <div class="sidenav">
     <a class="back-button" href="{% url 'main_app:home'%}"><i class="fa fa-angle-double-left" style="font-size: 3em; color: #FFFDD0;"></i></a>
     <div class="login-main-text">
@@ -151,7 +125,7 @@ quiere decir que no estan authenticados o no tienen permisos para ver esapagina 
 <div class="main">
     <div class="col-md-6 col-sm-12">
         <div class="login-form">
-            <form method="post" action="{% url 'jugador_app:login' %}">
+            <form id="loginForm" method="post" action="{% url 'jugador_app:login' %}">
             {% csrf_token %}
             <div class="form-group">
                 {{ form.username|as_crispy_field }}
@@ -159,15 +133,23 @@ quiere decir que no estan authenticados o no tienen permisos para ver esapagina 
             <div class="form-group">
                 {{ form.password|as_crispy_field }}
             </div>
-            <!-- input para registrarse -->
             <br>
             <button type="submit" id="submit" value="login" class="btn btn-primary" style="margin-bottom: 15px;">Login</button>
             <p>Aún no tienes tu cuenta? <a href="{% url 'jugador_app:signup' %}" style="color: #339999;">Sign Up</a></p>
-
-            <!-- hidden input para el caso de next, se fija si tiene permisos para ver el next -->
             <input type="hidden" name="next" value="{{ next }}">
-
             </form>
+            {% if form.errors %}
+                <div style="color: red;">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
