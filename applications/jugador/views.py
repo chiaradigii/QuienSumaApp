@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from applications.comunicaciones.models import ChatSession
+from django.db import transaction
 
 class SignUpView(FormView):
     """Vista para crear un nuevo jugador"""
@@ -26,12 +27,13 @@ class SignUpView(FormView):
     form_class = SignUpForm
     template_name = 'registration/signup.html'
 
+    @transaction.atomic
     def form_valid(self, form):
         cleaned_data = form.cleaned_data
+        print("Form Valid: Cleaned Data:", cleaned_data)
         direccion = cleaned_data.get('direccion')
         ubicacion = Ubicacion(direccion=direccion)
         ubicacion.save()
-
         user = Jugador.objects.create_user(
             user=form.cleaned_data['user'],
             nombre=form.cleaned_data['nombre'],
@@ -52,7 +54,9 @@ class SignUpView(FormView):
         return JsonResponse({'status': 'success'}, status=200)
 
     def form_invalid(self, form):
-        return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+        errors = form.errors.get_json_data()
+        print("Form Invalid: Errors:", errors)
+        return JsonResponse({'status': 'error', 'errors': errors}, status=400)
 
     def get(self, request, *args, **kwargs):
         if 'registro_exitoso' in request.session:

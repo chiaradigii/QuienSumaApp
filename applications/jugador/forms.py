@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 from .models import Jugador
 from .widgets import DatePickerInput 
@@ -58,37 +59,48 @@ class SignUpForm(forms.ModelForm):
 
     class Meta:
         model = Jugador
-        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'posicion', 'foto',)
+        fields = ('user', 'nombre', 'apellido', 'fecha_nacimiento', 'sexo', 'correo', 'posicion', 'foto','direccion', 'password1', 'password2')
         exclude = ['geolocation', 'is_staff', 'is_superuser']
 
     def clean_password2(self):
-        if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-            self.add_error('password2', 'Las contraseñas no coinciden')
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise ValidationError('Las contraseñas no coinciden.')
+        return password2
 
     def clean_password1(self):
-        password = self.cleaned_data['password1']
+        password = self.cleaned_data.get('password1')
         if len(password) < 8:
-            self.add_error('password1', 'La contraseña debe tener al menos 8 caracteres')
-        # check for number
+            raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
         if not any(char.isdigit() for char in password):
-            self.add_error('password1', 'La contraseña debe tener al menos un número')
-        # check for letter
+            raise ValidationError('La contraseña debe tener al menos un número.')
         if not any(char.isalpha() for char in password):
-            self.add_error('password1', 'La contraseña debe tener al menos una letra')
-        # check for uppercase letter
+            raise ValidationError('La contraseña debe tener al menos una letra.')
         if not any(char.isupper() for char in password):
-            self.add_error('password1', 'La contraseña debe tener al menos una letra mayúscula')
-        # check for lowercase letter
+            raise ValidationError('La contraseña debe tener al menos una letra mayúscula.')
         if not any(char.islower() for char in password):
-            self.add_error('password1', 'La contraseña debe tener al menos una letra minúscula')
+            raise ValidationError('La contraseña debe tener al menos una letra minúscula.')
         return password
+    
+    from datetime import datetime
 
+    def clean_fecha_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        if fecha_nacimiento.year > datetime.today().year - 18:
+            raise ValidationError('Debes ser mayor de 18 años para registrarte.')
+        elif fecha_nacimiento.year < 1900:
+            raise ValidationError('Fecha de nacimiento inválida.')
+        elif fecha_nacimiento.year > datetime.today().year:
+            raise ValidationError('Fecha de nacimiento inválida.')
+        return fecha_nacimiento
 
+        
     def clean(self):
         cleaned_data = super().clean()
         direccion = cleaned_data.get('direccion')
-        cleaned_data['direccion'] = direccion
         return cleaned_data
+    
 
 class LoginForm(forms.Form):
     user = forms.CharField(

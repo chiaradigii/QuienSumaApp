@@ -129,99 +129,94 @@ form i {
 {% block body %}
 <section class="vh-100 gradient-custom">
     <div class="container">
-                <div class="card shadow-2-strong card-registration" style="border-radius: 15px"> 
-                    <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-3 pb-2 pb-md-0 mb-md-4 text-uppercase">Sign Up</h3>
-                            <form id="signupForm" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}   
-                            <div class="row">
-                                <div class="col">         
-                                    <div class="form-outline">          
-                                        {{ form.user|as_crispy_field }}
-                                    </div>
-                                </div>
-                                
-                                <div class="col">   
-                                    <div class="form-outline">          
-                                         {{form.correo|as_crispy_field}}
-                                    </div>  
-                                </div>
-                            <div class="row">
-                            <div class="col">
-                                <div class="form-outline">              
-                                        {{form.nombre|as_crispy_field}} 
-                                </div>
+        <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
+            <div class="card-body p-4 p-md-5">
+                <h3 class="mb-3 pb-2 pb-md-0 mb-md-4 text-uppercase">Sign Up</h3>
+                <form id="signupForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div id="errorMessages" class="alert alert-danger" style="display: none;"></div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.user|as_crispy_field }}
                             </div>
-                            <div class="col">
-                                <div class="form-outline"> 
-                                    {{form.apellido|as_crispy_field}}
-                                </div>   
-                            </div>
-                            </div>
-                            <div class="row"> 
-                                <div class="col">  
-                                    <div class="form-outline">             
-                                    <h6 class="mb-0 me-4">Sexo: </h6>
-                                    {{ form.sexo }}
-
-                                    </div>                                  
-                                </div>
-                                
-                                <div class="col">
-                                    <div class="form-outline mb-4" style="position: relative;">
-                                        {{ form.fecha_nacimiento|as_crispy_field }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                    <div class="col">
-                                        {{form.direccion|as_crispy_field}}
-                                    </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-outline">
-                                        {{form.posicion|as_crispy_field}}
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-outline">
-                                        {{form.foto|as_crispy_field}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-outline password-field">
-                                        <label>Contraseña</label>
-                                        <input type="password" name="{{ form.password1.name }}" id="id_password1" class="form-control" required>
-                                        <i class="bi bi-eye-slash password-toggle" id="togglePassword1"></i>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-outline password-field">
-                                        <label>Confirmar contraseña</label>
-                                        <input type="password" name="{{ form.password2.name }}" id="id_password2" class="form-control" required>
-                                        <i class="bi bi-eye-slash password-toggle" id="togglePassword2"></i>
-                                    </div>
-                                </div>
-                            </div>
-                                        
-                                        <div class="d-flex justify-content-center-end pt-3">
-                                            <button type="submit" id="confirmarButton" class="btn btn-warning btn-lg ms-2" data-bs-toggle="modal" data-bs-target="#registroExitosoModal">Confirmar</button>
-                                        </div>
-                                    </form>
-
-                                </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.correo|as_crispy_field }}
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.nombre|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.apellido|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline">
+                                <h6 class="mb-0 me-4">Sexo: </h6>
+                                {{ form.sexo }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline mb-4" style="position: relative;">
+                                {{ form.fecha_nacimiento|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {{ form.direccion|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.posicion|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                {{ form.foto|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-outline password-field">
+                                <label>Contraseña</label>
+                                <input type="password" name="{{ form.password1.name }}" id="id_password1" class="form-control" required>
+                                <i class="bi bi-eye-slash password-toggle" id="togglePassword1"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline password-field">
+                                <label>Confirmar contraseña</label>
+                                <input type="password" name="{{ form.password2.name }}" id="id_password2" class="form-control" required>
+                                <i class="bi bi-eye-slash password-toggle" id="togglePassword2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center-end pt-3">
+                        <button type="submit" id="confirmarButton" class="btn btn-warning btn-lg ms-2">Confirmar</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+</section>
 
-  <!-- Modal HTML -->
-  <div class="modal fade" id="registroExitosoModal" tabindex="-1" aria-labelledby="registroExitosoModalLabel" aria-hidden="true">
+
+<!-- Modal HTML -->
+<div class="modal fade" id="registroExitosoModal" tabindex="-1" aria-labelledby="registroExitosoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -239,25 +234,40 @@ form i {
     </div>
 </div>
 
-</section>
-
-
 {% endblock body %}
 
 {% block scripts %}
 {{ block.super }}
 
 <!-- script for Google Maps API -->
-<script>
-    console.log('Google Maps API Key:', '{{ google_maps_api_key }}');
-</script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
-
 <script>
+    function displayErrors(errors) {
+        const errorMessages = document.getElementById('errorMessages');
+        errorMessages.innerHTML = '';
+        console.log("Errors received:", errors);  // Debugging line
+    
+        for (let field in errors) {
+            if (errors.hasOwnProperty(field)) {
+                const fieldErrors = errors[field];
+                console.log(`Errors for ${field}:`, fieldErrors);  // Debugging line
+    
+                fieldErrors.forEach(errorObj => {
+                    console.log("Error message:", error.message);  // Debugging line
+                    const errorItem = document.createElement('div');
+                    errorItem.className = 'alert alert-danger';
+                    errorItem.textContent = errorObj.message;
+                    errorMessages.appendChild(errorItem);
+                });
+            }
+        }
+        errorMessages.style.display = 'block';
+    }
+    
     $(document).ready(function() {
         $('#signupForm').on('submit', function(e) {
             e.preventDefault();
-
+    
             $.ajax({
                 type: 'POST',
                 url: window.location.href,
@@ -268,47 +278,42 @@ form i {
                     if (response.status === 'success') {
                         $('#registroExitosoModal').modal('show');
                     } else {
-                        console.log(response.errors);
+                        displayErrors(response.errors);
                     }
                 },
                 error: function(response) {
-                    alert('Error: ' + response.responseJSON.message);
+                    const errorMessages = document.getElementById('errorMessages');
+                    const errors = response.responseJSON ? response.responseJSON.errors : {'error': [{message: 'An unknown error occurred.'}]};
+                    displayErrors(errors);
                 }
             });
         });
     });
-</script>
-<!-- Script for the autocompletion function -->
-<script>
+    
+    
     function initAutocomplete() {
-        console.log('initAutocomplete called');
-        var input = document.getElementById('id_direccion');
+        const input = document.getElementById('id_direccion');
         if (input && input.tagName === 'INPUT') {
-            console.log('Initializing Google Places Autocomplete');
-            var autocomplete = new google.maps.places.Autocomplete(input);
+            const autocomplete = new google.maps.places.Autocomplete(input);
         } else {
             console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
         }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM fully loaded and parsed');
         if (typeof google !== 'undefined') {
             initAutocomplete();
         } else {
             console.error('Google Maps JavaScript API not loaded');
         }
     });
-</script>
-<!-- Other scripts -->
-<script type="text/javascript">
+
     $(function () {
         $('#id_fecha_nacimiento').datetimepicker({
             format: 'DD-MM-YYYY'  
         });
     });
-</script>
-<script>
+
     const togglePassword1 = document.querySelector('#togglePassword1');
     const password1 = document.querySelector('#id_password1');
     togglePassword1.addEventListener('click', function() {
@@ -324,6 +329,6 @@ form i {
         password2.setAttribute('type', type);
         this.classList.toggle('bi-eye');
     });
-</>
+</script>
 
 {% endblock scripts %}
