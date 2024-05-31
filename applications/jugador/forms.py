@@ -235,7 +235,11 @@ class EditPasswordForm(forms.ModelForm):
         new_password2 = cleaned_data.get("new_password2")
 
         if new_password1 and new_password1 != new_password2:
-            raise ValidationError("Las contraseñas no coinciden.")
+            self.add_error('new_password2', "Las contraseñas no coinciden.")
+        if len(new_password1) < 8:
+            self.add_error('new_password1', "La contraseña debe tener al menos 8 caracteres.")
+        if not any(char.isdigit() for char in new_password1):
+            self.add_error('new_password1', "La contraseña debe tener al menos un número.")
 
         return cleaned_data
 

@@ -164,6 +164,12 @@ class EditPasswordView(LoginRequiredMixin, UpdateView):
         # Save the new password
         form.save()
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        # Get the first error for each field
+        first_errors = {f: errors[0] for f, errors in form.errors.items()}
+        return self.render_to_response(self.get_context_data(form=form, first_errors=first_errors))
+
 
     def get_success_url(self):
         return reverse('jugador_app:detalle_jugador', kwargs={'pk': self.request.user.pk})
