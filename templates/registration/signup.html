@@ -129,6 +129,7 @@ form i {
 {% block body %}
 <section class="vh-100 gradient-custom">
     <div class="container">
+        <a class="back-button" href="{% url 'main_app:home'%}"><i class="fa fa-angle-double-left" style="font-size: 3em; color: #FFFDD0;"></i></a>
         <div class="card shadow-2-strong card-registration" style="border-radius: 15px">
             <div class="card-body p-4 p-md-5">
                 <h3 class="mb-3 pb-2 pb-md-0 mb-md-4 text-uppercase">Sign Up</h3>
@@ -205,8 +206,9 @@ form i {
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center-end pt-3">
+                    <div class="d-flex justify-content-center-end align-items-center pt-3">
                         <button type="submit" id="confirmarButton" class="btn btn-warning btn-lg ms-2">Confirmar</button>
+                        <p class="mb-0 ms-2">Ya tienes cuenta? <a href="{% url 'jugador_app:login' %}" style="color: #339999; margin-left: 2px;">Iniciar Sesión</a></p>
                     </div>
                 </form>
             </div>
@@ -245,15 +247,15 @@ form i {
     function displayErrors(errors) {
         const errorMessages = document.getElementById('errorMessages');
         errorMessages.innerHTML = '';
-        console.log("Errors received:", errors);  // Debugging line
+        console.log("Errors received:", errors);  
     
         for (let field in errors) {
             if (errors.hasOwnProperty(field)) {
                 const fieldErrors = errors[field];
-                console.log(`Errors for ${field}:`, fieldErrors);  // Debugging line
+                console.log(`Errors for ${field}:`, fieldErrors);  
     
                 fieldErrors.forEach(errorObj => {
-                    console.log("Error message:", errorObj.message);  // Debugging line
+                    console.log("Error message:", errorObj.message);  
                     const errorItem = document.createElement('div');
                     errorItem.className = 'alert alert-danger';
                     errorItem.textContent = errorObj.message;
@@ -327,7 +329,7 @@ form i {
         const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
         password2.setAttribute('type', type);
         this.classList.toggle('bi-eye');
-    });    
+    });     
 </script>
 
 {% endblock scripts %}

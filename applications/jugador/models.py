@@ -18,12 +18,16 @@ class Jugador(AbstractBaseUser,PermissionsMixin):
         ('Delantero', 'Delantero'),
     )
 
-    user = models.CharField("username", max_length=50, default=" ", unique=True)
+    user = models.CharField("username", max_length=50, default=" ", unique=True, error_messages={
+            'unique': 'El nombre de usuario ya esta en uso',
+        })
     nombre = models.CharField("nombre",max_length=50)
     apellido = models.CharField("apellido", max_length=60)
     fecha_nacimiento = models.DateField("fecha de nacimiento", auto_now=False, auto_now_add=False, default=date.today)
     sexo = models.CharField("sexo", max_length=50,choices=(('M', 'Masculino'), ('F', 'Femenino')), default='M')
-    correo = models.EmailField("correo", max_length=254, unique=True, )
+    correo = models.EmailField("correo", max_length=254, unique=True,         error_messages={
+            'unique': 'Este correo ya esta en uso',
+        })
     posicion = models.CharField("posicion", max_length=100, choices=posicion_choices, default='Medio')
     foto = models.ImageField(upload_to='fotos', null=True, blank=True)
     #address field and geolocation field

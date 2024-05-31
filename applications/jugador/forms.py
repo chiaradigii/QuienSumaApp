@@ -4,6 +4,7 @@ from .models import Jugador
 from .widgets import DatePickerInput 
 from django.contrib.auth import authenticate
 from applications.ubicaciones.models import Ubicacion
+from django.core.validators import EmailValidator
 
 class SignUpForm(forms.ModelForm):
 
@@ -56,6 +57,12 @@ class SignUpForm(forms.ModelForm):
         widget=forms.RadioSelect,
         initial='M',
     )
+    
+    correo = forms.EmailField(
+        error_messages={
+            'invalid': 'Ingresa un correo valido (ejemplo@dominio.com)',
+        }
+    )
 
     class Meta:
         model = Jugador
@@ -81,6 +88,8 @@ class SignUpForm(forms.ModelForm):
             raise ValidationError('La contraseña debe tener al menos una letra mayúscula.')
         if not any(char.islower() for char in password):
             raise ValidationError('La contraseña debe tener al menos una letra minúscula.')
+        elif not password:
+            raise ValidationError('La contraseña es obligatoria.')
         return password
     
     from datetime import datetime
@@ -89,16 +98,32 @@ class SignUpForm(forms.ModelForm):
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
         if fecha_nacimiento.year > datetime.today().year - 18:
             raise ValidationError('Debes ser mayor de 18 años para registrarte.')
-        elif fecha_nacimiento.year < 1900:
+        elif fecha_nacimiento.year < 1900 or fecha_nacimiento.year > datetime.today().year:
             raise ValidationError('Fecha de nacimiento inválida.')
-        elif fecha_nacimiento.year > datetime.today().year:
-            raise ValidationError('Fecha de nacimiento inválida.')
+        elif not fecha_nacimiento:
+            raise ValidationError('La fecha de nacimiento es obligatoria.')
         return fecha_nacimiento
+
+    def clean_correo(self):
+        correo = self.cleaned_data.get('correo')
+        print("Validating email:", correo)
+        validator = EmailValidator()
+        try:
+            validator(correo)
+        except forms.ValidationError:
+            print("Invalid email:", correo)  
+            raise ValidationError('Ingresa un correo valido (ejemplo@dominio.com)')
+        if not correo:
+            raise ValidationError('El correo es obligatorio.')
+        return correo
 
         
     def clean(self):
         cleaned_data = super().clean()
-        direccion = cleaned_data.get('direccion')
+        required_fields = ['user', 'nombre', 'apellido']
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                raise ValidationError(f'El campo {field} es obligatorio')
         return cleaned_data
     
 
