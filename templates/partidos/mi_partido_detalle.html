@@ -186,7 +186,16 @@
             <div class="card-columns">
                 {% for solicitud in solicitudes_pendientes %}
                 <div class="card">
+                    {% if solicitud.solicitante.foto %}
                     <img src="{{ solicitud.solicitante.foto.url }}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                    {% else %}
+                      {% if solicitud.solicitante.get_sexo_display == 'Femenino' %}
+                        <img src="{% static 'img/WomanAvatar.png' %}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                      {% else %}
+                        <img src="{% static 'img/MasculinoAvatar.jpg' %}" class="card-img-top" alt="{{ solicitud.solicitante.nombre }}">
+                      {% endif %}
+                    {% endif %}
+                    
                     <div class="card-body">
                         <h5 class="card-title">{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }}</h5>
                         <p class="card-text">{{ solicitud.solicitante.get_posicion_display }}</p>
