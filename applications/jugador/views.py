@@ -22,7 +22,6 @@ from applications.comunicaciones.models import ChatSession
 from django.db import transaction
 
 class SignUpView(FormView):
-    """Vista para crear un nuevo jugador"""
     model = Jugador
     form_class = SignUpForm
     template_name = 'registration/signup.html'

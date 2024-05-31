@@ -253,7 +253,7 @@ form i {
                 console.log(`Errors for ${field}:`, fieldErrors);  // Debugging line
     
                 fieldErrors.forEach(errorObj => {
-                    console.log("Error message:", error.message);  // Debugging line
+                    console.log("Error message:", errorObj.message);  // Debugging line
                     const errorItem = document.createElement('div');
                     errorItem.className = 'alert alert-danger';
                     errorItem.textContent = errorObj.message;
@@ -290,7 +290,6 @@ form i {
         });
     });
     
-    
     function initAutocomplete() {
         const input = document.getElementById('id_direccion');
         if (input && input.tagName === 'INPUT') {
@@ -299,7 +298,7 @@ form i {
             console.error('El input de autocompletado no se encuentra en el DOM o no es un elemento input válido');
         }
     }
-
+    
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof google !== 'undefined') {
             initAutocomplete();
@@ -307,13 +306,13 @@ form i {
             console.error('Google Maps JavaScript API not loaded');
         }
     });
-
+    
     $(function () {
         $('#id_fecha_nacimiento').datetimepicker({
-            format: 'DD-MM-YYYY'  
+            format: 'DD-MM-YYYY'
         });
     });
-
+    
     const togglePassword1 = document.querySelector('#togglePassword1');
     const password1 = document.querySelector('#id_password1');
     togglePassword1.addEventListener('click', function() {
@@ -321,14 +320,14 @@ form i {
         password1.setAttribute('type', type);
         this.classList.toggle('bi-eye');
     });
-
+    
     const togglePassword2 = document.querySelector('#togglePassword2');
     const password2 = document.querySelector('#id_password2');
     togglePassword2.addEventListener('click', function() {
         const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
         password2.setAttribute('type', type);
         this.classList.toggle('bi-eye');
-    });
+    });    
 </script>
 
 {% endblock scripts %}
