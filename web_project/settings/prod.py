@@ -1,20 +1,17 @@
 from .base import *
 import os
 from decouple import config
+import dj_database_url
+import django_heroku
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['yourdomain.com', 'your.azurewebsites.net']
+ALLOWED_HOSTS = ['quiensuma.com', 'quiensuma-app.herokuapp.com']
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 STATIC_URL = '/static/'
@@ -31,3 +28,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
