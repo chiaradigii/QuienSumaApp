@@ -15,7 +15,7 @@ crispy-bootstrap5==2023.10
 cryptography==42.0.5
 cycler==0.12.1
 daphne==4.1.2
-Django==5.0.4
+Django==4.2.3
 django-bootstrap-v5==1.0.11
 django-crispy-forms==2.1
 django-environ==0.11.2
