@@ -32,7 +32,7 @@ class PartidoForm(forms.ModelForm):
         ("U", "Mixto"), 
     )
     gender = forms.ChoiceField(
-        label='Gendero',
+        label='Genero',
         choices=GENDER_CHOICES,
         widget=forms.RadioSelect,
         initial='U',
