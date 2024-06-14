@@ -98,8 +98,13 @@ class Partido(models.Model):
     def delete(self, *args, **kwargs):
         PartidoJugador.objects.filter(partido=self).delete()
         super().delete(*args, **kwargs)
+    
+    @classmethod
+    def eliminar_partidos_anteriores(cls):
+        hoy = timezone.now()
+        cls.objects.filter(fecha_hora__lt=hoy).delete()
 
-def __str__(self):
+    def __str__(self):
         return f"{self.tipo_futbol} - {self.get_lugar()} - {date_format(self.fecha_hora, 'DATE_FORMAT')}"
 
 class PartidoJugador(models.Model):

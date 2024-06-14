@@ -250,10 +250,18 @@
 
   <div class="column" style="margin-left: 20px;">
     {% for partido in partidos %}
-      {% ifchanged partido.fecha_hora.date %}
-      <div class="list-group">
-        <br>
-        <h2 class="fecha-encabezado">{{ partido.fecha_hora | date:"l, d F Y" }}</h2>
+        {% ifchanged partido.fecha_hora.date %}
+        <div class="list-group">
+          <br>
+          <h2 class="fecha-encabezado">
+            {% if partido.es_hoy %}
+              Hoy
+            {% elif partido.es_manana %}
+              Mañana
+            {% else %}
+              {{ partido.fecha_hora | date:"l, d F Y" }}
+            {% endif %}
+          </h2>
       {% endifchanged %}
       <div class="match-player-container">
         <!-- Match Details -->

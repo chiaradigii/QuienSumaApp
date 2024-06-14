@@ -7,7 +7,6 @@ from .models import Partido, PosicionCupo, SolicitudUnirse,PartidoJugador
 from ..ubicaciones.models import Ubicacion
 from .forms import PartidoForm
 from django.views.generic import CreateView, ListView, DetailView
-from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.db import models
@@ -20,6 +19,8 @@ from django.utils.dateformat import DateFormat
 from django.utils.formats import date_format
 import locale
 from django.utils import translation
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 class PartidoCreateView(CreateView):
     """Vista para crear un nuevo partido"""
@@ -129,9 +130,15 @@ class PartidoListView(ListView):
         return context
     
     def get_queryset(self):
-        from datetime import timezone
-        hoy = datetime.now(timezone.utc).date()
-        partidos = Partido.objects.all().order_by('-fecha_hora')
+        # Eliminar partidos anteriores
+        Partido.eliminar_partidos_anteriores()
+
+        # Obtener la fecha actual y la de mañana
+        hoy = timezone.now().date()
+        manana = hoy + timedelta(days=1)
+
+        # Ordenar partidos por fecha de forma ascendente
+        partidos = Partido.objects.filter(fecha_hora__gte=timezone.now()).order_by('fecha_hora')
 
         # Manejo de filtros
         gender_filter = self.request.GET.get('gender')
@@ -144,11 +151,11 @@ class PartidoListView(ListView):
                 partidos = partidos.filter(fecha_hora__date=date_filter)
             except ValueError:
                 pass
-        partidos_hoy = partidos.filter(fecha_hora__date=hoy)
-        partidos_manana = partidos.filter(fecha_hora__date=hoy + timedelta(days=1))
-        partidos_semana = partidos.filter(fecha_hora__date__range=(hoy + timedelta(days=1), hoy + timedelta(days=7)))
-        partidos_otros = partidos.exclude(fecha_hora__date__in=[hoy, hoy + timedelta(days=1)]).exclude(fecha_hora__date__range=(hoy, hoy + timedelta(days=7)))
-        return list(partidos_hoy) + list(partidos_manana) + list(partidos_semana) + list(partidos_otros)
+        for partido in partidos:
+            partido.es_hoy = partido.fecha_hora.date() == hoy
+            partido.es_manana = partido.fecha_hora.date() == manana
+
+        return partidos
     
 class MisPartidosListView(LoginRequiredMixin, ListView):
     model = Partido
