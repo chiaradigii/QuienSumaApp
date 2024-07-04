@@ -48,8 +48,11 @@ class Partido(models.Model):
     gender = models.CharField(max_length=1, choices=(('M', 'Masculino'), ('F', 'Femenino'),('U', 'Mixto')), default='U')
     
     def update_cupos_disponibles(self):
-        total_cupos = sum(pos.cupos_totales - pos.cupos_ocupados for pos in self.posiciones_cupos.all())
-        self.cupos_disponibles = total_cupos
+        total_cupos = self.posiciones_cupos.aggregate(
+            total_cupos=models.Sum('cupos_totales'),
+            ocupados_cupos=models.Sum('cupos_ocupados')
+        )
+        self.cupos_disponibles = total_cupos['total_cupos'] - total_cupos['ocupados_cupos']
         self.save()
     
     def get_lugar(self):

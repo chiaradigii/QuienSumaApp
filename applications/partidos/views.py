@@ -204,20 +204,21 @@ class MiPartidoDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         partido = context['partido']
-        
+
+        # Separate pending and accepted requests
         solicitudes_pendientes = SolicitudUnirse.objects.filter(
-            cupo__partido=partido, 
+            cupo__partido=partido,
             estado='pendiente'
         ).select_related('solicitante')
 
         solicitudes_aceptadas = SolicitudUnirse.objects.filter(
-            cupo__partido=partido, 
+            cupo__partido=partido,
             estado='aceptado'
         ).select_related('solicitante')
 
         context['solicitudes_pendientes'] = solicitudes_pendientes
         context['solicitudes_aceptadas'] = solicitudes_aceptadas
-        
+
         return context
 
 @login_required
@@ -225,7 +226,9 @@ def unirse_partido(request, partido_id):
     partido = get_object_or_404(Partido, id=partido_id)
     cupo = partido.posiciones_cupos.filter(cupos_ocupados__lt=models.F('cupos_totales')).first()
     if not cupo:
-            messages.error(request, "No hay cupos disponibles.")
+        messages.error(request, "No hay cupos disponibles.")
+        return redirect('partidos_app:listar_partidos')
+    
     # Check if there's already a pending or accepted solicitud
     if SolicitudUnirse.objects.filter(cupo=cupo, solicitante=request.user).exists():
         messages.error(request, "Ya has enviado una solicitud para este partido.")
@@ -234,9 +237,10 @@ def unirse_partido(request, partido_id):
     else:
         SolicitudUnirse.objects.create(cupo=cupo, solicitante=request.user)
         messages.success(request, "Solicitud enviada")
+        create_notification(recipient=partido.creador, message=f"{request.user.user} quiere unirse a tu partido.")
 
-    create_notification(recipient=partido.creador, message=f"{request.user.user} quiere unirse a tu partido.")
     return redirect('partidos_app:listar_partidos')
+
     
 @login_required
 def aceptar_solicitud(request, solicitud_id):
@@ -251,6 +255,14 @@ def aceptar_solicitud(request, solicitud_id):
     try:
         solicitud.aceptar()
         
+        # Update the cupos_ocupados for the specific position
+        solicitud.cupo.cupos_ocupados = F('cupos_ocupados') + 1
+        solicitud.cupo.save()
+
+        # Update the total available slots for the match
+        partido.cupos_disponibles = F('cupos_disponibles') - 1
+        partido.save()
+
         # Formatear la fecha
         fecha_partido = partido.fecha_hora.strftime('%A, %d de %B')
         lugar_partido = partido.get_lugar()
@@ -265,7 +277,8 @@ def aceptar_solicitud(request, solicitud_id):
         PartidoJugador.objects.create(partido=partido, jugador=solicitud.solicitante, posicion=solicitud.cupo.posicion)
     except ValidationError as e:
         messages.error(request, str(e))
-    return redirect('partidos_app:listar_partidos')
+    return redirect('partidos_app:mi_partido', pk=partido.id)
+
 
 
 @login_required
