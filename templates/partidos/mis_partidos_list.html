@@ -154,8 +154,8 @@
                         <h5 class="card-title">{{ partido.fecha_hora|date:"d M Y H:i" }}</h5>
                         <p class="card-text">Cupos disponibles: {{ partido.cupos_disponibles }}</p>
                         <p class="card-text">Solicitudes pendientes: {{ partido.solicitudes_pendientes }}</p>
-                        <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
                         {% if partido.creador == request.user %}
+                        <a href="{% url 'partidos_app:mi_partido' partido.id %}" class="btn btn-primary">Ver Detalles</a>
                         <a href="{% url 'partidos_app:cancelar_partido' partido.id %}" class="btn btn-danger">Cancelar Partido</a>
                         {% else %}
                         <a href="{% url 'partidos_app:abandonar_partido' partido.id %}" class="btn btn-warning">Cancelar Participación</a>

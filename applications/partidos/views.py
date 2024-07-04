@@ -204,11 +204,12 @@ class MiPartidoDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         partido = context['partido']
+        
         solicitudes_pendientes = SolicitudUnirse.objects.filter(
             cupo__partido=partido, 
             estado='pendiente'
         ).select_related('solicitante')
-        
+
         solicitudes_aceptadas = SolicitudUnirse.objects.filter(
             cupo__partido=partido, 
             estado='aceptado'
@@ -216,6 +217,7 @@ class MiPartidoDetailView(LoginRequiredMixin, DetailView):
 
         context['solicitudes_pendientes'] = solicitudes_pendientes
         context['solicitudes_aceptadas'] = solicitudes_aceptadas
+        
         return context
 
 @login_required
