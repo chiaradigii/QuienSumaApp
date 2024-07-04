@@ -168,9 +168,9 @@ class MisPartidosListView(LoginRequiredMixin, ListView):
         from django.utils import timezone
         ahora = timezone.now()
         return Partido.objects.filter(
-            (Q(creador=self.request.user) | Q(jugadores=self.request.user)),
+            Q(creador=self.request.user) | Q(jugadores=self.request.user),
             fecha_hora__gte=ahora
-        ).order_by('-fecha_hora')
+        ).distinct().order_by('-fecha_hora')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
