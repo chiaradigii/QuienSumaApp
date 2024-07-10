@@ -99,8 +99,13 @@ class Partido(models.Model):
         PartidoJugador.objects.filter(partido=self).delete()
         super().delete(*args, **kwargs)
 
-def __str__(self):
-        return f"{self.tipo_futbol} - {self.get_lugar()} - {date_format(self.fecha_hora, 'DATE_FORMAT')}"
+    @classmethod
+    def eliminar_partidos_anteriores(cls):
+        hoy = timezone.now()
+        cls.objects.filter(fecha_hora__lt=hoy).delete()
+
+    def __str__(self):
+            return f"{self.tipo_futbol} - {self.get_lugar()} - {date_format(self.fecha_hora, 'DATE_FORMAT')}"
 
 class PartidoJugador(models.Model):
     partido = models.ForeignKey(Partido, on_delete=models.CASCADE)
