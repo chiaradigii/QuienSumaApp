@@ -1,54 +1,66 @@
 # QuienSumaApp
-"Quien Suma" es una aplicación web diseñada para conectar equipos de fútbol que necesitan jugadores con aficionados apasionados por el deporte que desean unirse a un equipo o jugar ocasionalmente. La aplicación simplifica la coordinación, la comunicación y la organización de partidos, mejorando la experiencia de la comunidad futbolística.
+"Quien Suma" is a web application designed to connect soccer teams in need of players with sports enthusiasts looking to join a team or play occasionally. The app simplifies coordination, communication, and match organization, enhancing the experience for the soccer community.
 
-El proyecto "Quien Suma" representa una iniciativa innovadora destinada a abordar desafíos comunes en el ámbito del fútbol amateur y aficionado. Esta aplicación web tiene como objetivo principal conectar equipos de fútbol que necesitan jugadores adicionales con individuos apasionados por el deporte que desean unirse a un equipo o simplemente disfrutar de un partido ocasional.
+## Overview
+The "Quien Suma" project is an innovative initiative aimed at addressing common challenges in the amateur and recreational soccer world. Its primary goal is to connect soccer teams needing additional players with individuals passionate about the sport, whether they want to join a team or simply enjoy an occasional match.
 
-El problema:
-El mundo del fútbol aficionado enfrenta desafíos significativos, desde la dificultad de encontrar jugadores disponibles para completar un equipo hasta la ineficiente coordinación de partidos y eventos. Esto a menudo conduce a partidos cancelados y experiencias insatisfactorias para los amantes del deporte.
+## The Problem
+Amateur soccer faces significant challenges, such as:
+* Difficulty finding available players to complete a team.
+* Inefficient coordination of matches and events.
+* Frequent cancellations and unsatisfactory experiences for soccer enthusiasts
 
-La Solución:
-"Quien Suma" es una aplicación web innovadora diseñada para abordar estos problemas. Conecta equipos de fútbol que necesitan jugadores adicionales con individuos apasionados por el deporte que desean unirse a un equipo o jugar partidos. La aplicación ofrecerá un conjunto de funcionalidades clave, que incluyen registro de usuarios, organización de partidos, visualización de partidos próximos, comunicación entre perfiles de usuario, búsqueda de partidos disponibles y una integración con Google Maps para mostrar ubicaciones de partidos.
+## The Solution
+"Quien Suma" is a web application designed to tackle these problems by connecting soccer teams with players. The app provides key features such as:
+* User registration.
+* Match organization.
+* Viewing upcoming matches.
+* Communication between user profiles.
+* Searching for available matches.
+* Google Maps integration to display match locations.
 
-Alcance del Proyecto:
-El alcance del proyecto abarca el desarrollo de la aplicación web, la configuración de la base de datos, la integración de Google Maps y la creación de documentación técnica y de usuario.
-
-Beneficios Esperados:
-Facilitar la organización de partidos de fútbol.
-Fomentar la participación y la unión en la comunidad deportiva.
-Mejorar la experiencia de los usuarios al simplificar la búsqueda y la coordinación de partidos.
-Utilizar tecnología avanzada para brindar una plataforma segura y eficiente.
+## Project Scope
+The project includes:
+* Developing the web application.
+* Setting up the database.
+* Integrating Google Maps and other APIs
+* Creating technical and user documentation.
 
 **Objetivos del proyecto**
-Diseñar y construir una plataforma de software que sea capaz de gestionar de manera eficiente la coordinación y participación en partidos de fútbol, y que permita:
-  Registrar Cuentas de Usuario
-  Organizar partidos de futbol
-  Unirse a partidos disponibles
-  Visualizar partidos disponibles y próximos
-  Communication entre perfiles de usuario
-  Integration con google maps para mostrar ubicaciones de partidos
+Develop and implement a software platform capable of efficiently managing soccer match coordination and participation, with the following functionalities:
+* User account registration.
+* Organizing soccer matches.
+* Joining available matches.
+* Viewing upcoming matches.
+* Communication between user profiles.
+* Google Maps integration for match locations.
 
-Para descargar y usar la aplicación "QuienSumaApp", sigue estos pasos detallados:
+# Installation and Usage Instructions
+To download and use the "QuienSumaApp", follow these detailed steps:
 
-# Requisitos Previos
+## Prerequisites
 Asegúrate de tener instalados los siguientes componentes antes de comenzar:
 
 * Python 3.11
 * PostgreSQL
-* Redis: Un almacén de estructuras de datos en memoria, usado para gestionar las notificaciones y mensajes en tiempo real.
-  
-# Descarga de la Aplicación desde GitHub
-Clona el repositorio de la aplicación desde GitHub
+
+## Downloading the Application from GitHub
+
+Clone the application's repository from GitHub:
 
 git clone https://github.com/chiaradigii/QuienSumaApp.git
 cd QuienSumaApp
 
-# Instalación de Dependencias
-Asegúrate de activar un entorno virtual (puedes usar venv o virtualenv) para evitar conflictos con otras instalaciones de Python. Luego, instala las dependencias necesarias especificadas en el archivo requirements.txt.
+## Installing Dependencies
+
+1. Activate a virtual environment (Optional) 
+2. Install the required dependencies listed in the requirements.txt file:
 
 pip install -r requirements.txt
 
-# Configuración de la Base de Datos PostgreSQL
-Crea una base de datos en PostgreSQL y configura los detalles en el archivo settings.py de tu proyecto Django. Asegúrate de que la base de datos esté activa y accesible.
+## Configuring the PostgreSQL Database
+Create a PostgreSQL database and configure the details in the settings.py file of your Django project. Ensure the database is active and accessible:
+
 
 DATABASES = {
     'default': {
@@ -61,20 +73,22 @@ DATABASES = {
     }
 }
 
-# Luego, realiza las migraciones necesarias para configurar la base de datos:
+
+## Run the necessary migrations to set up the database:
 
 python manage.py migrate
 
-# Ejecución del Servidor Redis
-Redis es necesario para gestionar las notificaciones y mensajes.
+## Running the Redis Server
+Redis is required to manage notifications and messaging. Start the Redis server:
 
 redis-server
 
-# Ejecución de la Aplicación Localmente
-Para correr la aplicación en tu máquina local, usa Daphne. Esto levantará el servidor ASGI necesario para aplicaciones Django en tiempo real.
+## Running the Application Locally
+To run the application locally, use Daphne. This starts the ASGI server required for real-time Django applications:
 
 daphne -p 8000 web_project.asgi:application
 
-# Acceso a la Aplicación
-Ahora puedes acceder a la aplicación en tu navegador web visitando http://127.0.0.1:8000.
+## Accessing the Application 
+You can now access the application in your web browser by visiting:
+http://127.0.0.1:8000.
 
